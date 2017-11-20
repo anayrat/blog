@@ -25,4 +25,4 @@ weight = 5
 
 I started working with Postgres in 2013 at a web hosting provider of educational solutions. Seduced by the features of the engine and the community I joined Dalibo in 2015 to devote full time to PostgreSQL.
 
-Here you will find articles (mostly in French but I try to translate them) about PostgreSQL (but not only :smile:). As well as the presentations that I could make during conferences. Feel free to contact me if you see an error ;)
+Here you will find articles (mostly in French but I try to translate them) about PostgreSQL (but not only :smile:). As well as the presentations that I could make during conferences. Feel free to open an issue on [github](https://github.com/anayrat/blog) ;)

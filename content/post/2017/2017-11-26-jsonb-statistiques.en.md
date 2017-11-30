@@ -1,11 +1,11 @@
 +++
-title = "PostgreSQL - JSONB et Statistiques"
+title = "PostgreSQL - JSONB and Statistics"
 date = 2017-11-26T21:11:38+01:00
 draft = false
 
 # Tags and categories
 # For example, use `tags = []` for no tags, or the form `tags = ["A Tag", "Another Tag"]` for one or more tags.
-tags = ["postgres","JSONB","statistiques"]
+tags = ["postgres","JSONB","statistics"]
 categories = ["Postgres"]
 
 # Featured image
@@ -22,45 +22,44 @@ preview = true
 
 {{% toc %}}
 
-# Rappels statistiques, cardinalité, sélectivité
+# Statistics, cardinality, selectivity
 
-Le SQL est un language dit "déclaratif". C'est un language où l'utilisateur demande ce qu'il souhaite. Sans préciser comment l'ordinateur doit procéder pour obtenir les résultats.
+SQL is a declarative language. It is a language where the user asks what he wants. Without specifying how the computer should proceed to get the results.
 
-C'est le SGBD qui doit trouver "comment" réaliser l'opération en s'assurant de :
+It is the DBMS that must find "how" to perform the operation by ensuring:
 
-  * Retourner le résultat juste
-  * Idéalement, le plus vite possible
+   * Return the right result
+   * Ideally, as soon as possible
 
-"Le plus vite possible" se traduit par :
+"As soon as possible" means:
 
-  * Réduire au maximum les accès disques
-  * Privilégier les lectures séquentielles (praticulièrement important pour les disques mécaniques)
-  * Réduire le nombre d'opérations CPU
-  * Réduire l'empreinte mémoire
+   * Minimize disk access
+   * Give priority to sequential readings (especially important for mechanical disks)
+   * Reduce the number of CPU operations
+   * Reduce memory footprint
 
-Pour se faire, un SGBD possède ce que l'on appèle un optimiseur dont le rôle est de trouver le meilleur *plan d'exécution*.
+To do this, a DBMS has an optimizer whose role is to find the best *execution plan*.
 
-PostgreSQL possède un optimiseur basé sur un mécanisme de coût.
-Sans rentrer dans les détails, chaque opération a un cout unitaire (lecture d'un bloc séquentiel, traitement CPU d'un enregistrement...).
-Le moteur calcule le coût de plusieurs plans d'exécution (si la requête est simple) et choisi le moins couteux.
+PostgreSQL has an optimizer based on a cost mechanism.
+Without going into details, each operation has a unit cost (reading a sequential block, CPU processing of a record ...).
+Postgres calculates the cost of several execution plans (if the query is simple) and chooses the least expensive.
 
-Comment le moteur peut estimer le coût d'un plan? En estimant le coût de chaque noeud du plan en se basant sur des statistiques.
-PostgreSQL analyse les tables pour d'obtenir un échantillon statistique (opération normalement réalisée par l'*autovacuum*).
+How can postgres estimate the cost of a plan? By estimating the cost of each node of the plan based on statistics.
+PostgreSQL analyzes tables to obtain a statistical sample (this operation is normally performed by the *autovacuum* daemon).
 
+Some words of vocabulary:
 
-Quelques mots de vocabulaire :
+*Cardinality*: In set theory, it is the number of elements in a set. In databases, it will be the number of rows in a table or after applying a predicate.
 
-*Cardinalité* : Dans la théorie des ensemble, c'est le nombre d'éléments dans un ensemble. Dans les bases de données, ça sera le nombre de lignes d'une table ou après application d'un prédicat.
+*Selectivity*: Fraction of records returned after applying a predicate. For example, a table containing people and about one third of them are children. The selectivity of the predicate `person = 'child'` will be 0.33.
 
-*Sélectivité* : Fraction d'enregistrements retournés après application d'un prédicat. Par exemple, une table contenant des personnes et dont environ un tier correspond à des enfants. La sélectivité du prédicat `personne = 'enfant'` sera de 0.33.
-
-Si cette table contient 300 personnes (c'est la cardinalité de l'ensemble "personnes"), on peut estimer le nombre d'enfants car on sait que le prédicat `personne = 'enfant'` est de 0.33 :
+If this table contains 300 people (this is the cardinality of the "people" set), we can estimate the number of children because we know that the predicate `person = 'child'` is 0.33:
 
 300 * 0.33 = 99
 
-On peut obtenir ces estimations avec `EXPLAIN` qui affiche le plan d'exécution.
+These estimates can be obtained with `EXPLAIN` which displays the execution plan.
 
-Exemple (simplifié) :
+Example (simplified):
 
 ```SQL
 explain (analyze, timing off) select * from t1 WHERE c1=1;
@@ -71,21 +70,21 @@ explain (analyze, timing off) select * from t1 WHERE c1=1;
    Rows Removed by Filter: 200
 ```
 
-*(cost=0.00..5.75 rows=100 ...)* : Indique le coût estimé et le nombre d'enregistrements estimé (*rows*).
+*(cost=0.00..5.75 rows=100 ...)* : Indicates the estimated cost and the estimated number of records (*rows*).
 
-*(actual rows=100 ...)* : Indique le nombre d'enregistrement réellement obtenu.
+*(actual rows=100 ...)* : Indicates the number of records obtained.
 
-La documentation de PostgreSQL fourni des exemples de calculs d'estimation : [Row Estimation Examples](https://www.postgresql.org/docs/current/static/row-estimation-examples.html)
+PostgreSQL documentation provides examples of estimation calculations : [Row Estimation Examples](https://www.postgresql.org/docs/current/static/row-estimation-examples.html)
 
-Il est assez facile de comprendre comment obtenir des estimations à partir de types de données scalaires.
+It is quite easy to understand how to obtain estimates from scalar data types.
 
-Comment ça se passe pour des types particuliers? Par exemple le JSON?
+How are things going for particular types? For example JSON?
 
-# Recherche sur du JSONB
+# Search on JSONB
 
-## Jeu de données
+## Dataset
 
-Comme dans les précédents articles, j'ai utilisé le jeu de données de stackoverflow. J'ai créé une nouvelle table en aggrégeant les données de plusieurs tables dans un objet JSON :
+As in previous articles, I used the stackoverflow dataset. I created a new table by aggregating data from multiple tables into a JSON object:
 
 ```SQL
 CREATE TABLE json_stack AS
@@ -108,9 +107,9 @@ FROM
    JOIN users ON posts.owneruserid = users.id) t;
 ```
 
-Le traitement est assez long car les deux tables concernées totalisent près de 40Go.
+The processing is quite long because the two tables involved total nearly 40GB.
 
-J'obtiens donc une table de 40Go qui ressemble à ça :
+So I get a 40GB table that looks like this:
 
 ```SQL
  \dt+ json_stack
@@ -148,19 +147,19 @@ select post_id,jsonb_pretty(json) from json_stack
           | }
 ```
 
-## Opérateurs et indexation sur du JSONB
+## Operators and indexing for JSONB
 
-PostgreSQL propose plusieurs opérateurs pour interroger du JSONB [^1]. Nous allons utiliser l'opérateur `@>`.
+PostgreSQL provides several operators for querying JSONB [^1]. We will use the operator `@>`.
 
 [^1]: <https://www.postgresql.org/docs/current/static/functions-json.html>
 
-Il est également possible d'indexer du JSONB grâce aux index GIN :
+It is also possible to index JSONB using GIN indexes:
 
 ```SQL
 create index ON json_stack using gin (json );
 ```
 
-Enfin, voici un exemple de requête :
+Finally, here is an example of query:
 
 ```SQL
 explain (analyze,buffers)  select * from json_stack
@@ -183,12 +182,13 @@ explain (analyze,buffers)  select * from json_stack
 (9 rows)
 ```
 
-En lisant ce plan on constate que le moteur se trompe complètement.
-Il estime obtenir 33 283 lignes, hors la requête retourne seulement deux enregistrements. Le facteur d'erreur est d'environ 15 000!
+Reading this plan we see that postgres is completely wrong.
+He estimates getting 33,283 lines, but the query returns only two rows. The error factor is around 15,000!
 
-## Sélectivité sur du JSONB
+## Selectivity on JSONB
 
-Quelle est la cardinalité de la table? L'information est contenue dans le catalogue système :
+What is the cardinality of the table? The information is contained in the system catalog:
+
 
 ```SQL
 select reltuples from pg_class where relname = 'json_stack';
@@ -197,7 +197,7 @@ select reltuples from pg_class where relname = 'json_stack';
  3.32833e+07
 ```
 
-Quelle est la sélectivité estimée?
+What is the estimated selectivity?
 
 ```SQL
 select 33283 / 3.32833e+07;
@@ -206,11 +206,11 @@ select 33283 / 3.32833e+07;
  0.00099999098647069251
 ```
 
-En gros 0.001.
+Arround 0.001.
 
-## Plongée dans le code
+## Diving in the code
 
-Je me suis amusé à sortir le débugueur GDB pour trouver d'où pouvait venir ce chiffre. J'ai fini par arriver dans cette fonction :
+I had fun taking out the debugger GDB to find out where this number could come from. I ended up arriving in this function:
 
 ```C
 [...]
@@ -229,7 +229,8 @@ Je me suis amusé à sortir le débugueur GDB pour trouver d'où pouvait venir c
 [...]
 ```
 
-Le calcul de la sélectivité dépend du type de l'opérateur. Regardons dans le catalogue système :
+The selectivity depends on the type of the operator. Let's look in the system catalog:
+
 
 ```sql
 select oprname,typname,oprrest from pg_operator op
@@ -251,12 +252,12 @@ select oprname,typname,oprrest from pg_operator op
  @>      | jsonb    | contsel
 ```
 
-On retrouve plusieurs types, en effet l'opérateur `@>`signifie (en gros) : "Est-ce que l'objet de gauche contient l'élément de droite?".
-Il est utilisé pour différents types : géométrie, tableaux...
+There are several types, in fact the operator `@>` means (roughly): "Does the object on the left contain the right element?".
+It is used for different types: geometry, array ...
 
-Dans notre cas, est-ce que l'objet JSONB de gauche contient l'élément `'{"displayname":"anayrat"}'` ?
+In our case, does the left JSONB object contain the `''{" displayname ":" anayrat "}''` element?
 
-Un objet JSON est un type particulier. Déterminer la sélectivité d'un élément serait assez complexe. Le commentaire est assez explicite :
+A JSON object is a special type. Determining the selectivity of an element would be quite complex. The comment is quite explicit:
 
 ```C
  25 /*
@@ -271,22 +272,22 @@ Un objet JSON est un type particulier. Déterminer la sélectivité d'un éléme
 [...]
 ```
 
-Il n'est donc pas possible (actuellement) de déterminer la sélectivité sur des objets JSONB.
+It is therefore not possible (currently) to determine the selectivity of JSONB objects.
 
-Mais tout n'est pas perdu :wink:
+But all is not lost :wink:
 
-# Index fonctionnels
+# Functional indexes
 
-PostgreSQL permet de créer des index dits *fonctionnels*. On crée un index à partir d'une fonction.
+PostgreSQL permits to creates so-called *functional* indexes. We create an index on a fonction.
 
-Vous allez me dire : "Oui mais on n'en a pas besoin. Dans ton exemple, postgres utilise déjà un index".
+You're going to say, "Yes, but we do not need it." In your example, postgres is already using an index.
 
-C'est vrai, la différence, c'est que le moteur collecte des statistiques à propos de cet index.
-Comme si le résultat de la fonction était une nouvelle colonne.
+That's right, the difference is that postgres collects statistics about this index.
+As if the result of the function was a new column.
 
-## Création de la fonction et de l'index
+## Creating the function and the index
 
-C'est très simple :
+It is very simple :
 
 ```plpgsql
 CREATE or replace FUNCTION json_displayname (jsonb )
@@ -300,9 +301,9 @@ LANGUAGE SQL IMMUTABLE PARALLEL SAFE
 create index ON json_stack (json_displayname(json));
 ```
 
-## Recherche en utilisant une fonction
+## Search using a function
 
-Pour utiliser l'index que nous venons de créer, il faut l'utiliser dans la requête :
+To use the index we just created, use it in the query:
 
 ```SQL
 explain (analyze,verbose,buffers) select * from json_stack
@@ -320,12 +321,12 @@ explain (analyze,verbose,buffers) select * from json_stack
 (6 rows)
 ```
 
-Cette fois le moteur estime obtenir 363 lignes, ce qui est bien plus proche du résultat final (2).
+This time postgres estimates to get 363 rows, which is much closer to the final result (2).
 
 
-## Autre exemple et calcul de sélectivité
+## Another example and selectivity calculation
 
-Cette fois nous allons effectuer une recherche sur le champ "age" de l'objet JSON :
+This time we will search on the "age" field of the JSON object:
 
 
 ```SQL
@@ -376,14 +377,14 @@ explain (analyze,buffers)  select * from json_stack
 (12 lignes)
 ```
 
-Dans cet exemple on constate que le moteur estime toujours obtenir 33 283 enregistrements.
-Hors il en obtient 804 644. Cette fois il est beaucoup trop optimiste.
+In this example we see that postgres still estimates 33,283 records.
+Out he gets 804 644. This time he is too much optimistic.
 
-PS : Dans mon exemple vous verrez que j'ai joué la même requête en modifiant la `work_mem`. C'est pour éviter que le bitmap ne soit `lossy` [^2]
+P.S: In my example you will see that I run the same query by modifying `work_mem`. This is to prevent the bitmap from being `lossy` [^2]
 
-[^2]: Un noeud bitmap devient lossy lorsque le moteur ne peut pas faire un bitmap de tous les enregistrements. Il passe donc en mode dit "lossy" où le bitmap ne se fait plus sur l'enregistrement mais pour le bloc entier. Ce qui nécessite de lire plus de blocs et de faire un "recheck" qui consiste à filter les enregistrements obtenus.
+[^2]: A bitmap node becomes lossy when postgres can not make a bitmap of all tuples. It thus passes in so-called "lossy" mode where the bitmap is no longer on the tuple but for the entire block. This requires reading more blocks and doing a "recheck" which consists in filtering obtained tuples.
 
-Comme vu ci-dessus nous pouvons créer une fonction :
+As seen above we can create a function:
 
 ```SQL
 CREATE or replace FUNCTION json_age (jsonb )
@@ -397,7 +398,7 @@ LANGUAGE SQL IMMUTABLE PARALLEL SAFE
 create index ON json_stack (json_age(json));
 ```
 
-A nouveau l'estimation est bien meilleure:
+Again the estimate is much better:
 
 ```SQL
 explain (analyze,buffers)   select * from json_stack
@@ -414,11 +415,11 @@ explain (analyze,buffers)   select * from json_stack
  Execution time: 2410.269 ms
 ```
 
-Le moteur estime obtenir 799 908 enregistrements. nous allons le vérifier.
+Postgres estimates to get 799,908 records. we will check it.
 
-Comme je l'ai précisé, le moteur possède des informations de statistiques basées sur un échantillon de données.
-Ces informations sont stockées dans un catalogue système lisible grâce à la vue `pg_stats`.
-Avec un index fonctionnel, le moteur le voit comme une nouvelle colonne.
+As I said, Postgres has statistics information based on a sample of data.
+This information is stored in a readable system catalog with the `pg_stats` view.
+With a functional index, Postgres sees it as a new column.
 
 ```psql
 schemaname             | public
@@ -429,11 +430,12 @@ most_common_vals       | {28,27,29,31,26,30,32,25,33,34,36,24,[...]}
 most_common_freqs      | {0.0248,0.0240333,0.0237333,0.0236333,0.0234,0.0229333,[...]}
 [...]
 ```
-La colonne *most_common_vals* contient les valeurs les plus fréquentes et la colonne *most_common_freqs* la sélectivité correspondante.
 
-Donc pour `age=27` on a une sélectivité de 0.0240333.
+The column *most_common_vals* contains the most common values and the column *most_common_freqs* the corresponding selectivity.
 
-Ensuite il suffit de multiplier la sélectivité par la cardinalité de la table :
+So for `age = 27` we have a selectivity of 0.0240333.
+
+Then we just have to multiply the selectivity by the cardinality of the table:
 
 ```SQL
 select n_live_tup from pg_stat_all_tables where relname ='json_stack';
@@ -448,16 +450,16 @@ select 0.0240333 * 33283258;
  799906.5244914
 ```
 
-D'accord, l'estimation est bien meilleure. Mais est-ce grave si le moteur se trompe? Dans les deux requêtes ci-dessus on constate que le moteur exploite bien un index et que le résultat est obtenu rapidement.
+Okay, estimate is much better. But is it serious if postgres is wrong?
+In the two queries above we see that postgres uses an index and that the result is obtained quickly.
 
+# Consequences of a bad estimate
 
-# Conséquences d'une mauvaise estimation
+How can a bad estimate be a problem?
 
-En quoi une mauvaise estimation peut poser problème?
+When that leads to the choice of a bad plan.
 
-Quand ça entraine le choix d'un mauvais plan.
-
-Par exemple cette requête d'aggregation qui compte le nombre de posts par age:
+For example, this aggregation query that counts the number of posts by age:
 
 ```SQL
 explain (analyze,buffers)  select json->'age',count(json->'age')
@@ -501,9 +503,10 @@ explain (analyze,buffers)  select json->'age',count(json->'age')
  Execution time: 411688.165 ms
 ```
 
-Le moteur s'attend à obtenir 33 283 256 d'enregistrement au lieu de 86. Il a également effectué un tri très couteux puisqu'il a généré plus de 33Go (11GO * 3 loops) de fichiers temporaires.
+Postgres expects to get 33,283,256 records instead of 86. It also performed a very expensive sort since it generated more than 33GB (11GB * 3 loops) of temporary files.
 
-La même requête en utilisant la fonction *json_age* :
+The same query using the *json_age* function:
+
 
 ```SQL
 explain (analyze,buffers)   select json_age(json),count(json_age(json))
@@ -546,14 +549,13 @@ explain (analyze,buffers)   select json_age(json),count(json_age(json))
 
 ```
 
-Ici le moteur effectue le tri plus tard sur beaucoup moins de lignes. Le temps d'exécution est nettement réduit et on s'épargne surtout 33Go de fichiers temporaires.
+Here postgres sorts later on a lot less lines. The execution time is significantly reduced and we save especially 33GB of temporary files.
 
+# Last word
 
-# Mot de la fin
+Statistics are essential for choosing the best execution plan. Currently Postgres has advanced features for JSON [^4]
+Unfortunately there is no possibility to add statistics on the JSONB type. Note that PostgreSQL 10 provides the infrastructure to [extend statistics](https://www.postgresql.org/docs/current/static/sql-createstatistics.html). Hopefully in the future it will be possible to extend them for special types.
 
-Les statistiques sont indispensables pour choisir les meilleurs plan d'exécution. Actuellement Postgres dispose de fonctionnalités avancées pour le JSON [^4]
-Malheureusement il n'y a pas encore de possibilité d'ajouter de statistiques sur le type JSONB. A noter que PostgreSQL 10 apporte l'infrastructure pour [étendre les statistiques](https://www.postgresql.org/docs/current/static/sql-createstatistics.html). Espérons que dans le futur il sera possible de les étendre pour des types spéciaux.
+In the meantime, it is possible to work around this limitation by using functional indexes.
 
-En attendant il est possible de contourner cette limitation en utilisant les index fonctionnels.
-
-[^4]: La [documentation](https://www.postgresql.org/docs/current/static/functions-json.html) est très complète et fournie de nombreux exemples : usage des opérateurs, indexation.
+[^4]: The [documentation](https://www.postgresql.org/docs/current/static/functions-json.html) is very complete and provides many examples: use of operators, indexing.

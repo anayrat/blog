@@ -45,7 +45,7 @@ Sans rentrer dans les détails, chaque opération a un cout unitaire (lecture d'
 Le moteur calcule le coût de plusieurs plans d'exécution (si la requête est simple) et choisi le moins couteux.
 
 Comment le moteur peut estimer le coût d'un plan? En estimant le coût de chaque noeud du plan en se basant sur des statistiques.
-PostgreSQL analyse les tables pour d'obtenir un échantillon statistique (opération normalement réalisée par l'*auto_vacuum*).
+PostgreSQL analyse les tables pour d'obtenir un échantillon statistique (opération normalement réalisée par l'*autovacuum*).
 
 
 Quelques mots de vocabulaire :
@@ -277,7 +277,7 @@ Mais tout n'est pas perdu :wink:
 
 # Index fonctionnels
 
-PostgreSQL permet de créer des index dits *fonctionnels*. On crée un index à partir d'une foction.
+PostgreSQL permet de créer des index dits *fonctionnels*. On crée un index à partir d'une fonction.
 
 Vous allez me dire : "Oui mais on n'en a pas besoin. Dans ton exemple, postgres utilise déjà un index".
 
@@ -417,7 +417,7 @@ explain (analyze,buffers)   select * from json_stack
 Le moteur estime obtenir 799 908 enregistrements. nous allons le vérifier.
 
 Comme je l'ai précisé, le moteur possède des informations de statistiques basées sur un échantillon de données.
-Ces informations sont stockées dans un catalogue système lisible grâce à la vue `pg_stats`
+Ces informations sont stockées dans un catalogue système lisible grâce à la vue `pg_stats`.
 Avec un index fonctionnel, le moteur le voit comme une nouvelle colonne.
 
 ```psql

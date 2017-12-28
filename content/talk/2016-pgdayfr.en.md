@@ -1,9 +1,9 @@
 +++
-date = 2017-01-01T00:00:00  # Schedule page publish date.
-
+date = 2016-05-31T00:00:00  # Schedule page publish date.
+aliases = "/en/talk/2016-pgdayfr/"
 title = "BRIN indexes - How they works and usages?"
-time_start = "2017-05-31T16:00:00"
-time_end = "2017-05-31T16:30:00"
+time_start = "2016-05-31T16:00:00"
+time_end = "2016-05-31T16:30:00"
 abstract = "Released in January 2016, PostgreSQL 9.5 introduces  BRIN indexes for Block Ranges Index. This type of index looks promising for high volumetry where there is a strong correlation between the data and their location. First part of the talk (in french) will be dedicated to their functioning and specificities. From this information it will then be possible to identify use cases."
 abstract_short = "This type of index looks promising for high volumetry where there is a strong correlation between the data and their location."
 event = "PGDay FR 2016"

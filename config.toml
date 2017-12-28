@@ -24,6 +24,7 @@ pygmentsCodefences = true
 
 [permalinks]
   post = "/:year/:month/:day/:title/"
+  talk = "/talk/:year/:month/:day/:title/"
 
 [outputs]
   home = [ "HTML", "CSS", "RSS" ]

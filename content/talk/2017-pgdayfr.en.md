@@ -1,6 +1,6 @@
 +++
-date = 2017-01-01T00:00:00  # Schedule page publish date.
-
+date = 2017-06-08T00:00:00  # Schedule page publish date.
+aliases = "/en/talk/2017-pgdayfr/"
 title = "How does Full Text Search works?"
 time_start = "2017-06-08T15:55:00"
 time_end = "2017-06-08T16:30:00"

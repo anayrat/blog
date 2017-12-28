@@ -184,7 +184,7 @@ explain (analyze,buffers)  select * from json_stack
 ```
 
 En lisant ce plan on constate que le moteur se trompe complètement.
-Il estime obtenir 33 283 lignes, hors la requête retourne seulement deux enregistrements. Le facteur d'erreur est d'environ 15 000!
+Il estime obtenir 33 283 lignes, or la requête retourne seulement deux enregistrements. Le facteur d'erreur est d'environ 15 000!
 
 ## Sélectivité sur du JSONB
 
@@ -377,7 +377,7 @@ explain (analyze,buffers)  select * from json_stack
 ```
 
 Dans cet exemple on constate que le moteur estime toujours obtenir 33 283 enregistrements.
-Hors il en obtient 804 644. Cette fois il est beaucoup trop optimiste.
+Or il en obtient 804 644. Cette fois il est beaucoup trop optimiste.
 
 PS : Dans mon exemple vous verrez que j'ai joué la même requête en modifiant la `work_mem`. C'est pour éviter que le bitmap ne soit `lossy` [^2]
 

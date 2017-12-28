@@ -163,6 +163,11 @@ copyright = "This work is licensed under a Creative Commons Attribution-NonComme
     'Book chapter'  # 6
   ]
 
+  # Configuration of talk pages.
+  [params.talks]
+    # Show talk time?
+    time = true
+
   # Configuration of project pages.
   [params.projects]
     # List publications and talks related to the project?

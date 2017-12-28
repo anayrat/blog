@@ -92,6 +92,9 @@ copyright = "This work is licensed under a Creative Commons Attribution-NonComme
   #   Examples: "Mon, Jan 2, 2006" or "2006-01-02"
   date_format = "Jan 2, 2006"
 
+  #   Examples: "3:04 pm" or "15:04"
+  time_format = "15:04"
+
   # Show estimated reading time for posts?
   reading_time = true
 

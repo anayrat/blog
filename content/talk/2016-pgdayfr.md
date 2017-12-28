@@ -3,8 +3,8 @@ date = 2016-05-31T00:00:00  # Schedule page publish date.
 aliases = "/talk/2016-pgdayfr/"
 
 title = "Index BRIN - Fonctionnement et usages possibles"
-time_start = "2016-05-31T16:00:00"
-time_end = "2016-05-31T16:30:00"
+time_start = 2016-05-31T16:00:00
+time_end = 2016-05-31T16:30:00
 abstract = "Sortie en Janvier 2016, la version 9.5 introduit les index BRIN pour Block Ranges Index. Ce type d'index s'annonce prometteur pour les fortes volumétrie où il y a une forte corrélation entre les données et leur emplacement. La première partie sera consacrée à leur fonctionnement et spécificités. A partir de ces informations il sera alors possible d'en déduire les usages."
 abstract_short = "Ce type d'index s'annonce prometteur pour les fortes volumétrie où il y a une forte corrélation entre les données et leur emplacement."
 event = "PGDay FR 2016"

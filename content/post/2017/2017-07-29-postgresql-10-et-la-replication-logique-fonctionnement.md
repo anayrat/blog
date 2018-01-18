@@ -48,7 +48,7 @@ Néanmoins elle présente quelques limitations :
 
 # Fonctionnement
 
-Contrairement à la réplication physique, la réplication logique ne réplique pas les blocs de données. Elle décode le résultat des requêtes qui sont transmis au secondaire. Celui-ci applique les modifications SQL issues du flux de réplication logique.
+Contrairement à la réplication physique, la réplication logique ne réplique pas les blocs de données. Elle décode le résultat des requêtes qui est transmis au secondaire. Celui-ci applique les modifications SQL issues du flux de réplication logique.
 
 Le serveur secondaire est en réalité un serveur primaire, dans le sens où il s'agît d'un serveur qui accepte des requêtes en écritures comme n'importe quel instance primaire.
 

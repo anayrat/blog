@@ -229,6 +229,10 @@ copyright = "This work is licensed under a Creative Commons Attribution-NonComme
 #     desired widget in your `content/home/` folder.
 #   The weight parameter defines the order that the links will appear in.
 
+[params.menus]
+  # Align the main menu to the right of the page? (true/false)
+  align_right = true
+
 [[menu.main]]
   name = "Accueil"
   url = "#about"

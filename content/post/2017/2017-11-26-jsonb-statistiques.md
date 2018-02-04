@@ -2,6 +2,7 @@
 title = "PostgreSQL - JSONB et Statistiques"
 date = 2017-11-26T21:11:38+01:00
 draft = false
+summary = "Cet article présente le fonctionnement des statistiques dans PostgreSQL et ses limitations dans le cas du type JSONB"
 
 # Tags and categories
 # For example, use `tags = []` for no tags, or the form `tags = ["A Tag", "Another Tag"]` for one or more tags.

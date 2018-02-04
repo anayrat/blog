@@ -11,7 +11,7 @@ subtitle = ""
 widget = "talks_selected"
 
 # Order that this section will appear in.
-weight = 5
+weight = 40
 
 # List format.
 #   0 = Simple

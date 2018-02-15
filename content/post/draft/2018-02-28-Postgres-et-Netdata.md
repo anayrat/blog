@@ -42,7 +42,7 @@ permettent de mettre en évidence le comportement de PostgreSQL.
 Ce graphe présente l'activité des processus lancés par "l'autovacuum launcher".
 Leur rôle est d'effectuer des tâches de maintenance afin de :
 
-  * De nettoyer les lignes mortes
+  * Nettoyer les lignes mortes
   * Mettre à jour les statistiques des données (voir [Rappels statistiques, cardinalité, sélectivité](https://blog.anayrat.info/2017/11/26/postgresql---jsonb-et-statistiques/#rappels-statistiques-cardinalit%C3%A9-s%C3%A9lectivit%C3%A9))
   * "Geler" les lignes anciennes afin d'éviter un wraparround (Voir [Transaction Id Wraparound in Postgres](http://malisper.me/transaction-id-wraparound-in-postgres/))
 
@@ -51,10 +51,10 @@ la plupart des situations. Cependant, il peut arriver qu'il soit nécessaire
 d'affiner la configuration de l'autovacuum.
 
 Par exemple, si l'activité est très soutenue et que le nombre de processus lancés
-atteint régulièrement l'`autovacuum_max_workers`. Dans ce cas, il peut être nécessaire soit :
+atteint régulièrement l'`autovacuum_max_workers`. Dans ce cas, il peut être nécessaire :
 
-  * D'augmenter le nombre de processus (s'il y a beaucoup de tables à traiter)
-  * De rendre les processus plus aggressifs (lorsque les tables sont volumineuses).
+  * soit d'augmenter le nombre de processus (s'il y a beaucoup de tables à traiter)
+  * soit de rendre les processus plus aggressifs (lorsque les tables sont volumineuses).
   En effet, leur activité est bridée via les paramètres `autovacuum_vacuum_cost_delay`
   et `autovacuum_vacuum_cost_limit` afin que cette tâche se fasse en arrière plan
   pour impacter le moins possible les autres processus en charge de traiter les requêtes.
@@ -98,14 +98,14 @@ les processeurs étaient en attente d'accès disque.
 Ici on peut voir que le moteur a dû lire les blocs depuis le disque. Le graphe
 décroit, car les lectures suivantes se font depuis la mémoire partagée.
 
-On peut également voir que le nombre de transaction par seconde augmente, puis
+On peut également voir que le nombre de transactions par seconde augmente, puis
 se stabilise une fois que les données sont chargées en mémoire partagée.
 
 On observe le même phénomène sur ce graphe :
 
 {{< figure src="/img/2018/netdata-postgres04.png" title="Statistiques base bench" >}}
 
-On peut ainsi constater qu'il a fallut une 1min30 pour charger le cache.
+On peut ainsi constater qu'il a fallu une 1min30 pour charger le cache.
 
 
 

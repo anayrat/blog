@@ -81,7 +81,7 @@ have been modified in shared buffers but not yet written to data files
 The "checkpointer" is also in charge of synchronizing these blocks. Writes
 are smoothed in the background (this depends on the `checkpoint_completion_target` parameter).
 The bgwriter occurs when backends need to release blocks in
-shared buffers. Unlike the checkpointer which does it at a checkpoint.
+shared buffers, unlike the checkpointer which does it at a checkpoint.
 
 
 To return to the chart, the blue curve corresponds to the number of blocks that have

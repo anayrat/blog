@@ -77,9 +77,9 @@ ont été modifiés dans la mémoire partagée mais pas encore écrits dans les 
 de données (rassurez-vous ils sont bien écrits sur disque dans les journaux de transaction).
 
 Le "checkpointer" est également en charge de synchroniser ces blocs. Les écritures
-sont lissées en arrière plan (celà dépend du paramètre `checkpoint_completion_target`).
+sont lissées en arrière plan (cela dépend du paramètre `checkpoint_completion_target`).
 Le bgwriter intervient lorsque des backends ont besoin de libérer des blocs en
-mémoire partagée. Contrairement au checkpointer qui le fait lors d'un checkpoint.
+mémoire partagée,  contrairement au checkpointer qui le fait lors d'un checkpoint.
 
 Pour en revenir au graphe, la courbe bleue correspond au nombre de blocs qui ont
 dû être alloués en mémoire partagée. Le graphe a cette forme car il correspond à

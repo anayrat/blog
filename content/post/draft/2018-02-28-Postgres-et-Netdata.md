@@ -35,6 +35,13 @@ ce qui existe dans [check_pgactivity](https://github.com/OPMDG/check_pgactivity)
 Voici la présentation et les explications de quelques graphes. Certains,
 permettent de mettre en évidence le comportement de PostgreSQL.
 
+Pour information, les graphes présentés ici ne correspondent pas à la version finale.
+Plusieurs graphes ont été séparés afin de distinguer les différentes opérations
+(lecture, écrites) et les processus (backend, checkpointer, bgwriter).
+
+Je remercie au passage [Guillaume Lelarge](https://twitter.com/g_lelarge) qui a
+joué le rôle de relecteur pour cet article.
+
 # Autovacuum
 
 {{< figure src="/img/2018/netdata-postgres02.png" title="Autovacuum workers" >}}
@@ -63,16 +70,16 @@ atteint régulièrement l'`autovacuum_max_workers`. Dans ce cas, il peut être n
 
 {{< figure src="/img/2018/netdata-postgres01.png" title="Bgwriter" >}}
 
-Ce graphe s'appelle Bgwriter en référence à la vue qui permet d'obtenir les statistiques [pg_stat_bgwriter](https://www.postgresql.org/docs/10/static/monitoring-stats.html#PG-STAT-BGWRITER-VIEW)
+Ce graphe s'appelle Bgwriter en référence à la vue qui permet d'obtenir les statistiques [pg_stat_bgwriter](https://www.postgresql.org/docs/current/static/monitoring-stats.html#PG-STAT-BGWRITER-VIEW)
 
 Le rôle du "bgwriter" est de synchroniser des blocs "sales". Ce sont des blocs qui
 ont été modifiés dans la mémoire partagée mais pas encore écrits dans les fichiers
 de données (rassurez-vous ils sont bien écrits sur disque dans les journaux de transaction).
 
-Le "checkpointer" est également en charge de synchroniser ces blocs. La différence
-étant que le bgwriter essaie de le faire en arrière plan lorsque des backends ont
-besoin de libérer des blocs en mémoire partagée. Contrairement au checkpointer
-qui le fait lors d'un checkpoint.
+Le "checkpointer" est également en charge de synchroniser ces blocs. Les écritures
+sont lissées en arrière plan (celà dépend du paramètre `checkpoint_completion_target`).
+Le bgwriter intervient lorsque des backends ont besoin de libérer des blocs en
+mémoire partagée. Contrairement au checkpointer qui le fait lors d'un checkpoint.
 
 Pour en revenir au graphe, la courbe bleue correspond au nombre de blocs qui ont
 dû être alloués en mémoire partagée. Le graphe a cette forme car il correspond à

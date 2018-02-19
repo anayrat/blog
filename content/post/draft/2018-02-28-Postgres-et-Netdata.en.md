@@ -1,5 +1,5 @@
 +++
-title = "Postgres and Netdata - 1"
+title = "Postgres and Netdata : apply to autovacuum and pg_stat_bgwriter"
 date = 2018-02-11T11:05:22+01:00
 draft = true
 summary = "Introduction of autovacuum and bgwriter charts dedicated to PostgreSQL in Netdata"

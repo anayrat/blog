@@ -1,7 +1,7 @@
 +++
 title = "Postgres et Netdata : application à autovacuum et pg_stat_bgwriter"
-date = 2018-02-11T11:05:22+01:00
-draft = true
+date = 2018-02-20T19:05:22+01:00
+draft = false
 summary = "Présentation des graphiques autovacuum et bgwriter dédiés à PostgreSQL dans Netdata"
 
 # Tags and categories
@@ -30,14 +30,14 @@ une mesure toutes les secondes, tout est stocké en mémoire. Il n'y a pas vraim
 d'historique. Le but est d'avoir accès à un ensemble de métrique en temps réel. [^1]
 
 J'ai rajouté plusieurs graphiques pour PostgreSQL, en m'inspirant largement de
-ce qui existe dans [check_pgactivity](https://github.com/OPMDG/check_pgactivity). [^2]
+ce qui existe dans [check_pgactivity](https://github.com/OPMDG/check_pgactivity).
 
 Voici la présentation et les explications de quelques graphes. Certains,
 permettent de mettre en évidence le comportement de PostgreSQL.
 
 Pour information, les graphes présentés ici ne correspondent pas à la version finale.
 Plusieurs graphes ont été séparés afin de distinguer les différentes opérations
-(lecture, écrites) et les processus (backend, checkpointer, bgwriter).
+(lecture, écrites) et les processus (backend, checkpointer, bgwriter). [^2]
 
 Je remercie au passage [Guillaume Lelarge](https://twitter.com/g_lelarge) qui a
 joué le rôle de relecteur pour cet article.

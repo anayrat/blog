@@ -119,4 +119,4 @@ We can see that it took a 1min30 to load the cache.
 
 
 [^1]: See : [Netdata Performance](https://github.com/firehol/netdata/wiki/Performance)
-[^2]: The Pull Request has not been merged yet : [Add charts for postgres](https://github.com/firehol/netdata/pull/3400)
+[^2]: The Pull Request has been merged : [Add charts for postgres](https://github.com/firehol/netdata/pull/3400)

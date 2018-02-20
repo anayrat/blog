@@ -1,6 +1,6 @@
 +++
 title = "Postgres et Netdata : application à autovacuum et pg_stat_bgwriter"
-date = 2018-02-20T19:05:22+01:00
+date = 2018-02-20T18:35:22+01:00
 draft = false
 summary = "Présentation des graphiques autovacuum et bgwriter dédiés à PostgreSQL dans Netdata"
 

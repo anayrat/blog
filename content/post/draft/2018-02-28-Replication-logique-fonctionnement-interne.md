@@ -102,7 +102,7 @@ A partir de 4096 modifications le moteur écrit les changements sur disque :
 
 En plaçant le paramètre `log_min_messages` sur `debug2` on peut arriver à mettre
 en évidence ce comportement. Le but est d'afficher le message correspondant à la
-ligne 2079.
+ligne 2078.
 
 Sans activité particulière, voici le contenu du répertoire `pg_replslot` :
 ```
@@ -153,7 +153,7 @@ select count(*) from t1;
   4095
 (1 ligne)
 ```
-Jusqu'ici nous n'avons pas atteint le seuil de 4096. Le repertoire ne contient
+Jusqu'ici nous n'avons pas atteint le seuil de 4096. Le répertoire ne contient
 encore que le fichier state :
 
 ```
@@ -220,7 +220,7 @@ drwx------ 4 postgres postgres   33 févr. 18 11:51 ..
 -rw------- 1 postgres postgres 656K févr. 18 15:53 xid-51689068-lsn-92-98000000.snap
 ```
 
-Chaque wal sender a du sérialiser les changements sur disque.
+Chaque wal sender a dû sérialiser les changements sur disque.
 
 ## Cas avec deux transactions
 
@@ -288,7 +288,7 @@ drwx------ 4 postgres postgres   33 févr. 18 11:51 ..
 
 J'ai essayé en insérant 3000 lignes dans chaque transaction, aucun fichier snap
 n'est écrit. Ce n'est que lorsque chaque transaction dépasse 4096 changements
-que ceux-ci sont écrit sur disque.
+que ceux-ci sont écrits sur disque.
 
 Commitons la première transaction :
 
@@ -321,7 +321,7 @@ Dans cet exemple nous allons insérer une grande quantité d'enregistrements dan
 une transaction qui sera commitée plus tard. Ceci afin de mettre en évidence le
 fonctionnement de la réplication logique.
 
-Voici les requêtes qui ont a été exécutées
+Voici les requêtes qui ont été exécutées :
 
 ```SQL
 BEGIN.
@@ -368,12 +368,13 @@ Voici quelques graphes issus de Netdata :
 
 
 On constate une forte charge CPU, jusqu'à 16h28min16s où elle baisse un peu.
-Puis à 16h28min48s la charge redescent à 0. On retrouve une hausse de la charge
+Puis à 16h28min48s la charge redescend à 0. On retrouve une hausse de la charge
 à 16h33min46s.
 
 Comment expliquer ces résultats?
 
 Lors du premier pic de charge, il y avait plusieurs processus qui consommait de la ressource :
+
   * le backend qui insérait les données
   * les deux processus wal sender
 
@@ -381,11 +382,11 @@ La machine dispose de 8 coeurs logiques, chaque processus n'exploite qu'un seul
 coeur. Soit environ 13% par processus.
 
 A 16h28min16s, le backend venait de terminer l'insertion. Cependant les processus
-wal sender contininaient d'être actifs. Le décodage des journaux et la sérialisation
-des transactions est assez couteux.
+wal sender continuaient d'être actifs. Le décodage des journaux et la sérialisation
+des transactions est assez coûteux.
 
 Enfin, à 16h33min46s, la transaction est commitée. Ca n'a eu aucune incidence sur
-la charge du backend. en revanche, les processus wal sender se sont mis à lire
+la charge du backend. En revanche, les processus wal sender se sont mis à lire
 les fichiers snap produits sur disque pour transmettre les modifications aux
 souscripteurs.
 
@@ -417,9 +418,9 @@ cela rajoute du délai dans l'application des changements.
 Thomas Vondra a soumis un patch afin d'améliorer ce cas d'usage :
 [logical streaming for large in-progress transactions](https://commitfest.postgresql.org/16/1429/)
 
-Pour le moment le patch n'a pas encoré été accepté. Il nécessite de rajouter des
+Pour le moment le patch n'a pas encore été accepté. Il nécessite de rajouter des
 informations dans les journaux de transaction. La communauté est très prudente en
-ce qui concernne tout ce qui peut avoir un impact sur les performances.
+ce qui concerne tout ce qui peut avoir un impact sur les performances.
 
 ## Réplication
 
@@ -427,11 +428,11 @@ ce qui concernne tout ce qui peut avoir un impact sur les performances.
 
 
 On peut noter que les graphes "Streaming replication delta" mesurant le delta de
-réplication à partir de la vue `pg_stat_replication` sont difficile à expliquer.
+réplication à partir de la vue `pg_stat_replication` sont difficiles à expliquer.
 Normalement ils présentent le retard de réplication de serveurs secondaires. Or
 nous venons de voir que l'application des changements ne se fait que lors du
 commit, soit à 16h33min46s. Or les graphes semblent indiquer que les serveurs
-secondaire avaient du retard jusqu'à 16h28min48s.
+secondaires avaient du retard jusqu'à 16h28min48s.
 
 Les courbes "write delta", "flush delta" et "replay delta" se confondent.
 La courbe "sent delta" est assez différente.
@@ -439,12 +440,12 @@ La courbe "sent delta" est assez différente.
 Ma compréhension de ces graphes est que "write delta", "flush delta" et "replay delta"
 correspondent au retard de décodage logique par rapport aux données envoyées "sent delta".
 
-A 16h28min16s, la requête s'est terminée, le "sent delta" arrête de croitre. et
+A 16h28min16s, la requête s'est terminée, le "sent delta" arrête de croître. Puis,
 décroit au fur et à mesure de l'avancée du décodage logique.
 
 On peut confirmer cela grâce aux graphes "replication slot files", la courbe
-"pg_replslot files" correspond au nombre de fichiers présent dans le répertoire
-"pg_replslot" de chaque slot de réplication. Celle ci est croissance et s'arrête
+"pg_replslot files" correspond au nombre de fichiers présents dans le répertoire
+"pg_replslot" de chaque slot de réplication. Celle-ci est croissance et s'arrête
 de croitre au même moment où les courbes "write delta", "flush delta" et
 "replay delta" redescendent à 0.
 
@@ -470,7 +471,7 @@ sur une base dont toutes les tables sont répliquées.
 {{< figure src="/img/2018/logical-rep-oltp/replication.png" link="/img/2018/logical-rep-oltp/replication.png" title="Réplication delta" >}}
 
 On remarque que le trafic réseau chute au même moment que nous observons un
-retard de réplication qui augmente. Celà correspondait à des périodes où le
+retard de réplication qui augmente. Cela correspondait à des périodes où le
 secondaire saturait côté CPU (malheureusement je n'ai pas de graphe Netdata sur
 le secondaire).
 
@@ -482,7 +483,7 @@ secondes après la fin du bench.
 
 Autre point important, on constate qu'il n'y a aucun fichier snap écrit sur disque.
 Cela confirme le commentaire dans le code, indiquant qu'en cas de trafic OLTP,
-les changements sont conservé en mémoire et non sur disque.
+les changements sont conservés en mémoire et non sur disque.
 
 # Bilan
 
@@ -492,9 +493,9 @@ changements. Cela implique que le trafic en écriture ne peut être trop importa
 au risque d'avoir un secondaire qui a du mal à encaisser la charge : l'application
 des changements s'effectuant par un seul processus.
 
-En revanche, dans les cas où traic est différents, où des requêtes entrainent des
-changements important, le moteur devra sérialiser les changements sur disque. Les
-opérations de décodage logique puis de transfert réseau induisent un délai qui
+En revanche, dans les cas où le trafic est différent (OLAP), où des requêtes entraînent des
+changements importants, le moteur devra sérialiser les changements sur disque. Les
+opérations de décodage logique, puis de transfert réseau induisent un délai qui
 peut être non négligeable.
 
 

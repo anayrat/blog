@@ -234,8 +234,8 @@ As for the publication, there is a meta-command to display subscriptions:
 
 That's all for this article, in a future article we will see limitations.
 
-[1]: http://blog.anayrat.info/2017/07/29/postgresql-10-et-la-replication-logique-fonctionnement/
-[2]: http://blog.anayrat.info/2017/08/05/postgresql-10-et-la-replication-logique-mise-en-oeuvre/
+[1]: https://blog.anayrat.info/en/2017/07/29/postgresql-10-and-logical-replication---overview/
+[2]: https://blog.anayrat.info/en/2017/08/05/postgresql-10-and-logical-replication---setup/
 [3]: https://blog.anayrat.info/2017/08/27/postgresql-10-et-la-replication-logique-restrictions/
 [4]: https://wiki.postgresql.org/wiki/Apt
 [5]: https://wiki.postgresql.org/wiki/Apt/FAQ#I_want_to_try_the_beta_version_of_the_next_PostgreSQL_release "Apt/FAQ"

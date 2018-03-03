@@ -64,7 +64,7 @@ It will be possible to choose tables to replicate, add views and indexes on the 
 
 Implementation in next article...
 
-[1]: http://blog.anayrat.info/2017/07/29/postgresql-10-et-la-replication-logique-fonctionnement/
-[2]: http://blog.anayrat.info/2017/08/05/postgresql-10-et-la-replication-logique-mise-en-oeuvre/
+[1]: https://blog.anayrat.info/en/2017/07/29/postgresql-10-and-logical-replication---overview/
+[2]: https://blog.anayrat.info/en/2017/08/05/postgresql-10-and-logical-replication---setup/
 [3]: https://blog.anayrat.info/2017/08/27/postgresql-10-et-la-replication-logique-restrictions/
 [4]: http://blog.anayrat.info/wp-content/uploads/2017/07/schema-repli-logique.png

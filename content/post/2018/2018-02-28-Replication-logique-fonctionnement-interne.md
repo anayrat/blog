@@ -1,7 +1,7 @@
 +++
 title = "Replication Logique Fonctionnement Interne"
-date = 2018-02-04T12:19:41+01:00
-draft = true
+date = 2018-03-10T12:19:41+01:00
+draft = false
 summary = "Cet article détaille le fonctionne de la réplication logique, notamment les différences de comportement en fonction du type de trafic"
 
 # Tags and categories

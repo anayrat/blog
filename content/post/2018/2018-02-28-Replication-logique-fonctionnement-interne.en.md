@@ -1,7 +1,7 @@
 +++
 title = "Logical replication internals"
-date = 2018-02-04T12:19:41+01:00
-draft = true
+date = 2018-03-10T12:19:41+01:00
+draft = false
 summary = "This post explains how logical replication works. Especially, difference beharvoirs depending of workloads"
 
 # Tags and categories
@@ -226,9 +226,8 @@ drwx------ 4 postgres postgres   33 févr. 18 11:51 ..
 -rw------- 1 postgres postgres 656K févr. 18 15:53 xid-51689068-lsn-92-98000000.snap
 ```
 
-We also note that the notion of change corresponds to a line and not
-an order. For example, a single insert of 4096 lines will result in the writing
-of a \*.snap file.
+Please note that one change here means one tuple, not one SQL statement.
+For example, a single insert of 4096 lines will result in the writing of a \*.snap file.
 
 Each wal sender had to serialize changes on disk.
 

@@ -32,10 +32,13 @@ J'ai présenté la réplication à travers plusieurs articles :
 2. [PostgreSQL 10 et la réplication logique - Mise en oeuvre][2]
 3. [PostgreSQL 10 et la réplication logique - Restrictions][3]
 
-Cette nouvelle série d'article va creuser un peu plus le sujet. Nous verrons plus
-en détail son fonctionnement. Pour mieux l'appréhender, j'ai rajouté des graphes
-dans Netdata que j'ai présenté dans un précédent article. Je vous invite à cliquer
-sur les images pour les agrandir, elles seront plus lisibles :smile:
+Cet article va creuser un peu plus le sujet. Nous verrons plus en détail son
+fonctionnement. Pour mieux l'appréhender, j'ai rajouté des graphes dans Netdata
+que j'ai présenté dans un précédent article. Je vous invite à cliquer sur les
+images pour les agrandir, elles seront plus lisibles :smile:
+
+Je remercie au passage [Guillaume Lelarge](https://twitter.com/g_lelarge) qui a
+joué le rôle de relecteur pour cet article.
 
 # Sérialisation des changements sur disque
 
@@ -68,7 +71,7 @@ Après une exploration dans le code, on arrive dans le fichier `src/backend/repl
  151 static const Size max_changes_in_memory = 4096;
 ```
 
-A partir de 4096 modifications le moteur écrit les changements sur disque :
+À partir de 4096 modifications, le moteur écrit les changements sur disque :
 
 ```C
 2048 /*
@@ -100,7 +103,7 @@ A partir de 4096 modifications le moteur écrit les changements sur disque :
 2079          (uint32) txn->nentries_mem, txn->xid);
 ```
 
-En plaçant le paramètre `log_min_messages` sur `debug2` on peut arriver à mettre
+En plaçant le paramètre `log_min_messages` sur `debug2`, on peut arriver à mettre
 en évidence ce comportement. Le but est d'afficher le message correspondant à la
 ligne 2078.
 
@@ -153,7 +156,7 @@ select count(*) from t1;
   4095
 (1 ligne)
 ```
-Jusqu'ici nous n'avons pas atteint le seuil de 4096. Le répertoire ne contient
+Jusqu'ici, nous n'avons pas atteint le seuil de 4096. Le répertoire ne contient
 encore que le fichier state :
 
 ```
@@ -183,10 +186,10 @@ postgres=# select count(*) from t1;
 (1 ligne)
 ```
 
-Cette fois le seuil est atteint (`if (txn->nentries_mem >= max_changes_in_memory`).
+Cette fois, le seuil est atteint (`if (txn->nentries_mem >= max_changes_in_memory`).
 Les processus wal sender vont écrire sur disque les changements à appliquer.
 
-On retrouve dans les logs ces messages :
+On retrouve dans les logs ces messages (avec `log_min_messages = debug2`) :
 ```
 [1977] postgres@postgres DEBUG:  spill 4096 changes in XID 51689068 to disk
 [2061] postgres@postgres DEBUG:  spill 4096 changes in XID 51689068 to disk
@@ -221,6 +224,10 @@ drwx------ 4 postgres postgres   33 févr. 18 11:51 ..
 ```
 
 Chaque wal sender a dû sérialiser les changements sur disque.
+
+On remarque également que la notion de changement correspond à une ligne et non
+un ordre. Par exemple, un seul insert de 4096 lignes entrainera l'écriture d'un
+fichier \*.snap.
 
 ## Cas avec deux transactions
 
@@ -264,7 +271,7 @@ drwx------ 4 postgres postgres   33 févr. 18 11:51 ..
 -rw------- 1 postgres postgres 656K févr. 18 16:07 xid-51689070-lsn-92-98000000.snap
 ```
 
-Ensuite, si on insère 4096 lignes dans la seconde transaction, nous obtenons de
+Ensuite, si on insère 4096 lignes dans la seconde transaction, nous obtenons deux
 nouveaux fichiers \*.snap :
 
 ```
@@ -312,13 +319,13 @@ drwx------ 4 postgres postgres   33 févr. 18 11:51 ..
 Le fichier snap correspondant est supprimé par chaque wal sender. Si on commite
 la deuxième transaction, le second fichier est également supprimé.
 
-A noter que ces fichiers apparaissent pour toute modification (`DELETE, UPDATE`...).
+Il est à noter que ces fichiers apparaissent pour toute modification (`DELETE, UPDATE`...).
 
 
 Que se passe t'il pour une grosse transaction?
 
-Dans cet exemple nous allons insérer une grande quantité d'enregistrements dans
-une transaction qui sera commitée plus tard. Ceci afin de mettre en évidence le
+Dans cet exemple, nous allons insérer une grande quantité d'enregistrements dans
+une transaction qui sera commitée plus tard, afin de mettre en évidence le
 fonctionnement de la réplication logique.
 
 Voici les requêtes qui ont été exécutées :
@@ -381,17 +388,17 @@ Lors du premier pic de charge, il y avait plusieurs processus qui consommait de 
 La machine dispose de 8 coeurs logiques, chaque processus n'exploite qu'un seul
 coeur. Soit environ 13% par processus.
 
-A 16h28min16s, le backend venait de terminer l'insertion. Cependant les processus
+A 16h28min16s, le backend venait de terminer l'insertion. Cependant, les processus
 wal sender continuaient d'être actifs. Le décodage des journaux et la sérialisation
-des transactions est assez coûteux.
+des transactions sont assez coûteux.
 
 Enfin, à 16h33min46s, la transaction est commitée. Ca n'a eu aucune incidence sur
 la charge du backend. En revanche, les processus wal sender se sont mis à lire
 les fichiers snap produits sur disque pour transmettre les modifications aux
 souscripteurs.
 
-A noter que les changements n'ont été visibles côté souscripteur que vers 16h35min40s.
-Une fois que les changements ont été rejoués. Le rejeu est plus long que l'insertion.
+À noter que les changements n'ont été visibles côté souscripteur que vers 16h35min40s,
+une fois que les changements ont été rejoués. Le rejeu est plus long que l'insertion.
 Cela dépend beaucoup des performances des processeurs.
 
 ## Statistiques sur les enregistrements
@@ -429,7 +436,7 @@ ce qui concerne tout ce qui peut avoir un impact sur les performances.
 
 On peut noter que les graphes "Streaming replication delta" mesurant le delta de
 réplication à partir de la vue `pg_stat_replication` sont difficiles à expliquer.
-Normalement ils présentent le retard de réplication de serveurs secondaires. Or
+Normalement, ils présentent le retard de réplication de serveurs secondaires. Or
 nous venons de voir que l'application des changements ne se fait que lors du
 commit, soit à 16h33min46s. Or les graphes semblent indiquer que les serveurs
 secondaires avaient du retard jusqu'à 16h28min48s.
@@ -445,7 +452,7 @@ décroit au fur et à mesure de l'avancée du décodage logique.
 
 On peut confirmer cela grâce aux graphes "replication slot files", la courbe
 "pg_replslot files" correspond au nombre de fichiers présents dans le répertoire
-"pg_replslot" de chaque slot de réplication. Celle-ci est croissance et s'arrête
+"pg_replslot" de chaque slot de réplication. Celle-ci est croissante et s'arrête
 de croitre au même moment où les courbes "write delta", "flush delta" et
 "replay delta" redescendent à 0.
 
@@ -477,8 +484,8 @@ le secondaire).
 
 Cela peut s'expliquer par le fait que le rejeu ne se fait que grâce à un seul processus
 bgworker qui avait du mal à supporter la charge (machine moins puissante).
-D'ailleurs on peut voir que le secondaire rattrape le retard quelques dizaines
-secondes après la fin du bench.
+D'ailleurs, on peut voir que le secondaire rattrape le retard quelques dizaines
+de secondes après la fin du bench.
 
 
 Autre point important, on constate qu'il n'y a aucun fichier snap écrit sur disque.
@@ -490,7 +497,7 @@ les changements sont conservés en mémoire et non sur disque.
 On peut constater que la réplication logique s'applique assez bien dans le cas
 d'un trafic OLTP pour peu que le secondaire arrive à suivre l'application des
 changements. Cela implique que le trafic en écriture ne peut être trop important
-au risque d'avoir un secondaire qui a du mal à encaisser la charge : l'application
+au risque d'avoir un secondaire qui a du mal à encaisser la charge, l'application
 des changements s'effectuant par un seul processus.
 
 En revanche, dans les cas où le trafic est différent (OLAP), où des requêtes entraînent des

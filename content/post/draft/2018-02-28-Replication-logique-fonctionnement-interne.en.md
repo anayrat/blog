@@ -32,10 +32,13 @@ I introduced replication through several posts:
 2. [PostgreSQL 10 : Logical replication - Setup][2]
 3. [PostgreSQL 10 : Logical replication - Limitations][3]
 
-This new series will dig a little deeper. We will see postgres internals about
+This new post will dig a little deeper. We will see postgres internals about
 logical replication. To ease comprehension, I added charts in Netdata that I
 presented in a previous article. I invite you to click on the images to enlarge them,
 they will be more readable :smile:
+
+I would like to thank [Guillaume Lelarge](https://twitter.com/g_lelarge) who
+reviewed this post :)
 
 # Spills changes on disk
 
@@ -99,7 +102,7 @@ From 4096 changes Postgres spills changes to disk:
 2079          (uint32) txn->nentries_mem, txn->xid);
 ```
 
-Setting `log_min_messages` parameter to `debug2` we can highlight this behavior.
+Setting `log_min_messages` parameter to `debug2`, we can highlight this behavior.
 The goal is to display the message corresponding to the line 2078.
 
 Without any particular activity, here is the content of the `pg_replslot` directory:
@@ -185,10 +188,10 @@ postgres=# select count(*) from t1;
 (1 ligne)
 ```
 
-This time the threshold is reached (`if (txn-> nentries_mem> = max_changes_in_memory`).
+This time, threshold is reached (`if (txn-> nentries_mem> = max_changes_in_memory`).
 Wal sender process will spills changes to apply on disk.
 
-We find in the logs these messages:
+We find in the logs these messages (with `log_min_messages = debug2`):
 
 ```
 [1977] postgres@postgres DEBUG:  spill 4096 changes in XID 51689068 to disk
@@ -222,6 +225,10 @@ drwx------ 4 postgres postgres   33 févr. 18 11:51 ..
 -rw------- 1 postgres postgres  176 févr. 18 15:53 state
 -rw------- 1 postgres postgres 656K févr. 18 15:53 xid-51689068-lsn-92-98000000.snap
 ```
+
+We also note that the notion of change corresponds to a line and not
+an order. For example, a single insert of 4096 lines will result in the writing
+of a \*.snap file.
 
 Each wal sender had to serialize changes on disk.
 

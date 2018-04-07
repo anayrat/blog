@@ -15,7 +15,8 @@ weight = 5
     "PostgreSQL",
     "Open Source",
     "Linux",
-    "Social Science"
+    "Social Science",
+    "Social and Solidarity Economy"
   ]
 
 +++

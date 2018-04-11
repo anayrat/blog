@@ -90,7 +90,7 @@ Robert Haas : [Parallelism Progress](http://rhaas.blogspot.fr/2013/10/parallelis
 
 Depuis la version 9.6, PostgreSQL est capable d'utiliser plusieurs processus pour
 paralléliser l'opération de lecture d'une table. Cette opération correspond au
-noeud `Parallel Seq Scan`.
+noeud *Parallel Seq Scan*.
 
 
 ## Parcours d'index (10)

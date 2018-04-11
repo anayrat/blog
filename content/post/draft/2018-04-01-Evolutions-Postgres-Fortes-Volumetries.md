@@ -40,7 +40,7 @@ Ce premier article va tenter de les lister, nous verront qu'elles peuvent être 
 Afin de conserver de la clarté, l'explication de chaque fonctionnalité restera succincte.
 
 Note : cet article a été écrit durant la phase de développement de la version 11.
-J'ai intégré des nouveautés de la version 11. Tant que la version n'est pas sortie,
+J'ai intégré des nouveautés de la version 11. Tant que celle-ci n'est pas sortie,
 ces nouveautés peuvent être retirées.
 
 # SQL
@@ -55,30 +55,35 @@ résultat réel.
 ## GROUPING SETS (9.5)
 
 Toujours avec la version 9.5, PostgreSQL dispose de nouvelles clauses permettant
-de faire des agrégations multiples : `GROUPING SETS`, `ROLLUP`, `CUBE`.
+de faire des agrégations multiples appelé [GROUPING SETS](https://www.postgresql.org/docs/current/static/queries-table-expressions.html#QUERIES-GROUPING-SETS).
+Les nouveaux agrégats sont : `GROUPING SETS`, `ROLLUP`, `CUBE`.
+
+Voir cet article de Depesz : [Waiting for 9.5 – Support GROUPING SETS, CUBE and ROLLUP](https://www.depesz.com/2015/05/24/waiting-for-9-5-support-grouping-sets-cube-and-rollup/)
 
 A noter que la version 10 apporte des gains très significatifs grâce à l'amélioration
 des fonctions de hashage.
 
+
 ## Heritage sur les foreign tables (9.5)
 
-Depuis la version 9.5 il est possible des foreign tables comme tables enfant.
+Depuis la version 9.5 il est possible de declarer des foreign tables comme tables enfant.
 Il est ainsi possible de distribuer les données sur différents serveurs et d'y
-accéder depuis une seule instance. Ca s'apparente à du sharding.
+accéder depuis une seule instance. Cette technique s'apparente à du sharding.
+
+Voir cet article de Michael Paquier : [Postgres 9.5 feature highlight - Scale-out with Foreign Tables now part of Inheritance Trees](http://paquier.xyz/postgresql-2/postgres-9-5-feature-highlight-foreign-table-inheritance/)
 
 # Parallélisation
 
-En effet, PostgreSQL étant multi-processus,
-le traitement d'une requête ne se faisait que sur un coeur. On retrouve de nombreux
-posts où les utilisateurs se plaignent de ce fonctionnement :
+PostgreSQL étant multi-processus, le traitement d'une requête ne se faisait que
+sur un coeur. On retrouve de nombreux posts où les utilisateurs se plaignent de ce fonctionnement :
 
   * [Query parallelization for single connection in Postgres](https://stackoverflow.com/questions/32629988/query-parallelization-for-single-connection-in-postgres?rq=1&utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa)
   * [Any way to use >1 Core in PostgreSQL for a single Connection/Query?](https://stackoverflow.com/questions/18268130/any-way-to-use-1-core-in-postgresql-for-a-single-connection-query)
 
-Depuis la version 9.6, le moteur est capable de mobiliser plusieurs processus
+Depuis la version 9.6, le moteur est capable de mobiliser plusieurs processus (appelé *workers*)
 pour le traitement d'une requête. Cette avancée majeure a été l'aboutissement de
 plusieurs années de travail. Il a fallu mettre en place toute une infrastructure
-pour permettre au moteur d'utiliser plusieurs processeurs. Voir cet article de
+pour permettre au moteur d'utiliser plusieurs processus. Voir cet article de
 Robert Haas : [Parallelism Progress](http://rhaas.blogspot.fr/2013/10/parallelism-progress.html)
 
 ## Parcours séquentiel (9.6)
@@ -118,6 +123,7 @@ de hashage. Il y avait une grosse perte d'efficacité :
 Le *parallel hash join* permet aux worker de paralléliser la création de cette
 table de la hashage et de partager une seule table de hashage.
 
+L'auteur principal de cette fonctionnalité a écrit un excellent article : [Parallel Hash for PostgreSQL ](https://write-skew.blogspot.fr/2018/01/parallel-hash-for-postgresql.html)
 
 ## Agrégation (9.6)
 
@@ -148,7 +154,7 @@ Ce type d'index contient le résumé d'un ensemble de blocs. Ils sont donc très
 Ils sont particulièrement adaptés aux fortes volumétries avec des requêtes manipulant
 un gros volume de données. Attention, il est très important qu'il y ait une forte corrélation entre les données et leur emplacement.
 
-J'avais présenté le fonctionnement de ce type d'index lors du PGDay France 2016 à Lille : [Index BRIN - Fonctionnement et usages possibles](http://blog.anayrat.info/talk/2016/05/31/index-brin---fonctionnement-et-usages-possibles/)
+J'ai présenté le fonctionnement de ce type d'index lors du PGDay France 2016 à Lille : [Index BRIN - Fonctionnement et usages possibles](http://blog.anayrat.info/talk/2016/05/31/index-brin---fonctionnement-et-usages-possibles/)
 
 ## BLOOM filters (9.6)
 
@@ -160,15 +166,17 @@ l'information *peut* (avec une certaine probabilité) se trouver dans un autre e
 L'intérêt des filtres bloom, c'est qu'ils sont très compacts et permettent de répondre
 à des recherches multi-colonnes à partir d'un seul index.
 
+Voir cet article de Depesz : [Waiting for 9.6 – Bloom index contrib module](https://www.depesz.com/2016/04/11/waiting-for-9-6-bloom-index-contrib-module/)
+
 # Partionnement
 
 La partitionnement existait sous forme d'héritage de table. Cependant cette approche
 avait l'inconvénient de nécessiter la mise en place de trigger pour router les
-écritures dans bonnes tables. L'impact sur les performances était important.
+écritures dans les bonnes tables. L'impact sur les performances était important.
 
 La version 10 intègre une gestion native du partitionnement. Ainsi, il n'est plus
-nécessaire de mettre en place des triggers. Cela facilite grandement les opérations
-de maintenance et les performances sont améliorées.
+nécessaire de mettre en place des triggers. Les opérations de maintenance sont facilitées
+et les performances sont améliorées.
 
 ## Types de partitionnement (10, 11)
 
@@ -177,6 +185,11 @@ PostgreSQL supporte le partitionnement par :
   * Liste - `LIST` (10)
   * Intervalle - `RANGE` (10)
   * Hashage - `HASH` (11)
+
+Voir ces articles de Depesz :
+
+  * [Waiting for PostgreSQL 10 – Implement table partitioning](https://www.depesz.com/2017/02/06/waiting-for-postgresql-10-implement-table-partitioning/)
+  * [Waiting for PostgreSQL 11 – Add hash partitioning](https://www.depesz.com/2017/11/10/waiting-for-postgresql-11-add-hash-partitioning/)
 
 ## Index (11)
 
@@ -188,7 +201,7 @@ une table partitionnée.
 
 ## Exclusion de partition (11)
 
-Le partition pruning consiste à exclure les partitions inutiles. Postgres s'appuie
+Le *partition pruning* consiste à exclure les partitions inutiles. Postgres s'appuie
 sur les contraintes d'exclusion pour écarter des partitions à la planification.
 
 L'algorithme n'a pas été prévu pour gérer un nombre important de partitions. Sa
@@ -206,7 +219,7 @@ Cette fonctionnalité s'appelle *Runtime Partition Pruning*.
 
 La version 11 apporte de nouveaux algorithmes de jointure et d'agrégation.
 L'idée est de réaliser les opérations de jointures et d'agrégation partition par
-partition lors d'une jointure entre deux tables partitionnées ([Partition and conquer large data with PostgreSQL 10](https://www.pgcon.org/2017/schedule/events/1047.en.html)).
+partition lors d'une jointure entre deux tables partitionnées (Voir [Partition and conquer large data with PostgreSQL 10](https://www.pgcon.org/2017/schedule/events/1047.en.html)).
 
 # Améliorations intrinsèques
 
@@ -218,7 +231,7 @@ bénéficient de ces améliorations. Le temps d'exécution de certaines requête
 
 ## Amélioration de l'exécuteur (10)
 
-L'exécuteur a été amélioré dans la version 10, il maintenant plus performant pour
+L'exécuteur a été amélioré dans la version 10, il est maintenant plus performant pour
 le traitement des expressions. Ce thread mentionne des gains très significatifs : [Faster Expression Processing](https://www.postgresql.org/message-id/20170314065259.ffef4tfhgbsaieoe%40alap3.anarazel.de)
 
 Voir cet extrait du livre [PostgreSQL - Architecture et notions avancées](https://books.google.fr/books?id=LztCDwAAQBAJ&lpg=PA301&ots=Xko2mw6c6S&dq=postgres%20simd&hl=fr&pg=PA300#v=onepage&q&f=false) de Guillaume Lelarge et Julien Rouhaud.
@@ -238,7 +251,7 @@ réalisés sur disque. Certaines requêtes ont vu leur temps d'exécution divis�
 
 ## Just-In-time (11)
 
-La version 11 intègre une infrastructure pour le Just-In-Time (JIT) ou littéralement "compilation à la volée".
+La version 11 intègre une infrastructure pour le Just-In-Time (JIT) ou littéralement "[compilation à la volée](https://fr.wikipedia.org/wiki/Compilation_%C3%A0_la_vol%C3%A9e)".
 Le JIT consiste à compiler la requête pour générer un [bytecode](https://fr.wikipedia.org/wiki/Bytecode) qui sera exécuté.
 
 A nouveau, les gains annoncés sont impressionnants comme en témoigne ces slides de conférence : [JITing PostgreSQL using LLVM](http://anarazel.de/talks/fosdem-2018-02-03/jit.pdf)
@@ -257,13 +270,23 @@ a déjà été freezé. Cette information permet au moteur de sauter les blocs d
 Lors d'une opération de vacuum simple (où le moteur va nettoyer les lignes périmées).
 Le moteur était capable de sauter les blocs où il savait qu'il n'y avait aucune ligne
 à traiter. Néanmoins il devait quand même parcourir l'index, ce qui peut s'avérer coûteux
-avec une table volumineuse. La version 11 permet d'éviter de phénomène. FIXME
+avec une table volumineuse. La version 11 permet d'éviter de phénomène.
 
-## Création index parallélisée (11)
+Un nouveau paramètre fait son apparition : *vacuum_cleanup_index_scale_factor*.
+
+Le moteur peut éviter le parcours de l'index si deux conditions sont réunies :
+
+  * Aucun bloc ne doit être supprimé
+  * Les statistiques sont bien à jour
+
+Le moteur considère que les statistiques ne sont pas à jour si plus de :
+[nombre de lignes insérées] > vacuum_cleanup_index_scale_factor * [nombre de lignes dans la table]
+
+## Création d'index parallélisée (11)
 
 Lors de la création d'un index, le moteur peut utiliser plusieurs processus pour
 réaliser l'opération de tri. En fonction du nombre de processus, le temps de création
-de l'index peut être divisé de 2 à 4.
+de l'index peut être divisé de 2 à 4 environ.
 
 # Pushdown dans les Foreign Data Wrapper (9.6, 10)
 
@@ -273,14 +296,14 @@ C'est l'implémentation dans Postgres de la norme SQL/MED pour "Management of Ex
 Un FDW permet d'accéder à tout type de donnée externe pour peu qu'un FDW existe (voir [Foreign data wrappers](https://wiki.postgresql.org/wiki/Foreign_data_wrappers)).
 
 La communauté maintient un FDW permettant de se connecter à une instance Postgres : *postgres_fdw*.
-Mais ce n'est pas tout, certaines opérations peuvent être "transférées" au serveur distant.
+Mais ce n'est pas tout, certaines opérations peuvent être "poussées" au serveur distant. C'est ce qu'on appelle le *pushdown*
 
-Avant la version 9.6, une opération de tri ou une jointure se traduisant par le
+Avant la version 9.6, une opération de tri ou une jointure se traduisait par le
 rapatriement de toutes les données et le serveur effectuait le tri et/ou la jointure
 en local.
 
 La version 9.6 inclue le sort et join pushdown. Ainsi, l'opération de tri ou de
-jointure peut être réalisée par le serveur distant. D'une part celà décharge le
+jointure peut être réalisée par le serveur distant. D'une part cela décharge le
 serveur exécutant la requête, d'autre part, le serveur distant va pouvoir utiliser
 l'algorithme de jointure adéquat ou un index pour le tri des données.
 
@@ -289,9 +312,23 @@ Enfin, la version 10 inclue aussi l'exécution des agrégations et jointures de 
 
 # Futur
 
+Le feature freeze de la version 11 s'est terminé le 7 Avril : [PostgreSQL 11 Release Management Team & Feature Freeze](https://www.postgresql.org/message-id/AA141CD1-19CB-414F-98CB-87A32F397295%40postgresql.org)
+
+Cela signifie que certaines fonctionnalités n'ont pas été implémentées, certaines
+étant jugées pas assez matures pour être intégrées. D'autres ne sont encore qu'à
+l'état de discussion ou de démonstration.
+
+A noter que certaines fonctionnalités peuvent être retirées après le feature freeze
+si les développeurs considèrent qu'elles ne sont pas stables ou que
+l'implémentation doit être revue.
+
+Par chance, les développeurs des différentes sociétées qui contribuent au développement
+de Postgres, communiquent sur leur travaux en cours. Cela donne un aperçu des
+tendances des futures fonctionnalités.
+
 ## Extension du système de stockage
 
-La communauté travaille pour rendre le système de stockage modulaire (*pluggable storage*). Ainsi,
+La communauté travaille pour rendre le système de stockage modulaire (*[pluggable storage](https://www.postgresql.org/message-id/flat/20160812231527.GA690404%40alvherre.pgsql#20160812231527.GA690404@alvherre.pgsql)*). Ainsi,
 le moteur pourrait avoir différents moteurs de stockage. Dans les travaux en
 cours, on peut compter :
 
@@ -299,7 +336,8 @@ cours, on peut compter :
   * La compression des tables
   * Le stockage en mémoire (*In-memory*)
   * [zheap](https://github.com/EnterpriseDB/zheap) : ce moteur permettrait de
-  mettre à jour les enregistrements directement dans les tables (sans dupliquer les données).
+  mettre à jour les enregistrements directement dans les tables. Sans dupliquer
+  les données dans les tables selon le modèle MVCC. Et ainsi, s'affranchir de la fragmentation et des vacuum.
 
 ## Extension du JIT
 
@@ -323,7 +361,7 @@ Couplé à un stockage colonne, les gains peuvent être impressionnants :
 Le sujet du sharding revient régulièrement. D'une certaine façon, l'usage des
 FDW répond en partie à ce besoin. Néanmois, PostgreSQL a encore des progrès à
 faire dans ce domaine. Par exemple, s'il effectue une requête d'agrégation portant
-sur plusieurs tables distantes, le moteur requêter chaque serveur distant de manière
-séquentielle. Une piste d'amélioration serait de requêtes tous les serveurs distants
+sur plusieurs tables distantes, le moteur doit requêter chaque serveur distant de manière
+séquentielle. Une piste d'amélioration serait de requêter tous les serveurs distants
 de manière asynchrone. Ainsi, l'opération serait parallélisée sur tous les serveurs distants.
 Voir cette présentation [FDW-based Sharding Update and Future](https://fr.slideshare.net/masahikosawada98/fdwbased-sharding-update-and-future).

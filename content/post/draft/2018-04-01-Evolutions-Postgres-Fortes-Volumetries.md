@@ -28,7 +28,7 @@ preview = true
 Depuis quelques années, PostgreSQL s'est doté de nombreuses améliorations pour le
 traitement des grosses volumétries.
 
-Ce premier article va tenter de les lister, nous verront qu'elles peuvent être de différents ordres :
+Ce premier article va tenter de les lister, nous verrons qu'elles peuvent être de différents ordres :
 
   * Parallélisation
   * Amélioration intrinsèque du traitement des requêtes
@@ -55,18 +55,18 @@ résultat réel.
 ## GROUPING SETS (9.5)
 
 Toujours avec la version 9.5, PostgreSQL dispose de nouvelles clauses permettant
-de faire des agrégations multiples appelé [GROUPING SETS](https://www.postgresql.org/docs/current/static/queries-table-expressions.html#QUERIES-GROUPING-SETS).
+de faire des agrégations multiples appelées [GROUPING SETS](https://www.postgresql.org/docs/current/static/queries-table-expressions.html#QUERIES-GROUPING-SETS).
 Les nouveaux agrégats sont : `GROUPING SETS`, `ROLLUP`, `CUBE`.
 
 Voir cet article de Depesz : [Waiting for 9.5 – Support GROUPING SETS, CUBE and ROLLUP](https://www.depesz.com/2015/05/24/waiting-for-9-5-support-grouping-sets-cube-and-rollup/)
 
-A noter que la version 10 apporte des gains très significatifs grâce à l'amélioration
-des fonctions de hashage.
+À noter que la version 10 apporte des gains très significatifs grâce à l'amélioration
+des fonctions de hachage.
 
 
-## Heritage sur les foreign tables (9.5)
+## Héritage sur les foreign tables (9.5)
 
-Depuis la version 9.5 il est possible de declarer des foreign tables comme tables enfant.
+Depuis la version 9.5, il est possible de déclarer des foreign tables comme tables enfants.
 Il est ainsi possible de distribuer les données sur différents serveurs et d'y
 accéder depuis une seule instance. Cette technique s'apparente à du sharding.
 
@@ -103,9 +103,11 @@ Ainsi le moteur est maintenant capable d'utiliser plusieurs processus pour ces t
   * Bitmap heap scan
   * Index Only Scan
 
+FIXME: peut être indiquer que cela ne concerne que les BTree ?
+
 ## Jointures (9.6, 10, 11)
 
-En plus de la parallisation des parcours séquentiel, la version 9.6 apportait la
+En plus de la parallélisation des parcours séquentiels, la version 9.6 apportait la
 possibilité de paralléliser les opérations de jointure aux noeuds suivants:
 
   * Nested-loop
@@ -115,13 +117,15 @@ La version 10 a permis d'étendre la parallélisation au noeud de type *merge jo
 
 Enfin, la version 11 apporte un gros changement avec le *parallel hash join*.
 Avec les versions précédentes, chaque worker devait construire sa propre table
-de hashage. Il y avait une grosse perte d'efficacité :
+de hachage. Il y avait une grosse perte d'efficacité :
 
-  * Plusieurs worker faisaient en réalité la même opération
-  * Une même table de hashage existait plusieurs fois en mémoire
+  * Plusieurs workers faisaient en réalité la même opération (donc utilisation
+	de plus de ressources de type CPU)
+  * Une même table de hachage existait plusieurs fois en mémoire (donc
+	utilisation de plus de ressources de type IO)
 
-Le *parallel hash join* permet aux worker de paralléliser la création de cette
-table de la hashage et de partager une seule table de hashage.
+Le *parallel hash join* permet aux workers de paralléliser le remplissage
+d'une seule table de hachage, partagée.
 
 L'auteur principal de cette fonctionnalité a écrit un excellent article : [Parallel Hash for PostgreSQL ](https://write-skew.blogspot.fr/2018/01/parallel-hash-for-postgresql.html)
 
@@ -130,14 +134,14 @@ L'auteur principal de cette fonctionnalité a écrit un excellent article : [Par
 Toujours avec la version 9.6, le moteur est capable d'utiliser plusieurs workers
 pour réaliser des opérations d'agrégation (`COUNT`, `SUM`...).
 
-En réalité, chaque worker fait une agrégation partielle *Partial Aggregate*, puis,
+En réalité, chaque worker fait une agrégation partielle *Partial Aggregate*, puis
 un noeud parent se charge de faire l'agrégation finale *Finalize Aggregate*.
 
 
 ## Union d'ensembles (11)
 
-La version 11 apporte la possibilité de paralléliser les opérations d'union d'ensemble (noeud *append*).
-Par exemple lors de l'utilisation d'un `UNION` ou lorsque des tables sont héritées.
+La version 11 apporte la possibilité de paralléliser les opérations d'union d'ensemble (noeud *append*),
+par exemple lors de l'utilisation d'un `UNION` ou lorsque des tables sont héritées.
 
 # Méthodes d'accès
 
@@ -147,18 +151,18 @@ En réalité, au sens large, dans le domaine des bases de données, un index est
 
 ## Index BRIN (9.5)
 
-Depuis la version 9.5, PostgreSQL propose un type d'index particulier : BRIN pour Bloc Range INdexes.
+Depuis la version 9.5, PostgreSQL propose un type d'index particulier : BRIN pour Block Range INdexes.
 
 Ce type d'index contient le résumé d'un ensemble de blocs. Ils sont donc très compacts et tiennent facilement en mémoire.
 
 Ils sont particulièrement adaptés aux fortes volumétries avec des requêtes manipulant
-un gros volume de données. Attention, il est très important qu'il y ait une forte corrélation entre les données et leur emplacement.
+un gros volume de données. Attention, il est très important qu'il y ait une forte corrélation entre les données et leur emplacement pour que leur efficacité soit optimale.
 
 J'ai présenté le fonctionnement de ce type d'index lors du PGDay France 2016 à Lille : [Index BRIN - Fonctionnement et usages possibles](http://blog.anayrat.info/talk/2016/05/31/index-brin---fonctionnement-et-usages-possibles/)
 
 ## BLOOM filters (9.6)
 
-Depuis la version 9.6 il est possible d'utiliser des [filtres de Bloom](https://fr.wikipedia.org/wiki/Filtre_de_Bloom). Sans
+Depuis la version 9.6, il est possible d'utiliser des [filtres de Bloom](https://fr.wikipedia.org/wiki/Filtre_de_Bloom). Sans
 rentrer dans les détails, ce type de structure de donnée permet d'affirmer avec
 certitude que l'information recherchée ne se trouve pas un ensemble. Inversement,
 l'information *peut* (avec une certaine probabilité) se trouver dans un autre ensemble.
@@ -170,8 +174,8 @@ Voir cet article de Depesz : [Waiting for 9.6 – Bloom index contrib module](ht
 
 # Partionnement
 
-La partitionnement existait sous forme d'héritage de table. Cependant cette approche
-avait l'inconvénient de nécessiter la mise en place de trigger pour router les
+La partitionnement existait sous forme d'héritage de table. Cependant, cette approche
+avait l'inconvénient de nécessiter la mise en place de triggers pour router les
 écritures dans les bonnes tables. L'impact sur les performances était important.
 
 La version 10 intègre une gestion native du partitionnement. Ainsi, il n'est plus
@@ -184,7 +188,7 @@ PostgreSQL supporte le partitionnement par :
 
   * Liste - `LIST` (10)
   * Intervalle - `RANGE` (10)
-  * Hashage - `HASH` (11)
+  * Hachage - `HASH` (11)
 
 Voir ces articles de Depesz :
 
@@ -223,9 +227,9 @@ partition lors d'une jointure entre deux tables partitionnées (Voir [Partition 
 
 # Améliorations intrinsèques
 
-## Fonctions de hashage (10)
+## Fonctions de hachage (10)
 
-Les fonctions de hashage ont été améliorées dans la version 10. Ainsi, les opérations
+Les fonctions de hachage ont été améliorées dans la version 10. Ainsi, les opérations
 d'agrégat (`GROUP BY`, `GROUPING SETS`, `CUBE`...) ainsi que les noeuds type *bitmap scans*
 bénéficient de ces améliorations. Le temps d'exécution de certaines requêtes a été divisé par deux!
 
@@ -254,23 +258,23 @@ réalisés sur disque. Certaines requêtes ont vu leur temps d'exécution divis�
 La version 11 intègre une infrastructure pour le Just-In-Time (JIT) ou littéralement "[compilation à la volée](https://fr.wikipedia.org/wiki/Compilation_%C3%A0_la_vol%C3%A9e)".
 Le JIT consiste à compiler la requête pour générer un [bytecode](https://fr.wikipedia.org/wiki/Bytecode) qui sera exécuté.
 
-A nouveau, les gains annoncés sont impressionnants comme en témoigne ces slides de conférence : [JITing PostgreSQL using LLVM](http://anarazel.de/talks/fosdem-2018-02-03/jit.pdf)
+À nouveau, les gains annoncés sont impressionnants comme en témoignent ces slides de conférence : [JITing PostgreSQL using LLVM](http://anarazel.de/talks/fosdem-2018-02-03/jit.pdf)
 
 # Taches de maintenance
 
 ## VACUUM FREEZE (9.6)
 
 Avant la version 9.6, un `VACUUM FREEZE` entraînait la lecture de l'intégralité
-de la table. Même si des lignes avaient déjà été "freezée". La version 9.6 ajoute
+de la table, même si des lignes avaient déjà été "freezées". La version 9.6 ajoute
 une information supplémentaire dans la *visibility map* afin de savoir si un bloc
-a déjà été freezé. Cette information permet au moteur de sauter les blocs déjà freezé.
+a déjà été freezé. Cette information permet au moteur de sauter les blocs déjà freezés.
 
 ## Réduction des parcours d'index lors des opérations de VACUUM (11)
 
-Lors d'une opération de vacuum simple (où le moteur va nettoyer les lignes périmées).
-Le moteur était capable de sauter les blocs où il savait qu'il n'y avait aucune ligne
+Lors d'une opération de vacuum simple (où le moteur va nettoyer les lignes périmées),
+le moteur était capable de sauter les blocs où il savait qu'il n'y avait aucune ligne
 à traiter. Néanmoins il devait quand même parcourir l'index, ce qui peut s'avérer coûteux
-avec une table volumineuse. La version 11 permet d'éviter de phénomène.
+avec une table volumineuse. La version 11 permet d'éviter ce phénomène.
 
 Un nouveau paramètre fait son apparition : *vacuum_cleanup_index_scale_factor*.
 
@@ -290,24 +294,24 @@ de l'index peut être divisé de 2 à 4 environ.
 
 # Pushdown dans les Foreign Data Wrapper (9.6, 10)
 
-Petit rappel, les Foreign Data Wrapper permettent d'accéder à des données externe.
-C'est l'implémentation dans Postgres de la norme SQL/MED pour "Management of External Data".
+Petit rappel, les Foreign Data Wrapper permettent d'accéder à des données externes.
+C'est l'implémentation dans PostgreSQL de la norme SQL/MED (pour "Management of External Data").
 
 Un FDW permet d'accéder à tout type de donnée externe pour peu qu'un FDW existe (voir [Foreign data wrappers](https://wiki.postgresql.org/wiki/Foreign_data_wrappers)).
 
-La communauté maintient un FDW permettant de se connecter à une instance Postgres : *postgres_fdw*.
-Mais ce n'est pas tout, certaines opérations peuvent être "poussées" au serveur distant. C'est ce qu'on appelle le *pushdown*
+La communauté maintient un FDW permettant de se connecter à une instance PostgreSQL : *postgres_fdw*.
+Mais ce n'est pas tout, certaines opérations peuvent être "poussées" au serveur distant. C'est ce qu'on appelle le *pushdown*.
 
 Avant la version 9.6, une opération de tri ou une jointure se traduisait par le
 rapatriement de toutes les données et le serveur effectuait le tri et/ou la jointure
 en local.
 
-La version 9.6 inclue le sort et join pushdown. Ainsi, l'opération de tri ou de
-jointure peut être réalisée par le serveur distant. D'une part cela décharge le
+La version 9.6 inclut le "sort pushdown" et le "join pushdown". Ainsi, l'opération de tri ou de
+jointure peut être réalisée par le serveur distant. D'une part, cela décharge le
 serveur exécutant la requête, d'autre part, le serveur distant va pouvoir utiliser
 l'algorithme de jointure adéquat ou un index pour le tri des données.
 
-Enfin, la version 10 inclue aussi l'exécution des agrégations et jointures de type
+Enfin, la version 10 inclut aussi l'exécution des agrégations et jointures de type
 `FULL JOIN` sur le serveur distant.
 
 # Futur
@@ -318,8 +322,8 @@ Cela signifie que certaines fonctionnalités n'ont pas été implémentées, cer
 étant jugées pas assez matures pour être intégrées. D'autres ne sont encore qu'à
 l'état de discussion ou de démonstration.
 
-A noter que certaines fonctionnalités peuvent être retirées après le feature freeze
-si les développeurs considèrent qu'elles ne sont pas stables ou que
+À noter que certaines fonctionnalités peuvent être retirées après le feature freeze
+si les développeurs considèrent qu'elles ne sont pas suffisamment stables ou que
 l'implémentation doit être revue.
 
 Par chance, les développeurs des différentes sociétées qui contribuent au développement
@@ -341,7 +345,7 @@ cours, on peut compter :
 
 ## Extension du JIT
 
-L'auteur du JIT prévoit de l'étendre au reste du moteur (agrégation, hashage, tris...).
+L'auteur du JIT prévoit de l'étendre au reste du moteur (agrégation, hachage, tris...).
 
 Dans les pistes évoquées, il y aurait aussi la mise en cache et le partage du bytecode
 entre toutes les sessions. Cela permettrait d'utiliser le JIT même dans le cas

@@ -47,7 +47,7 @@ ces nouveautés peuvent être retirées.
 
 ## TABLESAMPLE (9.5)
 
-L'ordre `TABLESAMPLE` (apparu avec la verison 9.5) permet de faire une requête
+L'ordre `TABLESAMPLE` (apparu avec la version 9.5) permet de faire une requête
 sur un échantillon. Cela permet d'avoir un aperçu du résultat. Comme en
 statistique, plus l'échantillon sera important, plus le résultat sera proche du
 résultat réel.
@@ -99,19 +99,19 @@ La version 10 a permis d'étendre la parallélisation aux parcours d'index.
 
 Ainsi le moteur est maintenant capable d'utiliser plusieurs processus pour ces types de parcours :
 
-  * Index Scan
-  * Bitmap heap scan
-  * Index Only Scan
+  * *Index Scan*
+  * *Bitmap heap scan*
+  * *Index Only Scan*
 
 FIXME: peut être indiquer que cela ne concerne que les BTree ?
 
 ## Jointures (9.6, 10, 11)
 
 En plus de la parallélisation des parcours séquentiels, la version 9.6 apportait la
-possibilité de paralléliser les opérations de jointure aux noeuds suivants:
+possibilité de paralléliser les opérations de jointure aux noeuds suivants :
 
-  * Nested-loop
-  * Hash join
+  * *Nested-loop*
+  * *Hash join*
 
 La version 10 a permis d'étendre la parallélisation au noeud de type *merge join*.
 
@@ -134,9 +134,8 @@ L'auteur principal de cette fonctionnalité a écrit un excellent article : [Par
 Toujours avec la version 9.6, le moteur est capable d'utiliser plusieurs workers
 pour réaliser des opérations d'agrégation (`COUNT`, `SUM`...).
 
-En réalité, chaque worker fait une agrégation partielle *Partial Aggregate*, puis
-un noeud parent se charge de faire l'agrégation finale *Finalize Aggregate*.
-
+En réalité, chaque worker fait une agrégation partielle (*Partial Aggregate*), puis
+un noeud parent se charge de faire l'agrégation finale (*Finalize Aggregate*).
 
 ## Union d'ensembles (11)
 

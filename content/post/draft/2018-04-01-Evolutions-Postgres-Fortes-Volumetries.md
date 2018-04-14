@@ -97,13 +97,13 @@ noeud *Parallel Seq Scan*.
 
 La version 10 a permis d'étendre la parallélisation aux parcours d'index.
 
-Ainsi le moteur est maintenant capable d'utiliser plusieurs processus pour ces types de parcours :
+Ainsi le moteur est maintenant capable d'utiliser plusieurs processus pour ces types
+de parcours (uniquement pour les index de type BTree) :
 
   * *Index Scan*
   * *Bitmap heap scan*
   * *Index Only Scan*
 
-FIXME: peut être indiquer que cela ne concerne que les BTree ?
 
 ## Jointures (9.6, 10, 11)
 

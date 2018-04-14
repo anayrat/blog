@@ -25,7 +25,7 @@ preview = true
 
 # Introduction
 
-Since few years, postgreSQL received several enhancements to process high volumes databases.
+Since few years, PostgreSQL received several enhancements to process high volumes databases.
 
 This first post will try to list them. We will see that they can be of different types:
 
@@ -40,7 +40,7 @@ This first post will try to list them. We will see that they can be of different
 
   Note: this article was written during the development phase of version 11.
   I integrated new features of version 11. As long as it is not released,
-  these fatures can be removed.
+  these features can be removed.
 
 # SQL features
 

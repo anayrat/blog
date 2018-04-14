@@ -42,6 +42,8 @@ This first post will try to list them. We will see that they can be of different
   I integrated new features of version 11. As long as it is not released,
   these features can be removed.
 
+I thank Guillaume Lelarge for his review of this article ;).
+
 # SQL features
 
 ## TABLESAMPLE (9.5)
@@ -353,3 +355,13 @@ if it performs an aggregate query on multiple remote tables, he must request eac
 remote server sequentially. An improvement track would be to query all remote servers
 asynchronously. Thus, the operation would be parallelized on all remote servers.
 See this presentation: [FDW-based Sharding Update and Future](https://fr.slideshare.net/masahikosawada98/fdwbased-sharding-update-and-future).
+
+# Conclusion
+
+> PostgreSQL rocks!
+>
+> -- <cite>Guillaume Lelarge</cite>
+
+This article has allowed us to see different developments of PostgreSQL in the
+world of big databases. Of course, there is still work to be done, but what has
+already been done is important and allows us to manage impressive databases.

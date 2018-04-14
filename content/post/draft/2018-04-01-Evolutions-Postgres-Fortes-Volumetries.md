@@ -43,6 +43,8 @@ Note : cet article a été écrit durant la phase de développement de la versio
 J'ai intégré des nouveautés de la version 11. Tant que celle-ci n'est pas sortie,
 ces nouveautés peuvent être retirées.
 
+Je remercie au passage Guillaume Lelarge pour la relecture de cet article ;).
+
 # SQL
 
 ## TABLESAMPLE (9.5)
@@ -368,3 +370,13 @@ sur plusieurs tables distantes, le moteur doit requêter chaque serveur distant 
 séquentielle. Une piste d'amélioration serait de requêter tous les serveurs distants
 de manière asynchrone. Ainsi, l'opération serait parallélisée sur tous les serveurs distants.
 Voir cette présentation [FDW-based Sharding Update and Future](https://fr.slideshare.net/masahikosawada98/fdwbased-sharding-update-and-future).
+
+# Conclusion
+
+> PostgreSQL rocks!
+>
+> -- <cite>Guillaume Lelarge</cite>
+
+Cet article nous a permis de voir les différentes avancées de PostgreSQL dans le
+monde des grosses volumétries. Il reste évidemment encore du travail, mais ce qui
+a déjà été réalisé est important et permet de gérer des bases imposantes.

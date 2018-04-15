@@ -25,9 +25,9 @@ preview = true
 
 # Introduction
 
-Since few years, PostgreSQL received several enhancements to process high volumes databases.
+On the last few years, PostgreSQL received several enhancements to process high-volume databases.
 
-This first post will try to list them. We will see that they can be of different types:
+This first post will try to list them. We will see that they can be splitted in different kinds:
 
   * Parallelism
   * Improvement of query processing
@@ -40,7 +40,7 @@ This first post will try to list them. We will see that they can be of different
 
   Note: this article was written during the development phase of version 11.
   I integrated new features of version 11. As long as it is not released,
-  these features can be removed.
+  these features might be removed.
 
 I thank Guillaume Lelarge for his review of this article ;).
 
@@ -48,8 +48,8 @@ I thank Guillaume Lelarge for his review of this article ;).
 
 ## TABLESAMPLE (9.5)
 
-`TABLESAMPLE` clause (since PG 9.5) allows to make a request on a sample.
-This gives an overview of the result. As in statistics, larger is the sample, closer
+`TABLESAMPLE` clause (since PG 9.5) allows to execute a query on a data sample.
+This gives an overview of the result. As in most things about statistics, the larger the sample, closer
 the result will be to the real result.
 
 ## GROUPING SETS (9.5)
@@ -60,28 +60,28 @@ New aggregates are: `GROUPING SETS`, `ROLLUP`, `CUBE`.
 
 See this article by Depesz: [Waiting for 9.5 – Support GROUPING SETS, CUBE and ROLLUP](https://www.depesz.com/2015/05/24/waiting-for-9-5-support-grouping-sets-cube-and-rollup/)
 
-Note that version 10 brings very significant gains thanks to improvement in
+Note that version 10 gives very significant gains, thanks to improvement in
 hash functions.
 
 
 ## Foreign table inheritance (9.5)
 
-Since version 9.5 it is possible to declare foreign tables as child tables.
+Since version 9.5, you can use foreign tables as child tables.
 It is thus possible to distribute data on different servers and to
-access from a single instance. This technique is similar to sharding.
+access all of them from a single instance. This is similar to sharding.
 
-See this article by Michael Paquier: [Postgres 9.5 feature highlight - Scale-out with Foreign Tables now part of Inheritance Trees](http://paquier.xyz/postgresql-2/postgres-9-5-feature-highlight-foreign-table-inheritance/)
+See this article written by Michael Paquier: [Postgres 9.5 feature highlight - Scale-out with Foreign Tables now part of Inheritance Trees](http://paquier.xyz/postgresql-2/postgres-9-5-feature-highlight-foreign-table-inheritance/)
 
 # Parallelism
 
-PostgreSQL being multi-process, the processing of a query was only done
-on one core. There are many posts where users complain about this operation:
+PostgreSQL being multi-processes, a query was executed on a single core.
+There are many posts in which users complain about this:
 
   * [Query parallelization for single connection in Postgres](https://stackoverflow.com/questions/32629988/query-parallelization-for-single-connection-in-postgres?rq=1&utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa)
   * [Any way to use >1 Core in PostgreSQL for a single Connection/Query?](https://stackoverflow.com/questions/18268130/any-way-to-use-1-core-in-postgresql-for-a-single-connection-query)
 
-Since 9.6, Postgres is able to call multiple processes (called *workers*)
-for the processing of a request. This major breakthrough was the culmination of
+Since 9.6, Postgres forks multiple processes (called *workers*)
+to execute a single query. This major breakthrough was the culmination of
 several years of work. It took a lot of infrastructure
 to allow Postgres to use multiple processes. See this article from
 Robert Haas: [Parallelism Progress](http://rhaas.blogspot.fr/2013/10/parallelism-progress.html)
@@ -89,7 +89,7 @@ Robert Haas: [Parallelism Progress](http://rhaas.blogspot.fr/2013/10/parallelism
 ## Sequential Scan (9.6)
 
 Since 9.6, PostgreSQL is able to use multiple processes to parallelize read
-operation. This process matches to node *Parallel Seq Scan*.
+operation on tables. The related query node is *Parallel Seq Scan*.
 
 
 ## Index Scan (10)
@@ -104,16 +104,16 @@ So Postgres is now able to use several processes for these types of scan (only w
 
 ## Joins (9.6, 10, 11)
 
-In addition to the parallelization of the sequential scan, Postgres 9.6 brought the
-possibility to parallelize join operations to the following nodes:
+In addition to the parallelization of the sequential scan, Postgres 9.6 also
+has the capacity to parallelize join operations for the following nodes:
 
   * *Nested-loop*
   * *Hash join*
 
-Postgres 10 allowed to extend the parallelization to the *merge join* node.
+Postgres 10 extends the parallelization to the *merge join* node.
 
 Finally, version 11 brings a big change with the *parallel hash join*.
-With previous versions, every worker had to build his own hash table.
+With previous versions, every worker had to build its own hash table.
 There was a big loss of efficiency:
 
    * Several workers were doing the same operation
@@ -122,21 +122,21 @@ There was a big loss of efficiency:
 The *parallel hash join* allows workers to parallelize the creation of this
 hash table and share a single hash table.
 
-The main author of this feature has written an excellent article: [Parallel Hash for PostgreSQL ](https://write-skew.blogspot.fr/2018/01/parallel-hash-for-postgresql.html)
+The main author of this feature wrote a great article: [Parallel Hash for PostgreSQL ](https://write-skew.blogspot.fr/2018/01/parallel-hash-for-postgresql.html)
 
 ## Aggregation (9.6)
 
-Still with version 9.6, Postgres is able to use multiple workers
+Still with version 9.6, Postgres can use multiple workers
 to perform aggregation operations (`COUNT`, `SUM`...).
 
-In fact, each worker makes a partial aggregation (*Partial Aggregate*), then,
-a parent node is responsible for finalizing (*Finalize Aggregate*).
+Actually, each worker makes a partial aggregation (*Partial Aggregate*), then,
+a parent node is responsible for finalizing the operation (*Finalize Aggregate*).
 
 
 ## Union of sets (11)
 
-Version 11 provides the ability to parallelize unions (node *append*).
-For example, when using `UNION` or when tables are inherited.
+Version 11 provides the ability to parallelize unions (node *append*),
+for example when using `UNION` or when tables are inherited.
 
 
 # Access methods
@@ -156,11 +156,11 @@ This type of index contains the summary of a set of blocks. They are very compac
 They are particularly suitable to high volumes with queries manipulating
 a large amount of data. Be careful, it is very important that there is a strong correlation between the data and their location.
 
-I presented the operation of this index during the PGDay France 2016 in Lille: [BRIN indexes - How they works and usages?](https://blog.anayrat.info/en/talk/2016/05/31/brin-indexes---how-they-works-and-usages/)
+I gave a talk on this kind of indexes during the PGDay France 2016 in Lille: [BRIN indexes - How they works and usages?](https://blog.anayrat.info/en/talk/2016/05/31/brin-indexes---how-they-works-and-usages/)
 
 ## BLOOM filters (9.6)
 
-Since version 9.6 it is possible to use [Bloom filters](https://en.wikipedia.org/wiki/Bloom_filter).
+Since version 9.6, it is possible to use [Bloom filters](https://en.wikipedia.org/wiki/Bloom_filter).
 Without going into details, this type of data structure used to say with certainty
 that the information sought is not in a set. Conversely, information *may*
 (with some probability) be in another set.
@@ -168,13 +168,13 @@ that the information sought is not in a set. Conversely, information *may*
 The advantage of bloom filters is that they are very compact and allow to respond
 to multi-column searches from a single index.
 
-See this article by Depesz : [Waiting for 9.6 – Bloom index contrib module](https://www.depesz.com/2016/04/11/waiting-for-9-6-bloom-index-contrib-module/)
+See this article by Depesz: [Waiting for 9.6 – Bloom index contrib module](https://www.depesz.com/2016/04/11/waiting-for-9-6-bloom-index-contrib-module/)
 
 # Partitioning
 
 Partitioning existed as a table inheritance. However this approach
-had the disadvantage of requiring to set up triggers to route writes in the right tables.
-The impact on performance was important.
+has the disadvantage of requiring to set up triggers to route writes in the right tables.
+The performance impact was important.
 
 Version 10 includes native partitioning management. So, it is no longer
 necessary to set up triggers. Maintenance operations are facilitated
@@ -188,7 +188,7 @@ PostgreSQL supports partition by:
   * Interval - `RANGE` (10)
   * Hash - `HASH` (11)
 
-See theses articles by  Depesz :
+See theses articles by Depesz:
 
   * [Waiting for PostgreSQL 10 – Implement table partitioning](https://www.depesz.com/2017/02/06/waiting-for-postgresql-10-implement-table-partitioning/)
   * [Waiting for PostgreSQL 11 – Add hash partitioning](https://www.depesz.com/2017/11/10/waiting-for-postgresql-11-add-hash-partitioning/)
@@ -210,7 +210,7 @@ on exclusion constraints to exclude partitions from planning.
 The algorithm was not designed to handle a large number of partitions. His
 complexity is linear depending on the number of partitions ([How many table partitions is too many in Postgres?](https://stackoverflow.com/a/6131446))
 
-To fix this, version 11 incorporates a new, more efficient search algorithm: *Faster Partition Pruning*
+To fix this, version 11 includes a new, more efficient search algorithm: *Faster Partition Pruning*
 
 Finally, Postgres could exclude partitions only during the planning.
 With version 11, the engine is able to exclude a partition during execution.
@@ -232,14 +232,14 @@ as well as the nodes type *bitmap scans* benefit from these improvements. The ex
 
 ## Executor improvements (10)
 
-The executor has been improved in version 10, it is now more efficient expressions processing.
+The executor has been improved in version 10, it is now more efficient with expressions processing.
 This thread mentions very significant gains: [Faster Expression Processing](https://www.postgresql.org/message-id/20170314065259.ffef4tfhgbsaieoe%40alap3.anarazel.de)
 
 ## Sorts improvements
 
 ### Abbreviated keys (9.5)
 
-Sorting algorithm has been revised with version 9.5, which makes better use of processor's cache.
+Sorting algorithm has been reworked with version 9.5, which makes better use of processor's cache.
 Gains were reported between 40 and 70% (see [Use abbreviated keys for faster sorting of text datums](http://pgeoghegan.blogspot.fr/2015/01/abbreviated-keys-exploiting-locality-to.html)).
 
 ### External sorts improvements (10)
@@ -249,22 +249,22 @@ Version 10 also brings very significant gains when sorts are made on disk. Some 
 ## Just-In-time (11)
 
 Version 11 includes an infrastructure for [Just-In-Time (JIT)](https://en.wikipedia.org/wiki/Just-in-time_compilation).
-JIT compile the query to generate [bytecode](https://en.wikipedia.org/wiki/Bytecode) which will be executed.
+JIT compiles the query to generate [bytecode](https://en.wikipedia.org/wiki/Bytecode) which will be executed.
 
-Once again, announced gains are impressive as evidenced by these slides: [JITing PostgreSQL using LLVM](http://anarazel.de/talks/fosdem-2018-02-03/jit.pdf)
+Once again, gains sound impressive as showed by these slides: [JITing PostgreSQL using LLVM](http://anarazel.de/talks/fosdem-2018-02-03/jit.pdf)
 
 # Maintenance tasks
 
 ## VACUUM FREEZE (9.6)
 
-Before version 9.6, a `VACUUM FREEZE` read the whole table. Even if lines had already
-been frozen". Version 9.6 adds additional information to the *visibility map*
+Before version 9.6, a `VACUUM FREEZE` reads the whole table, even if tuples had already
+been frozen. Version 9.6 adds additional information to the *visibility map*
 to see if a block has already been frozen. This information allows Postgres to skip blocks already frozen.
 
 ## Reduce index scan during VACUUM (11)
 
-During a simple vacuum (where postgres will clean the old lines). Postgres was able
-to skip blocks where he knew there was no line to deal with. However, he still had
+During a simple vacuum (where postgres will clean the dead tuples), Postgres was able
+to skip blocks where it knew there was no line to deal with. However, it still had
 to scan the index, which can be expensive with a large table. Version 11 makes it
 possible to avoid unnecessary index scan.
 
@@ -281,7 +281,7 @@ Postgres considers that the statistics are stalled if more than:
 ## Parallel create index (11)
 
 When creating an index, Postgres can use multiple processes to perform sort operation.
-Depending on the number of processes, the creation time of the index can be divided from 2 to 4 approximately.
+Depending on the number of processes, the creation time of the index can be divided by 2 to 4 approximately.
 
 # Foreign Data Wrapper pushdown (9.6, 10)
 
@@ -297,7 +297,7 @@ But that's not all, some operations can be "pushed" to the remote server. This i
 Prior to Version 9.6, a sort or join resulted in the download of all the data and the server performed sort and/or join locally.
 
 Version 9.6 includes sort and join pushdown. Thus, sort or join operation can be
-performed by the remote server. On the one hand it unloads the server running the
+performed by the remote server. On the one hand, there is less load on the local server running the
 query, on the other hand, the remote server will be able to use appropriate join
 algorithm or an index for sorting the data.
 
@@ -312,8 +312,8 @@ This means that some features have not been implemented, some of which are consi
 not mature enough to be integrated. Others are still in the state of discussion
 or demonstration.
 
-Note that some features can be removed after the feature freeze if the developers
-consider that they are not stable or their the implementation must be revised.
+Note that some features might be removed after the feature freeze if the developers
+consider that they are not stable enough or that their implementation must be changed.
 
 Luckily, the developers of the various companies that contribute to the development
 of Postgres, communicate about their roadmap. This gives an overview of the trends
@@ -321,14 +321,14 @@ of the future features.
 
 ## Extension of the storage system
 
-Community works to make modular storage system (*[pluggable storage](https://www.postgresql.org/message-id/flat/20160812231527.GA690404%40alvherre.pgsql#20160812231527.GA690404@alvherre.pgsql)*).
+The community works to make modular storage system (*[pluggable storage](https://www.postgresql.org/message-id/flat/20160812231527.GA690404%40alvherre.pgsql#20160812231527.GA690404@alvherre.pgsql)*).
 Thus, Postgres could have different storage engines. In the work in progress, we can list:
 
   * Columnar storage (associated with vectorization)
   * Table compression
   * *In-memory* storage
   * [zheap](https://github.com/EnterpriseDB/zheap) : this engine would update records
-  directly in the heap. Without duplicating tuples in the tables according to MVCC.
+  directly in the heap, without duplicating tuples in the tables according to MVCC.
   And so, get rid of fragmentation and vacuum.
 
 ## Extension of JIT
@@ -340,7 +340,7 @@ sessions. This would make it possible to use the JIT even in the case of OLTP tr
 
 ## Vectorization
 
-The idea of vectorization would be to process data in batch to use processors's
+The idea behind vectorization would be to process data in batch to use the processors's
 [SIMD instructions](https://en.wikipedia.org/wiki/SIMD).
 
 Coupled with a column storage, gains can be impressive:

@@ -1,7 +1,7 @@
 +++
 title = "Les évolutions de PostgreSQL pour le traitement des fortes volumétries"
-date = 2018-03-27T09:11:00+02:00
-draft = true
+date = 2018-04-16T09:00:00+02:00
+draft = false
 summary = "Depuis quelques années PostgreSQL a vue de nombreuses améliorations pour le traitement des grosses volumétries."
 
 # Tags and categories

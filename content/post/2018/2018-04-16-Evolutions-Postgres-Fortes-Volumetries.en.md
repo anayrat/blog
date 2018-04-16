@@ -1,7 +1,7 @@
 +++
 title = "PostgreSQL's developments for high volumes processing"
-date = 2018-03-27T09:11:00+02:00
-draft = true
+date = 2018-04-16T09:00:00+02:00
+draft = false
 summary = "Since few years, postgreSQL received several enhancements to process high volumes databases."
 
 # Tags and categories

@@ -327,7 +327,7 @@ l'état de discussion ou de démonstration.
 si les développeurs considèrent qu'elles ne sont pas suffisamment stables ou que
 l'implémentation doit être revue.
 
-Par chance, les développeurs des différentes sociétées qui contribuent au développement
+Par chance, les développeurs des différentes sociétés qui contribuent au développement
 de Postgres, communiquent sur leur travaux en cours. Cela donne un aperçu des
 tendances des futures fonctionnalités.
 
@@ -364,7 +364,7 @@ Couplé à un stockage colonne, les gains peuvent être impressionnants :
 ## FDW et exécution asynchrone
 
 Le sujet du sharding revient régulièrement. D'une certaine façon, l'usage des
-FDW répond en partie à ce besoin. Néanmois, PostgreSQL a encore des progrès à
+FDW répond en partie à ce besoin. Néanmoins, PostgreSQL a encore des progrès à
 faire dans ce domaine. Par exemple, s'il effectue une requête d'agrégation portant
 sur plusieurs tables distantes, le moteur doit requêter chaque serveur distant de manière
 séquentielle. Une piste d'amélioration serait de requêter tous les serveurs distants

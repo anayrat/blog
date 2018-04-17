@@ -21,8 +21,6 @@ preview = true
 
 +++
 
-{{% toc %}}
-
 # Introduction
 
 On the last few years, PostgreSQL received several enhancements to process high-volume databases.
@@ -43,6 +41,8 @@ This first post will try to list them. We will see that they can be splitted in 
   these features might be removed.
 
 I thank Guillaume Lelarge for his review of this article ;).
+
+{{% toc %}}
 
 # SQL features
 

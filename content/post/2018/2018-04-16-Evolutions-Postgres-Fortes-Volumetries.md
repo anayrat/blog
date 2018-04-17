@@ -21,8 +21,6 @@ preview = true
 
 +++
 
-{{% toc %}}
-
 # Introduction
 
 Depuis quelques années, PostgreSQL s'est doté de nombreuses améliorations pour le
@@ -44,6 +42,8 @@ J'ai intégré des nouveautés de la version 11. Tant que celle-ci n'est pas sor
 ces nouveautés peuvent être retirées.
 
 Je remercie au passage Guillaume Lelarge pour la relecture de cet article ;).
+
+{{% toc %}}
 
 # SQL
 

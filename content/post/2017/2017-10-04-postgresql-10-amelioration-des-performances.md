@@ -123,7 +123,7 @@ Peter Geoghegan en fait mention dans cette conférence :
 {{< youtube aic_9KNwKn0 >}}
 
 
-{{< speakerdeck bd27592aa1204383ab4510b4c114a08d >}}
+<https://speakerdeck.com/peterg/sort-hash-pgconfus-2017>
 
 (Voir le slide 52)
 

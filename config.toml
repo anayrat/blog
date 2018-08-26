@@ -27,10 +27,17 @@ pygmentsCodefences = true
   talk = "/talk/:year/:month/:day/:title/"
 
 [outputs]
-  home = [ "HTML", "CSS", "RSS" ]
+  home = [ "HTML", "CSS", "RSS" , "search" ]
   section = [ "HTML", "RSS" ]
   taxonomy = [ "HTML", "RSS" ]
   taxonomyTerm = [ "HTML", "RSS" ]
+
+[outputFormats.search]
+  baseName = "search"
+  isPlainText = true
+  mediaType = "application/json"
+  notAlternative = true
+
 
 # Configure BlackFriday Markdown rendering.
 #   See: https://gohugo.io/readfiles/bfconfig/
@@ -252,6 +259,23 @@ copyright = "This work is licensed under a Creative Commons Attribution-NonComme
   name = "Contact"
   url = "#contact"
   weight = 6
+
+# Search.
+[params.search]
+  # Search provider:
+  #   0: No search engine
+  #   1: Built-in (Fuse)
+  #   2: Algolia (https://www.algolia.com)
+  engine = 1
+
+  # Configuration of Algolia search engine.
+  # Paste the values from your Algolia dashboard.
+  [params.search.algolia]
+    app_id = ""
+    api_key = ""
+    index_name = ""
+    show_logo = false
+
 
 # Taxonomies.
 [taxonomies]

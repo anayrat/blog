@@ -260,6 +260,11 @@ copyright = "This work is licensed under a Creative Commons Attribution-NonComme
   url = "#contact"
   weight = 6
 
+[[menu.main]]
+  name = "Rechercher"
+  url = "#search"
+  weight = 7
+
 # Search.
 [params.search]
   # Search provider:
@@ -313,4 +318,8 @@ copyright = "This work is licensed under a Creative Commons Attribution-NonComme
   url = "#contact"
   weight = 6
 
+[[Languages.en.menu.main]]
+  name = "Search"
+  url = "#search"
+  weight = 7
 

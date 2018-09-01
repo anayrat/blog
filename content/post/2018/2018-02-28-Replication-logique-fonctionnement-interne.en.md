@@ -226,10 +226,27 @@ drwx------ 4 postgres postgres   33 févr. 18 11:51 ..
 -rw------- 1 postgres postgres 656K févr. 18 15:53 xid-51689068-lsn-92-98000000.snap
 ```
 
+Each wal sender had to serialize changes on disk.
+
 Please note that one change here means one tuple, not one SQL statement.
 For example, a single insert of 4096 lines will result in the writing of a \*.snap file.
 
-Each wal sender had to serialize changes on disk.
+Edit: Postgres hackers changes the `snap` extension to `spill` for Postgres 12: 
+
+```
+commit ba9d35b8eb8466cf445c732a2e15ca5790cbc6c6
+Author:     Jeff Davis <jdavis@postgresql.org>
+AuthorDate: Sat Aug 25 22:45:59 2018 -0700
+Commit:     Jeff Davis <jdavis@postgresql.org>
+CommitDate: Sat Aug 25 22:52:46 2018 -0700
+
+    Reconsider new file extension in commit 91f26d5f.
+
+    Andres and Tom objected to the choice of the ".tmp"
+    extension. Changing to Andres's suggestion of ".spill".
+
+    Discussion: https://postgr.es/m/88092095-3348-49D8-8746-EB574B1D30EA%40anarazel.de
+```
 
 ## Example with two transactions
 

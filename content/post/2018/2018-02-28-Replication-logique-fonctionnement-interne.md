@@ -229,6 +229,23 @@ On remarque également que la notion de changement correspond à une ligne et no
 un ordre. Par exemple, un seul insert de 4096 lignes entrainera l'écriture d'un
 fichier \*.snap.
 
+Edit : Les développeurs de Postgres ont changé l'extension `snap` pour `spill` pour Postgres 12 : 
+
+```
+commit ba9d35b8eb8466cf445c732a2e15ca5790cbc6c6
+Author:     Jeff Davis <jdavis@postgresql.org>
+AuthorDate: Sat Aug 25 22:45:59 2018 -0700
+Commit:     Jeff Davis <jdavis@postgresql.org>
+CommitDate: Sat Aug 25 22:52:46 2018 -0700
+
+    Reconsider new file extension in commit 91f26d5f.
+
+    Andres and Tom objected to the choice of the ".tmp"
+    extension. Changing to Andres's suggestion of ".spill".
+
+    Discussion: https://postgr.es/m/88092095-3348-49D8-8746-EB574B1D30EA%40anarazel.de
+```
+
 ## Cas avec deux transactions
 
 Deuxième exemple, avec deux transactions modifiant la table t1.

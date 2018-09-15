@@ -38,9 +38,9 @@ Voici la syntaxe:
 ```
 
 
-Il existe différentes options controlant la méthode d'échantillonnage.
+Il existe différentes options contrôlant la méthode d'échantillonnage.
 
-La première, consiste à choisir 
+La première, consiste à choisir
 
 La seconde,
 
@@ -50,5 +50,3 @@ Les `GROUPING SETS` correspondent à plusieurs clauses permettant de réaliser
 des aggrégations multiples.
 
 # Association des deux ordres
-
-

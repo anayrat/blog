@@ -54,7 +54,7 @@ Pour cela les SGBD ont adopté différentes techniques :
   d'avoir un mécanisme de nettoyage des lignes qui ne sont plus visibles par
   personne. C'est l'implémentation dans Postgres et le vacuum a pour rôle d'effectuer ce nettoyage.
 
-Prenons une table toute simple et regardons sont contenu évoluer à l'aide de l'extension pageinspect :
+Prenons une table toute simple et regardons son contenu évoluer à l'aide de l'extension pageinspect :
 
 ```
 postgres=# create table t2(c1 int);
@@ -184,7 +184,7 @@ cela entraîne :
 Si vous observez la lecture du bloc de la table, la colonne `t_ctid` de la
 première ligne pointe vers (0,3). Si la ligne était à nouveau mise à jour, la
 première ligne de la table pointerait vers la ligne (0,3) et la ligne (0,3)
-pointerait vers (0,4), formant ce qu'on appelle une chaîne. un vacuum nettoierait
+pointerait vers (0,4), formant ce qu'on appelle une chaîne. Un vacuum nettoierait
 les espaces libres mais conserverait toujours la première ligne qui pointera vers
 le dernier enregistrement.
 
@@ -252,7 +252,7 @@ En fait, ça n’apparaît pas dans pageinspect. Allons lire directement le bloc
 [pg_filedump](https://wiki.postgresql.org/wiki/Pg_filedump) :
 
 Note : Il faut demander un `CHECKPOINT` au préalable sinon le bloc pourrait ne
-pas encore être écrit sur le disque.
+pas être encore écrit sur le disque.
 
 ```
 pg_filedump  11/main/base/16606/8890510
@@ -282,7 +282,7 @@ Block    0 ********************************************************
  Item   4 -- Length:   32  Offset: 8128 (0x1fc0)  Flags: NORMAL
 ```
 
-La première ligne contient `Flags: REDIRECT`, ceci indique que cette ligne
+La première ligne contient `Flags: REDIRECT`. Ceci indique que cette ligne
 correspond à une redirection HOT. C'est documenté dans `src/include/storage/itemid.h` :
 
 ```
@@ -295,7 +295,7 @@ correspond à une redirection HOT. C'est documenté dans `src/include/storage/it
 40 #define LP_DEAD         3       /* dead, may or may not have storage */   
 ```
 
-En réalité il est possible de le voir avec pageinspect en affichant la colonne `lp_flags`:
+En réalité, il est possible de le voir avec pageinspect en affichant la colonne `lp_flags`:
 
 ```
 postgres=# select lp,lp_flags,t_data,t_ctid from  heap_page_items(get_raw_page('t3',0));
@@ -401,8 +401,8 @@ postgres=# select * from  bt_page_items(get_raw_page('t3_c3_idx',1));
 (2 rows)
 ```
 Pas de changement sur la table car la colonne c3 ne contient que des null, on
-peut le constater en observant l'index `t3_c3_idx` où sur chaque ligne `nulls`
-est à *true*.
+peut le constater en observant l'index `t3_c3_idx` où `nulls` est à *true* sur
+chaque ligne.
 
 ```
 postgres=# update t3 set c3 = 7 WHERE c1=1;
@@ -433,7 +433,7 @@ postgres=# select * from  bt_page_items(get_raw_page('t3_c1_idx',1));
           3 | (0,2) |      16 | f     | f    | 02 00 00 00 00 00 00 00
 (3 rows)
 ```
-On remarque bien la nouvelle entée dans l'index portant sur c3, la table contient
+On remarque bien la nouvelle entrée dans l'index portant sur c3. La table contient
 bien un nouvel enregistrement. En revanche, l'index `t3_c1_idx` a également été
 mis à jour entraînant l'ajout d'une troisième entrée même si la valeur de la
 colonne c1 n'a pas changée.
@@ -473,7 +473,7 @@ le flag `REDIRECT`.
 
 FIXME : pourquoi ça ne marche pas si un index porte sur la colonne?
 
-# Nouveauté version 11 heap-only-tuple (HOT) avec index Fonctionnels
+# Nouveauté version 11 heap-only-tuple (HOT) avec index fonctionnels
 
 
 

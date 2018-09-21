@@ -518,10 +518,10 @@ SELECT pg_stat_get_xact_tuples_hot_updated('t4'::regclass);
 ```
 
 La fonction `pg_stat_get_xact_tuples_hot_updated` indique le nombre de ligne mises
-à jour pas le mécanisme HOT.
+à jour par le mécanisme HOT.
 
 Les deux updates n'ont fait que modifier la clé "ville" et pas la clé "prenom".
-Ce qui n’entraîne pas de modification de l'index car il n'indexe que la clé prénom.
+Ce qui n’entraîne pas de modification de l'index car il n'indexe que la clé "prenom".
 
 Le moteur n'a pas pu faire d'HOT. En effet, pour lui l'update a porté sur la colonne et
 l'index doit être mis à jour.
@@ -601,11 +601,9 @@ supérieur à 1000. FIXME : a tester, voir cas où expression est coûteuse.
 # Impact sur les performances
 
 Voici un test assez simple pour mettre en évidence l'intérêt de cette fonctionnalité.
-On pourrait s'attendre à des gains en terme de performances pure car le moteur évite
-de mettre à jour les index. Ainsi qu'en terme de taille d'index, comme vu précédemment
+On pourrait s'attendre à des gains en performances car le moteur évite de mettre
+à jour les index. Ainsi qu'en matière de taille d'index, comme vu précédemment,
 on évite la fragmentation.
-
-FIXME : c'est tout faux!
 
 ```sql
 CREATE TABLE t5 (c1 jsonb, c2 int,c3 int);
@@ -694,7 +692,6 @@ vacuum_count        | 0
 autovacuum_count    | 5
 analyze_count       | 0
 autoanalyze_count   | 5
-
 ```
 
 Avec `recheck_on_update=off` :
@@ -760,7 +757,6 @@ autoanalyze_count   | 3
 L'écart de performance est assez impressionnant de même que la taille des tables
 et index.
 
-
 J'ai refait le premier test en désactivant l'autovacuum et voici le résultat :
 
 ```
@@ -802,7 +798,7 @@ autovacuum_count    | 0
 analyze_count       | 0
 autoanalyze_count   | 0
 
-postgres=# \di+ t5*
+\di+ t5*
 List of relations
 -[ RECORD 1 ]------------
 Schema      | public
@@ -821,7 +817,7 @@ Table       | t5
 Size        | 40 kB
 Description |
 
-postgres=# \dt+ t5
+\dt+ t5
 List of relations
 -[ RECORD 1 ]---------
 Schema      | public
@@ -873,7 +869,7 @@ autovacuum_count    | 0
 analyze_count       | 0
 autoanalyze_count   | 0
 
-postgres=# \di+ t5*
+\di+ t5*
 List of relations
 -[ RECORD 1 ]------------
 Schema      | public
@@ -892,7 +888,7 @@ Table       | t5
 Size        | 56 MB
 Description |
 
-postgres=# \dt+ t5*
+\dt+ t5*
 List of relations
 -[ RECORD 1 ]---------
 Schema      | public
@@ -906,13 +902,22 @@ Description |
 A nouveau l'écart de performance est important, il en est de même pour la taille
 des tables et index. On voit ici aussi l'importance de laisser l'autovacuum activé.
 
-FIXME : expliquer l'écart de la taille de la table.
+Pourquoi avons-nous un tel écart de taille sur les index et la table?
+
+Pour les index c'est du au mécanisme expliqué plus haut, le moteur a pu chaîner
+les enregistrements en évitant de mettre à jour l'index. L'index a quand même
+légèrement augmenté de taille, il arrive que le moteur ne peut pas faire de HOT.
+Par exemple, quand il n'y a plus de place dans le bloc.
+
+Pour ce qui est de la taille de la table. Lors du test avec autovacuum activé,
+l'autovacuum avait plus de difficultés à passer sur la table avec le HOT désactivé.
+L'index grossissant, cela engendrais plus de "travail".
+Lors du test sans autovacuum, l'écart s'explique FIXME: finir explication
+
 
 # Cas où l'expression est coûteuse
 
-FIXME : corriger la suite et éventuellement faire un bench pour montrer l'impact
-sur les performances en lecture et insertion. Les lectures devraient être plus
-performantes car l'index bloate moins.
+FIXME : est-ce que je vais aussi loin?
 
 Et dans le cas d'un index fonctionnel? Il est trop coûteux de verifier à chaque mise à jour si l'index doit être mis à jour.
 Par exemple, un index fonctionnel qui n'indexe que certaines clés d'un objet JSON :

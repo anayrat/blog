@@ -1,7 +1,8 @@
 +++
-title = "2018 05 01 PG11 Hot Index Fonctionnels"
+title = "PostgreSQL - heap-only-tuples"
 date = 2018-04-25T14:09:22+02:00
 draft = true
+summary = "Fonctionnement des updates heap-only-tuple"
 
 # Tags and categories
 # For example, use `tags = []` for no tags, or the form `tags = ["A Tag", "Another Tag"]` for one or more tags.
@@ -162,7 +163,7 @@ En observant attentivement le champ `t_data`, on arrive à distinguer le 1 de la
 colonne c1 et le 3 de la colonne c2.
 
 En lisant le bloc de l'index, on constate que son contenu n'a pas bougé! Si je
-cherche la ligne WHERE c1 = 1, l'index m'oriente vers l'enregistrement (0,1) qui
+cherche la ligne `WHERE c1 = 1`, l'index m'oriente vers l'enregistrement (0,1) qui
 correspond à l'ancienne ligne!
 
 Que s'est-il passé?
@@ -370,7 +371,7 @@ Il y a cependant quelques cas où le moteur ne peut pas utiliser ce mécanisme :
 Reprenons l'exemple précédent et rajoutons une colonne indexée :
 
 ```sql
-alter table t3 add column c3 int;
+ALTER TABLE t3 ADD COLUMN c3 int;
 ALTER TABLE
 CREATE INDEX ON t3(c3);
 CREATE INDEX
@@ -570,7 +571,7 @@ Cette fois le moteur a bien utilisé le mécanisme HOT. On peut le vérifier en
 regardant le contenu physique de l'index avec pageinspect :
 
 Version 10 :
-```
+```sql
 SELECT * FROM  bt_page_items(get_raw_page('t4_expr_idx',1));
 itemoffset | ctid  | itemlen | nulls | vars |                      data                       
 ------------+-------+---------+-------+------+-------------------------------------------------
@@ -583,7 +584,7 @@ itemoffset | ctid  | itemlen | nulls | vars |                      data
 
 Version 11 :
 
-```
+```sql
 SELECT * FROM  bt_page_items(get_raw_page('t4_expr_idx',1));
 itemoffset | ctid  | itemlen | nulls | vars |                      data
 ------------+-------+---------+-------+------+-------------------------------------------------
@@ -978,4 +979,4 @@ SELECT pg_stat_get_xact_tuples_hot_updated('t4'::regclass);
 UPDATE t4 SET c1 = '{"ville": "lillgegre", "prenom": "guillaume"}' WHERE c2=2;
 ```
 
-[^1]: [https://git.postgresql.org/gitweb/?p=postgresql.git;a=blob;f=src/backend/access/heap/README.HOT;h=4cf3c3a0d4c2db96a57e73e46fdd7463db439f79;hb=HEAD#l128]
+[^1]: [README.HOT](https://git.postgresql.org/gitweb/?p=postgresql.git;a=blob;f=src/backend/access/heap/README.HOT;h=4cf3c3a0d4c2db96a57e73e46fdd7463db439f79;hb=HEAD#l128)

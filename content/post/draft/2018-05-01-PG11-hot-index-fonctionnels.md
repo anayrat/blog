@@ -48,7 +48,7 @@ antérieure. Une sauvegarde en cours par exemple :)
 Pour cela les SGBD ont adopté différentes techniques :
 
   * Modifier l'enregistrement et stocker les versions antérieures sur un autre
-  emplacement. C'est ce que fait oracle par exemple avec les redo logs.
+  emplacement. C'est ce que fait oracle par exemple avec les undo logs.
   * Dupliquer l'enregistrement et stocker des informations de visibilité pour
   savoir quelle ligne est visible par telle ou telle transaction. Cela nécessite
   d'avoir un mécanisme de nettoyage des lignes qui ne sont plus visibles par
@@ -56,7 +56,7 @@ Pour cela les SGBD ont adopté différentes techniques :
 
 Prenons une table toute simple et regardons son contenu évoluer à l'aide de l'extension pageinspect :
 
-```
+```sql
 CREATE TABLE t2(c1 int);
 CREATE TABLE
 INSERT INTO t2 VALUES (1);
@@ -94,7 +94,7 @@ l'emplacement pour un usage futur.
 Prenons un autre cas, un peu plus compliqué, une table avec deux colonnes et un
 index sur une des deux colonnes :
 
-```
+```sql
 CREATE TABLE t3(c1 int,c2 int);
 CREATE INDEX ON t3(c1);
 INSERT INTO t3(c1,c2) VALUES (1,1);
@@ -105,13 +105,12 @@ SELECT ctid,* FROM t3;
  (0,1) |  1 |  1
  (0,2) |  2 |  2
 (2 rows)
-
 ```
 
 De la même façon qu'on peut lire les blocs d'une table, on peut lire les blocs
 d'un index avec pageinspect :
 
-```
+```sql
 SELECT * FROM  bt_page_items(get_raw_page('t3_c1_idx',1));
  itemoffset | ctid  | itemlen | nulls | vars |          data           
 ------------+-------+---------+-------+------+-------------------------
@@ -120,7 +119,7 @@ SELECT * FROM  bt_page_items(get_raw_page('t3_c1_idx',1));
 (2 rows)
 ```
 
-Jusque là c'est assez simple, ma table contient deux enregistrements et l'index
+Jusque-là, c'est assez simple, ma table contient deux enregistrements et l'index
 contient également deux enregistrements pointant vers les blocs correspondants de
 la table (colonne ctid).
 
@@ -133,12 +132,12 @@ sera mis à jour?
 Au premier abord on pourrait se dire non car c1 n'est pas modifiée.
 
 Mais à cause du modèle MVCC présenté plus haut, en théorie, la réponse sera oui :
-nous venons de voir plus haut que le moteur va dupliquer la ligne, son emplacement
-physique sera donc différent (le ctid suivant sera (0,3)).
+nous venons de voir que le moteur va dupliquer la ligne, son emplacement physique
+sera donc différent (le ctid suivant sera (0,3)).
 
 Vérifions le :
 
-```
+```sql
 UPDATE t3 SET c2 = 3 WHERE c1=1;
 UPDATE 1
 SELECT lp,t_data,t_ctid FROM  heap_page_items(get_raw_page('t3',0));
@@ -171,7 +170,7 @@ Que s'est-il passé?
 En réalité nous venons de mettre en évidence un mécanisme un peu particulier
 appelé *heap-only-tuple* alias HOT. Lorsqu'une colonne est mise à jour, qu'aucun
 index ne pointe vers cette colonne et qu'on peut insérer l'enregistrement dans
-le même bloc, le moteur va se contenter de faire un pointeur entre l'ancien
+le même bloc. Le moteur va se contenter de faire un pointeur entre l'ancien
 enregistrement le nouveau.
 
 Cela permet au moteur d'éviter d'avoir à mettre à jour l'index. Avec tout ce que
@@ -185,12 +184,13 @@ Si vous observez la lecture du bloc de la table, la colonne `t_ctid` de la
 première ligne pointe vers (0,3). Si la ligne était à nouveau mise à jour, la
 première ligne de la table pointerait vers la ligne (0,3) et la ligne (0,3)
 pointerait vers (0,4), formant ce qu'on appelle une chaîne. Un vacuum nettoierait
-les espaces libres mais conserverait toujours la première ligne qui pointera vers
+les espaces libres mais conserverait toujours la première ligne qui pointerait vers
 le dernier enregistrement.
 
 
-On modifie une ligne et l'index ne change toujours pas:
-```
+On modifie une ligne et l'index ne change toujours pas :
+
+```sql
 UPDATE t3 SET c2 = 4 WHERE c1=1;
 SELECT * FROM  bt_page_items(get_raw_page('t3_c1_idx',1));
  itemoffset | ctid  | itemlen | nulls | vars |          data           
@@ -209,8 +209,9 @@ SELECT lp,t_data,t_ctid FROM  heap_page_items(get_raw_page('t3',0));
 (4 rows)
 ```
 
-Vacuum nettoie les emplacements disponibles:
-```
+Vacuum nettoie les emplacements disponibles :
+
+```sql
 vacuum t3;
 VACUUM
 SELECT lp,t_data,t_ctid FROM  heap_page_items(get_raw_page('t3',0));
@@ -224,8 +225,9 @@ SELECT lp,t_data,t_ctid FROM  heap_page_items(get_raw_page('t3',0));
 ```
 
 Un update va réutiliser le second emplacement et l'index reste inchangé.
-Observez la valeur de la colonne `t_ctid` pour reconstituer la chaîne.
-```
+Observez la valeur de la colonne `t_ctid` pour reconstituer la chaîne :
+
+```sql
 UPDATE t3 SET c2 = 5 WHERE c1=1;
 UPDATE 1
 SELECT lp,t_data,t_ctid FROM  heap_page_items(get_raw_page('t3',0));
@@ -248,7 +250,7 @@ SELECT * FROM  bt_page_items(get_raw_page('t3_c1_idx',1));
 
 Euh, la première ligne est vide et le moteur a réutilisé le troisième emplacement?
 
-En fait, ça n’apparaît pas dans pageinspect. Allons lire directement le bloc avec
+En fait, une information n’apparaît pas dans pageinspect. Allons lire directement le bloc avec
 [pg_filedump](https://wiki.postgresql.org/wiki/Pg_filedump) :
 
 Note : Il faut demander un `CHECKPOINT` au préalable sinon le bloc pourrait ne
@@ -285,19 +287,20 @@ Block    0 ********************************************************
 La première ligne contient `Flags: REDIRECT`. Ceci indique que cette ligne
 correspond à une redirection HOT. C'est documenté dans `src/include/storage/itemid.h` :
 
-```
-34  * lp_flags has these possible states.  An UNUSED line pointer is available     
-35  * for immediate re-use, the other states are not.                              
-36  */                                                                             
-37 #define LP_UNUSED       0       /* unused (should always have lp_len=0) */      
-38 #define LP_NORMAL       1       /* used (should always have lp_len>0) */        
-39 #define LP_REDIRECT     2       /* HOT redirect (should have lp_len=0) */       
-40 #define LP_DEAD         3       /* dead, may or may not have storage */   
+```c
+/*
+ * lp_flags has these possible states.  An UNUSED line pointer is available     
+ * for immediate re-use, the other states are not.                              
+ */                                                                             
+#define LP_UNUSED       0       /* unused (should always have lp_len=0) */      
+#define LP_NORMAL       1       /* used (should always have lp_len>0) */        
+#define LP_REDIRECT     2       /* HOT redirect (should have lp_len=0) */       
+#define LP_DEAD         3       /* dead, may or may not have storage */   
 ```
 
 En réalité, il est possible de le voir avec pageinspect en affichant la colonne `lp_flags`:
 
-```
+```sql
 SELECT lp,lp_flags,t_data,t_ctid FROM  heap_page_items(get_raw_page('t3',0));
  lp | lp_flags |       t_data       | t_ctid
 ----+----------+--------------------+--------
@@ -310,7 +313,7 @@ SELECT lp,lp_flags,t_data,t_ctid FROM  heap_page_items(get_raw_page('t3',0));
 
 Si on refait un update, suivi d'un CHECKPOINT pour écrire le bloc sur disque :
 
-```
+```sql
 SELECT lp,lp_flags,t_data,t_ctid FROM  heap_page_items(get_raw_page('t3',0));
  lp | lp_flags |       t_data       | t_ctid
 ----+----------+--------------------+--------
@@ -365,7 +368,8 @@ Il y a cependant quelques cas où le moteur ne peut pas utiliser ce mécanisme :
 # Cas avec un index sur une colonne mise à jour
 
 Reprenons l'exemple précédent et rajoutons une colonne indexée :
-```
+
+```sql
 alter table t3 add column c3 int;
 ALTER TABLE
 CREATE INDEX ON t3(c3);
@@ -376,8 +380,9 @@ Les updates précédents portaient sur une colonne non-indexée. Que se passe-t-
 si l'update porte sur c3?
 
 
-Etat de la table et des index avant update:
-```
+État de la table et des index avant update :
+
+```sql
 SELECT lp,lp_flags,t_data,t_ctid FROM  heap_page_items(get_raw_page('t3',0));
  lp | lp_flags |       t_data       | t_ctid
 ----+----------+--------------------+--------
@@ -402,11 +407,12 @@ SELECT * FROM  bt_page_items(get_raw_page('t3_c3_idx',1));
           2 | (0,2) |      16 | t     | f    |
 (2 rows)
 ```
-Pas de changement sur la table car la colonne c3 ne contient que des null, on
+
+Pas de changement sur la table car la colonne c3 ne contient que des nulls, on
 peut le constater en observant l'index `t3_c3_idx` où `nulls` est à *true* sur
 chaque ligne.
 
-```
+```sql
 UPDATE t3 SET c3 = 7 WHERE c1=1;
 UPDATE 1
 SELECT * FROM  bt_page_items(get_raw_page('t3_c3_idx',1));
@@ -435,15 +441,16 @@ SELECT * FROM  bt_page_items(get_raw_page('t3_c1_idx',1));
           3 | (0,2) |      16 | f     | f    | 02 00 00 00 00 00 00 00
 (3 rows)
 ```
+
 On remarque bien la nouvelle entrée dans l'index portant sur c3. La table contient
 bien un nouvel enregistrement. En revanche, l'index `t3_c1_idx` a également été
-mis à jour entraînant l'ajout d'une troisième entrée même si la valeur de la
+mis à jour. Entraînant l'ajout d'une troisième entrée, même si la valeur de la
 colonne c1 n'a pas changée.
 
 Après un vacuum:
 
-```
-vacuum t3;
+```sql
+VACUUM t3;
 VACUUM
 SELECT * FROM  bt_page_items(get_raw_page('t3_c1_idx',1));
  itemoffset | ctid  | itemlen | nulls | vars |          data
@@ -475,8 +482,7 @@ le flag `REDIRECT`.
 
 
 
-# Nouveauté version 11 heap-only-tuple (HOT) avec index fonctionnels
-
+# Nouveauté de la version : 11 heap-only-tuple (HOT) avec index fonctionnels
 
 
 Lorsqu'un index fonctionnel porte sur la colonne modifiée, il peut arriver que
@@ -488,7 +494,6 @@ Prenons un exemple : un index fonctionnel sur une *clé spécifique* d'un objet 
 ```SQL
 CREATE TABLE t4 (c1 jsonb, c2 int,c3 int);
 CREATE TABLE
--- CREATE INDEX ON t4 ((c1->>'prenom'))  WITH (recheck_on_update='false');
 CREATE INDEX ON t4 ((c1->>'prenom')) ;
 CREATE INDEX
 CREATE INDEX ON t4 (c2);
@@ -499,7 +504,7 @@ INSERT INTO t4 VALUES ('{ "prenom":"guillaume" , "ville" : "lille"}'::jsonb,2,2)
 INSERT 0 1
 
 
--- changement qui ne porte pas sur prenom
+-- changement qui ne porte pas sur prenom, on change que la ville
 UPDATE t4 SET c1 = '{"ville": "valence (#soleil)", "prenom": "guillaume"}' WHERE c2=2;
 UPDATE 1
 SELECT pg_stat_get_xact_tuples_hot_updated('t4'::regclass);
@@ -517,7 +522,7 @@ SELECT pg_stat_get_xact_tuples_hot_updated('t4'::regclass);
 (1 row)
 ```
 
-La fonction `pg_stat_get_xact_tuples_hot_updated` indique le nombre de ligne mises
+La fonction `pg_stat_get_xact_tuples_hot_updated` indique le nombre de lignes mises
 à jour par le mécanisme HOT.
 
 Les deux updates n'ont fait que modifier la clé "ville" et pas la clé "prenom".
@@ -629,7 +634,7 @@ INSERT INTO t5 VALUES ('{ "prenom":"guillaume" , "valeur" : "2"}'::jsonb,2,2);
 
 Puis ce test pgbench :
 
-```
+```sql
 \set id  random(1, 100000)
 \set id2  random(1, 100000)
 
@@ -697,7 +702,7 @@ autoanalyze_count   | 5
 Avec `recheck_on_update=off` :
 
 Même jeu de donnée que précédemment mais cette fois l'index est créé avec cet ordre :
-`CREATE INDEX ON t5 ((c1->>'prenom')) WITH  (recheck_on_update=off);`
+`CREATE INDEX ON t5 ((c1->>'prenom')) WITH (recheck_on_update=off);`
 
 
 ```
@@ -830,7 +835,6 @@ Description |
 
 Puis le second test :
 
-
 ```
 pgbench -f test.sql -n -c6 -T 120
 transaction type: test.sql
@@ -899,19 +903,19 @@ Size        | 55 MB
 Description |
 ```
 
-A nouveau l'écart de performance est important, il en est de même pour la taille
-des tables et index. On voit ici aussi l'importance de laisser l'autovacuum activé.
+A nouveau, l'écart de performance est important, il en est de même pour la taille
+des tables et index. On également l'importance de laisser l'autovacuum activé.
 
 Pourquoi avons-nous un tel écart de taille sur les index et la table?
 
-Pour les index c'est du au mécanisme expliqué plus haut, le moteur a pu chaîner
+Pour les index c'est dû au mécanisme expliqué plus haut, le moteur a pu chaîner
 les enregistrements en évitant de mettre à jour l'index. L'index a quand même
 légèrement augmenté de taille, il arrive que le moteur ne peut pas faire de HOT.
 Par exemple, quand il n'y a plus de place dans le bloc.
 
 Pour ce qui est de la taille de la table. Lors du test avec autovacuum activé,
 l'autovacuum avait plus de difficultés à passer sur la table avec le HOT désactivé.
-L'index grossissant, cela engendrais plus de "travail".
+L'index grossissant, cela engendrait plus de "travail".
 Lors du test sans autovacuum, l'écart s'explique FIXME: finir explication
 
 

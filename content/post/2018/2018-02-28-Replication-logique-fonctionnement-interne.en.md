@@ -2,7 +2,7 @@
 title = "Logical replication internals"
 date = 2018-03-10T12:19:41+01:00
 draft = false
-summary = "This post explains how logical replication works. Especially, difference beharvoirs depending of workloads"
+summary = "This post explains how logical replication works. Especially, difference behaviors depending of workloads"
 
 # Tags and categories
 # For example, use `tags = []` for no tags, or the form `tags = ["A Tag", "Another Tag"]` for one or more tags.
@@ -231,7 +231,7 @@ Each wal sender had to serialize changes on disk.
 Please note that one change here means one tuple, not one SQL statement.
 For example, a single insert of 4096 lines will result in the writing of a \*.snap file.
 
-Edit: Postgres hackers changes the `snap` extension to `spill` for Postgres 12: 
+Edit: Postgres hackers changes the `snap` extension to `spill` for Postgres 12:
 
 ```
 commit ba9d35b8eb8466cf445c732a2e15ca5790cbc6c6

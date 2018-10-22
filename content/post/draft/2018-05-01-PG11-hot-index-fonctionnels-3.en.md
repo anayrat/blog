@@ -1,5 +1,5 @@
 +++
-title = "PostgreSQL - heap-only-tuples - 3"
+title = "PostgreSQL and heap-only-tuples updates - part 3"
 date = 2018-04-25T14:09:22+02:00
 draft = true
 summary = "Fonctionnement des updates heap-only-tuple"
@@ -37,12 +37,10 @@ plusieurs articles :
 2. [Quand le moteur ne fait pas d'update *heap-only-tuple* et présentation de la nouveauté de la version 11](toto)
 3. [Impact sur les performances](toto)
 
-# Impact sur les performances
+# Impact on performance
 
-Voici un test assez simple pour mettre en évidence l'intérêt de cette fonctionnalité.
-On pourrait s'attendre à des gains en performances car le moteur évite de mettre
-à jour les index. Ainsi qu'en matière de taille d'index, comme vu précédemment,
-on évite la fragmentation.
+Here is a simple test to demonstrate the benefits of this feature.
+We could expect performance gains because postgres avoids updating the indexes. As well as in terms of index size, as seen above, fragmentation is avoided.
 
 ```sql
 CREATE TABLE t5 (c1 jsonb, c2 int,c3 int);
@@ -66,7 +64,7 @@ INSERT INTO t5 VALUES ('{ "prenom":"guillaume" , "valeur" : "2"}'::jsonb,2,2);
 (2 rows)
 ```
 
-Puis ce test pgbench :
+Then this pgbench test:
 
 ```sql
 \set id  random(1, 100000)
@@ -76,9 +74,9 @@ UPDATE t5 SET c1 = '{"valeur": ":id", "prenom": "guillaume"}' WHERE c2=2;
 UPDATE t5 SET c1 = '{"valeur": ":id2", "prenom": "adrien"}' WHERE c2=1;
 ```
 
-Qu'on exécute pendant 60 secondes :
+That we execute for 60 seconds:
 
-Avec `recheck_on_update=on` (par défaut):
+With `recheck_on_update=on` (default):
 
 ```
 pgbench -f test.sql -n -c6 -T 120
@@ -133,9 +131,9 @@ analyze_count       | 0
 autoanalyze_count   | 5
 ```
 
-Avec `recheck_on_update=off` :
+With `recheck_on_update=off`:
 
-Même jeu de donnée que précédemment mais cette fois l'index est créé avec cet ordre :
+Same data set as before but this time the index is created with this order:
 `CREATE INDEX ON t5 ((c1->>'prenom')) WITH (recheck_on_update=off);`
 
 
@@ -192,13 +190,11 @@ autovacuum_count    | 3
 analyze_count       | 0
 autoanalyze_count   | 3
 ```
-
 FIXME : rappeler les chiffres des deux tests.
 
-L'écart de performance est assez impressionnant de même que la taille des tables
-et index.
+The performance difference is quite impressive, as well as the size of the tables and indexes.
 
-J'ai refait le premier test en désactivant l'autovacuum et voici le résultat :
+I did the first test again by disabling the autovacuum and here is the result:
 
 ```
 pgbench -f test.sql -n -c6 -T 120
@@ -269,7 +265,7 @@ Size        | 1080 kB
 Description |
 ```
 
-Puis le second test :
+Then the second test:
 
 ```
 pgbench -f test.sql -n -c6 -T 120
@@ -341,21 +337,21 @@ Description |
 
 FIXME : rappeler les chiffres des deux tests.
 
-A nouveau, l'écart de performance est important, il en est de même pour la taille
-des tables et index. On note également l'importance de laisser l'autovacuum activé.
+Once again, the performance gap is significant, as is the size of tables and
+indexes. We also note the importance of leaving the autovacuum activated.
 
-Pourquoi avons-nous un tel écart de taille sur les index et la table?
+Why do we have such a large difference on the indexes and the table?
 
-Pour les index c'est dû au mécanisme expliqué plus haut, le moteur a pu chaîner
-les enregistrements en évitant de mettre à jour l'index. L'index a quand même
-légèrement augmenté de taille, il arrive que le moteur ne peut pas faire de HOT.
-Par exemple, quand il n'y a plus de place dans le bloc.
+For the indexes this is due to the mechanism explained above, postgres was
+able to chain the records by avoiding updating the index. The index has
+nevertheless slightly increased in size, it may happen that postgres cannot make a HOT.
+For example, when there is no more space in the block.
 
-Pour ce qui est de la taille de la table. Lors du test avec autovacuum activé,
-l'autovacuum avait plus de difficultés à passer sur la table avec le HOT désactivé.
-L'index grossissant, cela engendrait plus de "travail".
-Lors du test sans autovacuum, l'écart s'explique par le fait que même un simple
-select peut nettoyer des blocs FIXME: finir explication
+As for the size of the table. During the test with autovacuum activated, the
+autovacuum had more difficulty to pass on the table with the HOT disabled.
+The index growing, it resulted in more "work".
+During the test without autovacuum, the difference is explained FIXED: finish explanation
+
 
 
 # Cas où l'expression est coûteuse

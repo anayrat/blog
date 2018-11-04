@@ -21,6 +21,8 @@ defaultContentLanguage = "fr"
 defaultContentLanguageInSubdir = false
 
 pygmentsCodefences = true
+pygmentsStyle = "monokai"
+pygmentsCodefencesGuessSyntax = true
 
 [permalinks]
   post = "/:year/:month/:day/:title/"
@@ -55,13 +57,6 @@ copyright = "This work is licensed under a Creative Commons Attribution-NonComme
     name = "Adrien Nayrat"
 
 [params]
-  # Color theme.
-  #   Choose from `default`, `ocean`, `forest`, or `coffee`.
-  color_theme = "default"
-
-  # Font style.
-  #   Choose from `default`, `classic`, or `playfair`.
-  font = "default"
 
   # Your details.
   name = "Adrien Nayrat"
@@ -83,9 +78,6 @@ copyright = "This work is licensed under a Creative Commons Attribution-NonComme
   # Enable Keybase in Contact section by entering your keybase.io username.
   keybase = ""
 
-  # Diplay a logo in navigation bar rather than title (optional).
-  #   To enable, place an image in `static/img/` and reference its filename below. To disable, set the value to "".
-  logo = ""
 
   # Enable Google Maps by entering your API key, latitude, and longitude.
   #   Get your API key: https://developers.google.com/maps/documentation/javascript/get-api-key
@@ -94,6 +86,23 @@ copyright = "This work is licensed under a Creative Commons Attribution-NonComme
   google_maps_api_key = ""
   latitude = ""
   longitude = ""
+
+  # SITE SETUP
+   # Color theme.
+  #   Choose from `default`, `ocean`, `forest`, `dark`, `apogee`, `1950s`, `coffee`, `cupcake`.
+  color_theme = "default"
+   # Font style.
+  #   Choose from `default`, `classic`, or `playfair`.
+  font = "default"
+   # Description for social sharing and search engines. If undefined, author role is used in place.
+  description = ""
+   # Default image for social sharing and search engines. Place image in `static/img/` folder and specify image name here.
+  sharing_image = ""
+   # Twitter username (without @). Used when a vistor shares your site on Twitter.
+  twitter = "Adrien_nayrat"
+   # Diplay a logo in navigation bar rather than title (optional).
+  #   To enable, place an image in `static/img/` and reference its filename below. To disable, set the value to "".
+  logo = ""
 
   # Date format (refer to Go's date format: http://flippinggodateformat.com )
   #   Examples: "Mon, Jan 2, 2006" or "2006-01-02"
@@ -151,7 +160,7 @@ copyright = "This work is licensed under a Creative Commons Attribution-NonComme
 
   # Link custom CSS and JS assets
   #   (relative to /static/css and /static/js respectively)
-  custom_css = []
+  custom_css = ["override.css"]
   custom_js  = []
 
   # Publication types.
@@ -180,12 +189,24 @@ copyright = "This work is licensed under a Creative Commons Attribution-NonComme
     # List publications and talks related to the project?
     list_children = true
 
+    # Post list format.
+    #   0 = Simple
+    #   1 = Detailed
+    #   2 = Stream
+    post_format = 2
+
     # Publication list format.
     #   0 = Simple
     #   1 = Detailed
     #   2 = APA
     #   3 = MLA
     publication_format = 3
+
+    # Talk list format.
+    #   0 = Simple
+    #   1 = Detailed
+    #   2 = Stream
+    talk_format = 2
 
   # Social/Academic Networking
   #
@@ -207,28 +228,28 @@ copyright = "This work is licensed under a Creative Commons Attribution-NonComme
 
   [[params.social]]
     icon = "rss "
-    icon_pack = "fa"
-    link = "//blog.anayrat.info/index.xml"
+    icon_pack = "fas"
+    link = "https://blog.anayrat.info/index.xml"
 
   [[params.social]]
     icon = "envelope"
-    icon_pack = "fa"
+    icon_pack = "fas"
     link = "mailto:adrien.nayrat@gmail.com"
 
   [[params.social]]
     icon = "twitter"
-    icon_pack = "fa"
-    link = "//twitter.com/Adrien_nayrat"
+    icon_pack = "fab"
+    link = "https://twitter.com/Adrien_nayrat"
 
   [[params.social]]
     icon = "linkedin"
-    icon_pack = "fa"
-    link = "//linkedin.com/in/adriennayrat/"
+    icon_pack = "fab"
+    link = "https://linkedin.com/in/adriennayrat/"
 
   [[params.social]]
     icon = "github"
-    icon_pack = "fa"
-    link = "//github.com/anayrat/"
+    icon_pack = "fab"
+    link = "https://github.com/anayrat/"
 
 
 # Navigation Links
@@ -322,4 +343,3 @@ copyright = "This work is licensed under a Creative Commons Attribution-NonComme
   name = "Search"
   url = "#search"
   weight = 7
-

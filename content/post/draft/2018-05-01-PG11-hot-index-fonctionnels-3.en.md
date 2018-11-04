@@ -2,7 +2,7 @@
 title = "PostgreSQL and heap-only-tuples updates - part 3"
 date = 2018-04-25T14:09:22+02:00
 draft = true
-summary = "Fonctionnement des updates heap-only-tuple"
+summary = "Impact on performances"
 
 # Tags and categories
 # For example, use `tags = []` for no tags, or the form `tags = ["A Tag", "Another Tag"]` for one or more tags.
@@ -21,21 +21,20 @@ preview = true
 
 +++
 
-Voici une série d'articles qui va porter sur une nouveauté de la version 11.
+Here is a series of articles that will focus on a new feature in version 11.
 
-Durant le développement de cette version, une fonctionnalité a attiré mon attention.
-On peut la retrouver dans les releases notes : <https://www.postgresql.org/docs/11/static/release-11.html>
+During the development of this version, a feature caught my attention.
+It can be found in releases notes : <https://www.postgresql.org/docs/11/static/release-11.html>
 
 
 > Allow heap-only-tuple (HOT) updates for expression indexes when the values of the expressions are unchanged (Konstantin Knizhnik)
 
-J'avoue que ce n'est pas très explicite et cette fonctionnalité nécessite quelques
-connaissances sur le fonctionnement du moteur que je vais essayer d'expliquer à travers
-plusieurs articles :
+I admit that this is not very explicit and this feature requires some
+knowledge about how postgres works, that I will try to explain through several articles:
 
-1. [Fonctionnement du MVCC et update *heap-only-tuples*](toto)
-2. [Quand le moteur ne fait pas d'update *heap-only-tuple* et présentation de la nouveauté de la version 11](toto)
-3. [Impact sur les performances](toto)
+1. [How MVCC works and *heap-only-tuples* updates](toto)
+2. [When postgres do not use *heap-only-tuple* updates and introduction to the new feature in v11](toto)
+3. [Impact on performances](toto)
 
 # Impact on performance
 
@@ -190,7 +189,12 @@ autovacuum_count    | 3
 analyze_count       | 0
 autoanalyze_count   | 3
 ```
-FIXME : rappeler les chiffres des deux tests.
+| recheck_on_update | on     | off     | Gain   |
+|------------------:|--------|---------|--------|
+|               TPS | 22859  | 8880    | 157%   |
+|           t5 size | 376 kB | 9496 kB | -96%   |
+|    t5_c2_idx size | 16 kB  | 768 kB  | -98%   |
+|  t5_expr_idx size | 32 kB  | 58 MB   | -99.9% |
 
 The performance difference is quite impressive, as well as the size of the tables and indexes.
 
@@ -335,7 +339,12 @@ Size        | 55 MB
 Description |
 ```
 
-FIXME : rappeler les chiffres des deux tests.
+| recheck_on_update | on      | off    | Gain   |
+|------------------:|---------|--------|--------|
+|               TPS | 22937   | 7345   | 212%   |
+|           t5 size | 1080 kB | 55 MB  | -98%   |
+|    t5_c2_idx size | 16 kB   | 600 kB | -97%   |
+|  t5_expr_idx size | 40 kB   | 56 MB  | -99.9% |
 
 Once again, the performance gap is significant, as is the size of tables and
 indexes. We also note the importance of leaving the autovacuum activated.
@@ -350,7 +359,7 @@ For example, when there is no more space in the block.
 As for the size of the table. During the test with autovacuum activated, the
 autovacuum had more difficulty to pass on the table with the HOT disabled.
 The index growing, it resulted in more "work".
-During the test without autovacuum, the difference is explained FIXED: finish explanation
+During the test without autovacuum, the difference is explained.
 
 
 

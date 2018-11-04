@@ -1,8 +1,8 @@
 +++
-title = "PostgreSQL - heap-only-tuples - 3"
+title = "PostgreSQL et updates heap-only-tuples - partie 3"
 date = 2018-04-25T14:09:22+02:00
 draft = true
-summary = "Fonctionnement des updates heap-only-tuple"
+summary = "Impact sur les performances"
 
 # Tags and categories
 # For example, use `tags = []` for no tags, or the form `tags = ["A Tag", "Another Tag"]` for one or more tags.
@@ -193,7 +193,12 @@ analyze_count       | 0
 autoanalyze_count   | 3
 ```
 
-FIXME : rappeler les chiffres des deux tests.
+| recheck_on_update | on     | off     | Gain   |
+|------------------:|--------|---------|--------|
+|               TPS | 22859  | 8880    | 157%   |
+|           t5 size | 376 kB | 9496 kB | -96%   |
+|    t5_c2_idx size | 16 kB  | 768 kB  | -98%   |
+|  t5_expr_idx size | 32 kB  | 58 MB   | -99.9% |
 
 L'écart de performance est assez impressionnant de même que la taille des tables
 et index.
@@ -339,7 +344,12 @@ Size        | 55 MB
 Description |
 ```
 
-FIXME : rappeler les chiffres des deux tests.
+| recheck_on_update | on      | off    | Gain   |
+|------------------:|---------|--------|--------|
+|               TPS | 22937   | 7345   | 212%   |
+|           t5 size | 1080 kB | 55 MB  | -98%   |
+|    t5_c2_idx size | 16 kB   | 600 kB | -97%   |
+|  t5_expr_idx size | 40 kB   | 56 MB  | -99.9% |
 
 A nouveau, l'écart de performance est important, il en est de même pour la taille
 des tables et index. On note également l'importance de laisser l'autovacuum activé.
@@ -355,7 +365,7 @@ Pour ce qui est de la taille de la table. Lors du test avec autovacuum activé,
 l'autovacuum avait plus de difficultés à passer sur la table avec le HOT désactivé.
 L'index grossissant, cela engendrait plus de "travail".
 Lors du test sans autovacuum, l'écart s'explique par le fait que même un simple
-select peut nettoyer des blocs FIXME: finir explication
+select peut nettoyer des blocs.
 
 
 # Cas où l'expression est coûteuse

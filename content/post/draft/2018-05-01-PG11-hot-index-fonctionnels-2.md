@@ -2,7 +2,7 @@
 title = "PostgreSQL et updates heap-only-tuples - partie 2"
 date = 2018-04-25T14:09:22+02:00
 draft = true
-summary = "Fonctionnement des updates heap-only-tuple"
+summary = "Quand le moteur ne fait pas d'update *heap-only-tuple* et présentation de la nouveauté de la version 11"
 
 # Tags and categories
 # For example, use `tags = []` for no tags, or the form `tags = ["A Tag", "Another Tag"]` for one or more tags.
@@ -273,4 +273,4 @@ pour que le résultat de l'expression change lors d'un update. Cela permet d'év
 d'exécuter l'expression inutilement.
 
 A noter également que le moteur évite l'évaluation de l'expression si son coût est
-supérieur à 1000. FIXME : a tester, voir cas où expression est coûteuse.
+supérieur à 1000.

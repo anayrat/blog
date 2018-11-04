@@ -2,7 +2,7 @@
 title = "PostgreSQL and heap-only-tuples updates - part 2"
 date = 2018-04-25T14:09:22+02:00
 draft = true
-summary = "Fonctionnement des updates heap-only-tuple"
+summary = "When postgres do not use *heap-only-tuple* updates and introduction to the new feature in v11"
 
 # Tags and categories
 # For example, use `tags = []` for no tags, or the form `tags = ["A Tag", "Another Tag"]` for one or more tags.
@@ -21,21 +21,20 @@ preview = true
 
 +++
 
-Voici une série d'articles qui va porter sur une nouveauté de la version 11.
+Here is a series of articles that will focus on a new feature in version 11.
 
-Durant le développement de cette version, une fonctionnalité a attiré mon attention.
-On peut la retrouver dans les releases notes : <https://www.postgresql.org/docs/11/static/release-11.html>
+During the development of this version, a feature caught my attention.
+It can be found in releases notes : <https://www.postgresql.org/docs/11/static/release-11.html>
 
 
 > Allow heap-only-tuple (HOT) updates for expression indexes when the values of the expressions are unchanged (Konstantin Knizhnik)
 
-J'avoue que ce n'est pas très explicite et cette fonctionnalité nécessite quelques
-connaissances sur le fonctionnement du moteur que je vais essayer d'expliquer à travers
-plusieurs articles :
+I admit that this is not very explicit and this feature requires some
+knowledge about how postgres works, that I will try to explain through several articles:
 
-1. [Fonctionnement du MVCC et update *heap-only-tuples*](toto)
-2. [Quand le moteur ne fait pas d'update *heap-only-tuple* et présentation de la nouveauté de la version 11](toto)
-3. [Impact sur les performances](toto)
+1. [How MVCC works and *heap-only-tuples* updates](toto)
+2. [When postgres do not use *heap-only-tuple* updates and introduction to the new feature in v11](toto)
+3. [Impact on performances](toto)
 
 # Cases with an index on an updated column
 
@@ -79,7 +78,8 @@ SELECT * FROM  bt_page_items(get_raw_page('t3_c3_idx',1));
 (2 rows)
 ```
 
-No change on the table because the column c3 contains only nulls, we can see this by looking at the index `t3_c3_idx` where `nulls` is  *true* on each line.
+No change on the table because the column c3 contains only nulls, we can see this
+by looking at the index `t3_c3_idx` where `nulls` is  *true* on each line.
 
 ```sql
 UPDATE t3 SET c3 = 7 WHERE c1=1;
@@ -111,7 +111,9 @@ SELECT * FROM  bt_page_items(get_raw_page('t3_c1_idx',1));
 (3 rows)
 ```
 
-We notice the new entry in the index for c3. The table does contain a new record. On the other hand, the `t3_c1_idx` index has also been updated. This results in the addition of a third entry, even if the value in column c1 has not changed.
+We notice the new entry in the index for c3. The table does contain a new record
+On the other hand, the `t3_c1_idx` index has also been updated. This results in
+the addition of a third entry, even if the value in column c1 has not changed.
 
 After a vacuum:
 
@@ -143,14 +145,16 @@ SELECT * FROM  bt_page_items(get_raw_page('t3_c3_idx',1));
 (2 rows)
 ```
 
-Postgres cleaned the index and the table. The first line of the table no longer has the flag `REDIRECT`.
+Postgres cleaned the index and the table. The first line of the table no longer
+has the flag `REDIRECT`.
 
 
 
-# New in the version: 11 heap-only-tuple (HOT) with functional indexes
+# New in version: 11 heap-only-tuple (HOT) with functional indexes
 
 
-When a functional index is applied to the modified column, it may happen that the result of the expression remains unchanged despite the updating of the column.
+When a functional index is applied to the modified column, it may happen that
+the result of the expression remains unchanged despite the updating of the column.
 The key in the index would therefore remain unchanged.
 
 Let's take an example: a functional index on a *specific key* of a JSON object.
@@ -186,14 +190,17 @@ SELECT pg_stat_get_xact_tuples_hot_updated('t4'::regclass);
 (1 row)
 ```
 
-The function `pg_stat_get_get_xact_tuples_hot_updated` indicates the number of lines  updated by the HOT mechanism.
+The function `pg_stat_get_get_xact_tuples_hot_updated` indicates the number of
+lines  updated by the HOT mechanism.
 
 The two updates only modified the "city" key and not the "first name" key.
 This does not lead to a modification of the index because it only indexes the "first name" key.
 
-Postgres could not make a HOT. Indeed, for him the update is on the column and the index must be updated.
+Postgres could not make a HOT. Indeed, for him the update is on the column and
+the index must be updated.
 
-With version 11, postgres is able to see that the result of the expression does not change. Let's do the same test on version 11 :
+With version 11, postgres is able to see that the result of the expression does
+not change. Let's do the same test on version 11 :
 
 
 ```SQL
@@ -256,6 +263,8 @@ itemoffset | ctid  | itemlen | nulls | vars |                      data
 
 This behavior can be controlled by a new option when creating the index: `recheck_on_update`.
 
-On by default, the engine checks the result of the expression to perform a HOT update. It can be set to `off` if there is a good chance that the result of the expression will change during an update. This avoids executing the expression unnecessarily.
+On by default, the engine checks the result of the expression to perform a HOT update.
+It can be set to `off` if there is a good chance that the result of the expression
+will change during an update. This avoids executing the expression unnecessarily.
 
-Also notes that the engine avoids the evaluation of the expression if its cost is higher than 1000.  FIXME : a tester, voir cas où expression est coûteuse.
+Also notes that the engine avoids the evaluation of the expression if its cost is higher than 1000.

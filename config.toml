@@ -27,16 +27,16 @@ pygmentsCodefences = true
   talk = "/talk/:year/:month/:day/:title/"
 
 [outputs]
-  home = [ "HTML", "CSS", "RSS" , "search" ]
+  home = [ "HTML", "CSS", "RSS" , "JSON" ]
   section = [ "HTML", "RSS" ]
   taxonomy = [ "HTML", "RSS" ]
   taxonomyTerm = [ "HTML", "RSS" ]
 
-[outputFormats.search]
-  baseName = "search"
-  isPlainText = true
-  mediaType = "application/json"
-  notAlternative = true
+#[outputFormats.search]
+#  baseName = "search"
+#  isPlainText = true
+#  mediaType = "application/json"
+#  notAlternative = true
 
 
 # Configure BlackFriday Markdown rendering.

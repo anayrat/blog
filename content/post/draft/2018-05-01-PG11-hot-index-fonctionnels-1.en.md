@@ -1,7 +1,7 @@
 +++
 title = "PostgreSQL and heap-only-tuples updates - part 1"
-date = 2018-04-25T14:09:22+02:00
-draft = true
+date = 2018-11-12T08:00:00+01:00
+draft = false
 summary = "How MVCC works and *heap-only-tuples* updates"
 
 # Tags and categories
@@ -32,9 +32,16 @@ It can be found in releases notes : <https://www.postgresql.org/docs/11/static/r
 I admit that this is not very explicit and this feature requires some
 knowledge about how postgres works, that I will try to explain through several articles:
 
-1. [How MVCC works and *heap-only-tuples* updates](toto)
-2. [When postgres do not use *heap-only-tuple* updates and introduction to the new feature in v11](toto)
-3. [Impact on performances](toto)
+1. [How MVCC works and *heap-only-tuples* updates][1]
+2. When postgres do not use *heap-only-tuple* updates and introduction to the new feature in v11
+3. Impact on performances
+
+**This feature was disabled in 11.1 because it could lead to instance crashes[^1].
+I chose to publish these articles because they help to understand the mechanism
+of HOT updates and the benefits that this feature could bring.**
+
+I thank Guillaume Lelarge for his review of this article ;).
+
 
 # How MVCC works
 
@@ -65,9 +72,7 @@ Let's take a very simple table and watch its content evolve using the pageinspec
 
 ```sql
 CREATE TABLE t2(c1 int);
-CREATE TABLE
 INSERT INTO t2 VALUES (1);
-INSERT 0 1
 SELECT lp,t_data FROM  heap_page_items(get_raw_page('t2',0));
  lp |   t_data   
 ----+------------
@@ -75,7 +80,6 @@ SELECT lp,t_data FROM  heap_page_items(get_raw_page('t2',0));
 (1 row)
 
 UPDATE t2 SET c1 = 2 WHERE c1 = 1;
-UPDATE 1
 SELECT lp,t_data FROM  heap_page_items(get_raw_page('t2',0));
  lp |   t_data   
 ----+------------
@@ -83,8 +87,7 @@ SELECT lp,t_data FROM  heap_page_items(get_raw_page('t2',0));
   2 | \x02000000
 (2 rows)
 
-vacuum t2;
-VACUUM
+VACUUM t2;
 SELECT lp,t_data FROM  heap_page_items(get_raw_page('t2',0));
  lp |   t_data   
 ----+------------
@@ -132,9 +135,9 @@ contains two records pointing to the corresponding blocks in the table (ctid col
 
 If I update column c1, with the new value 3 for example, the index will have to be updated.
 
-Now if I update the column c2. Will the index on c1 be updated?
+Now, if I update the column c2. Will the index on c1 be updated?
 
-At first glance we might say no because c1 is unchanged.
+At first glance, we might say no because c1 is unchanged.
 
 But because of the MVCC model presented above, in theory, the answer will be yes:
 we have just seen that postgres will duplicate the line, so its physical location
@@ -144,7 +147,6 @@ Let's check it out:
 
 ```sql
 UPDATE t3 SET c2 = 3 WHERE c1=1;
-UPDATE 1
 SELECT lp,t_data,t_ctid FROM  heap_page_items(get_raw_page('t3',0));
  lp |       t_data       | t_ctid
 ----+--------------------+--------
@@ -174,7 +176,7 @@ What happened?
 
 In fact, we have just revealed a rather special mechanism called *heap-only-tuple*
 alias HOT. When a column is updated, no index points to that column and the
-record can be inserted in the same block. Postgres will only make a pointer
+record can be inserted in the same block, Postgres will only make a pointer
 between the old and the new record.
 
 This allows postgres to avoid having to update the index. With all that implies:
@@ -214,8 +216,7 @@ SELECT lp,t_data,t_ctid FROM  heap_page_items(get_raw_page('t3',0));
 Vacuum cleans available spaces:
 
 ```sql
-vacuum t3;
-VACUUM
+VACUUM t3;
 SELECT lp,t_data,t_ctid FROM  heap_page_items(get_raw_page('t3',0));
  lp |       t_data       | t_ctid
 ----+--------------------+--------
@@ -231,7 +232,6 @@ Look at the value of the column `t_ctid` to reconstruct the chain:
 
 ```sql
 UPDATE t3 SET c2 = 5 WHERE c1=1;
-UPDATE 1
 SELECT lp,t_data,t_ctid FROM  heap_page_items(get_raw_page('t3',0));
  lp |       t_data       | t_ctid
 ----+--------------------+--------
@@ -313,7 +313,7 @@ SELECT lp,lp_flags,t_data,t_ctid FROM  heap_page_items(get_raw_page('t3',0));
 (4 rows)
 ```
 
-If we do an update again, then a vacuum followed by a CHECKPOINT to write the block to disk:
+If we do an update again, then a vacuum, followed by a CHECKPOINT to write the block to disk:
 
 ```sql
 SELECT lp,lp_flags,t_data,t_ctid FROM  heap_page_items(get_raw_page('t3',0));
@@ -373,4 +373,9 @@ However, there are a few cases where postgres cannot use this mechanism:
 In the next article we will see an example where postgres cannot use HOT mechanism.
 Then, the new feature of version 11 where postgres can use this mechanism.
 
-[^1]: [README.HOT](https://git.postgresql.org/gitweb/?p=postgresql.git;a=blob;f=src/backend/access/heap/README.HOT;h=4cf3c3a0d4c2db96a57e73e46fdd7463db439f79;hb=HEAD#l128)
+[1]: https://blog.anayrat.info/en/2018/11/12/postgresql-and-heap-only-tuples-updates-part-1/
+[2]:
+[3]:
+
+[^1]: [Disable recheck_on_update optimization to avoid crashes](https://git.postgresql.org/gitweb/?p=postgresql.git;a=commit;h=05f84605dbeb9cf8279a157234b24bbb706c5256)
+[^2]: [README.HOT](https://git.postgresql.org/gitweb/?p=postgresql.git;a=blob;f=src/backend/access/heap/README.HOT;h=4cf3c3a0d4c2db96a57e73e46fdd7463db439f79;hb=HEAD#l128)

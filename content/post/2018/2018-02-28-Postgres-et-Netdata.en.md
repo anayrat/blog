@@ -52,7 +52,7 @@ launched by the "autovacuum launcher".  Their role is to perform maintenance
 tasks in order to:
 
   * Clean dead rows
-  * Update statistics (see [Statistics, cardinality, selectivity](https://blog.anayrat.info/en/2017/11/26/postgresql---jsonb-and-statistics/#statistics-cardinality-selectivity))
+  * Update statistics (see [Statistics, cardinality, selectivity](https://blog.anayrat.info/en/2017/11/26/postgresql-jsonb-and-statistics/#statistics-cardinality-selectivity))
   * Freeze old rows to avoid wraparound (See [Transaction Id Wraparound in Postgres](http://malisper.me/transaction-id-wraparound-in-postgres/))
 
 Usually, there is no need to worry, the default configuration is enough in

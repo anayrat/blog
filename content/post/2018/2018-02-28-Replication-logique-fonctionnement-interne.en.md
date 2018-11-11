@@ -514,6 +514,6 @@ and network transfer result in a delay which can be significant.
 
 
 
-[1]: https://blog.anayrat.info/en/2017/07/29/postgresql-10-and-logical-replication---overview/
-[2]: https://blog.anayrat.info/en/2017/08/05/postgresql-10-and-logical-replication---setup/
+[1]: https://blog.anayrat.info/en/2017/07/29/postgresql-10-and-logical-replication-overview/
+[2]: https://blog.anayrat.info/en/2017/08/05/postgresql-10-and-logical-replication-setup/
 [3]: https://blog.anayrat.info/2017/08/27/postgresql-10-et-la-replication-logique-restrictions/

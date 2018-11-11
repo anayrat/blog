@@ -32,9 +32,16 @@ It can be found in releases notes : <https://www.postgresql.org/docs/11/static/r
 I admit that this is not very explicit and this feature requires some
 knowledge about how postgres works, that I will try to explain through several articles:
 
-1. [How MVCC works and *heap-only-tuples* updates](toto)
-2. [When postgres do not use *heap-only-tuple* updates and introduction to the new feature in v11](toto)
-3. [Impact on performances](toto)
+1. [How MVCC works and *heap-only-tuples* updates][1]
+2. When postgres do not use *heap-only-tuple* updates and introduction to the new feature in v11
+3. Impact on performances
+
+**This feature was disabled in 11.1 because it could lead to instance crashes[^1].
+I chose to publish these articles because they help to understand the mechanism
+of HOT updates and the benefits that this feature could bring.**
+
+I thank Guillaume Lelarge for his review of this article ;).
+
 
 # Cases with an index on an updated column
 
@@ -42,15 +49,13 @@ Let's repeat the previous example and add an indexed column:
 
 ```sql
 ALTER TABLE t3 ADD COLUMN c3 int;
-ALTER TABLE
 CREATE INDEX ON t3(c3);
-CREATE INDEX
 ```
 
-Previous updates were for a non-indexed column. What happens if the update is on c3?
+Previous UPDATE were on a non-indexed column. What happens if the update is on c3?
 
 
-Content of the table and indexes before update :
+Content of the table and indexes before UPDATE:
 
 ```sql
 SELECT lp,lp_flags,t_data,t_ctid FROM  heap_page_items(get_raw_page('t3',0));
@@ -83,7 +88,6 @@ by looking at the index `t3_c3_idx` where `nulls` is  *true* on each line.
 
 ```sql
 UPDATE t3 SET c3 = 7 WHERE c1=1;
-UPDATE 1
 SELECT * FROM  bt_page_items(get_raw_page('t3_c3_idx',1));
  itemoffset | ctid  | itemlen | nulls | vars |          data
 ------------+-------+---------+-------+------+-------------------------
@@ -119,7 +123,6 @@ After a vacuum:
 
 ```sql
 VACUUM t3;
-VACUUM
 SELECT * FROM  bt_page_items(get_raw_page('t3_c1_idx',1));
  itemoffset | ctid  | itemlen | nulls | vars |          data
 ------------+-------+---------+-------+------+-------------------------
@@ -161,20 +164,14 @@ Let's take an example: a functional index on a *specific key* of a JSON object.
 
 ```SQL
 CREATE TABLE t4 (c1 jsonb, c2 int,c3 int);
-CREATE TABLE
 CREATE INDEX ON t4 ((c1->>'prenom')) ;
-CREATE INDEX
 CREATE INDEX ON t4 (c2);
-CREATE INDEX
 INSERT INTO t4 VALUES ('{ "prenom":"adrien" , "ville" : "valence"}'::jsonb,1,1);
-INSERT 0 1
 INSERT INTO t4 VALUES ('{ "prenom":"guillaume" , "ville" : "lille"}'::jsonb,2,2);
-INSERT 0 1
 
 
 -- change that does not concern the first name, we change only the city
 UPDATE t4 SET c1 = '{"ville": "valence (#soleil)", "prenom": "guillaume"}' WHERE c2=2;
-UPDATE 1
 SELECT pg_stat_get_xact_tuples_hot_updated('t4'::regclass);
  pg_stat_get_xact_tuples_hot_updated
 -------------------------------------
@@ -182,7 +179,6 @@ SELECT pg_stat_get_xact_tuples_hot_updated('t4'::regclass);
 (1 row)
 
 UPDATE t4 SET c1 = '{"ville": "nantes", "prenom": "guillaume"}' WHERE c2=2;
-UPDATE 1
 SELECT pg_stat_get_xact_tuples_hot_updated('t4'::regclass);
  pg_stat_get_xact_tuples_hot_updated
 -------------------------------------
@@ -193,10 +189,10 @@ SELECT pg_stat_get_xact_tuples_hot_updated('t4'::regclass);
 The function `pg_stat_get_get_xact_tuples_hot_updated` indicates the number of
 lines  updated by the HOT mechanism.
 
-The two updates only modified the "city" key and not the "first name" key.
+The two UPDATE only modified the "city" key and not the "first name" key.
 This does not lead to a modification of the index because it only indexes the "first name" key.
 
-Postgres could not make a HOT. Indeed, for him the update is on the column and
+Postgres could not make a HOT. Indeed, for him, the UPDATE is on the column and
 the index must be updated.
 
 With version 11, postgres is able to see that the result of the expression does
@@ -205,21 +201,15 @@ not change. Let's do the same test on version 11 :
 
 ```SQL
 CREATE TABLE t4 (c1 jsonb, c2 int,c3 int);
-CREATE TABLE
 -- CREATE INDEX ON t4 ((c1->>'prenom'))  WITH (recheck_on_update='false');
 CREATE INDEX ON t4 ((c1->>'prenom')) ;
-CREATE INDEX
 CREATE INDEX ON t4 (c2);
-CREATE INDEX
 INSERT INTO t4 VALUES ('{ "prenom":"adrien" , "ville" : "valence"}'::jsonb,1,1);
-INSERT 0 1
 INSERT INTO t4 VALUES ('{ "prenom":"guillaume" , "ville" : "lille"}'::jsonb,2,2);
-INSERT 0 1
 
 
 -- changement qui ne porte pas sur prenom
 UPDATE t4 SET c1 = '{"ville": "valence (#soleil)", "prenom": "guillaume"}' WHERE c2=2;
-UPDATE 1
 SELECT pg_stat_get_xact_tuples_hot_updated('t4'::regclass);
  pg_stat_get_xact_tuples_hot_updated
 -------------------------------------
@@ -227,7 +217,6 @@ SELECT pg_stat_get_xact_tuples_hot_updated('t4'::regclass);
 (1 row)
 
 UPDATE t4 SET c1 = '{"ville": "nantes", "prenom": "guillaume"}' WHERE c2=2;
-UPDATE 1
 SELECT pg_stat_get_xact_tuples_hot_updated('t4'::regclass);
  pg_stat_get_xact_tuples_hot_updated
 -------------------------------------
@@ -235,7 +224,7 @@ SELECT pg_stat_get_xact_tuples_hot_updated('t4'::regclass);
 (1 row)
 ```
 
-This time Postgres used the HOT mechanism correctly. This can be verified by
+This time, Postgres used the HOT mechanism correctly. This can be verified by
 looking at the physical content of the index with pageinspect:
 
 Version 10 :
@@ -263,8 +252,14 @@ itemoffset | ctid  | itemlen | nulls | vars |                      data
 
 This behavior can be controlled by a new option when creating the index: `recheck_on_update`.
 
-On by default, the engine checks the result of the expression to perform a HOT update.
+On by default, the engine checks the result of the expression to perform a HOT UPDATE.
 It can be set to `off` if there is a good chance that the result of the expression
-will change during an update. This avoids executing the expression unnecessarily.
+will change during an UPDATE. This avoids executing the expression unnecessarily.
 
 Also notes that the engine avoids the evaluation of the expression if its cost is higher than 1000.
+
+[1]: https://blog.anayrat.info/en/2018/11/12/postgresql-and-heap-only-tuples-updates-part-1/
+[2]:
+[3]:
+
+[^1]: [Disable recheck_on_update optimization to avoid crashes](https://git.postgresql.org/gitweb/?p=postgresql.git;a=commit;h=05f84605dbeb9cf8279a157234b24bbb706c5256)

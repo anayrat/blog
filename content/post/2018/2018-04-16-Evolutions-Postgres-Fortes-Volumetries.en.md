@@ -156,7 +156,7 @@ This type of index contains the summary of a set of blocks. They are very compac
 They are particularly suitable to high volumes with queries manipulating
 a large amount of data. Be careful, it is very important that there is a strong correlation between the data and their location.
 
-I gave a talk on this kind of indexes during the PGDay France 2016 in Lille: [BRIN indexes - How they works and usages?](https://blog.anayrat.info/en/talk/2016/05/31/brin-indexes---how-they-works-and-usages/)
+I gave a talk on this kind of indexes during the PGDay France 2016 in Lille: [BRIN indexes - How they works and usages?](https://blog.anayrat.info/en/talk/2016/05/31/brin-indexes-how-they-works-and-usages/)
 
 ## BLOOM filters (9.6)
 

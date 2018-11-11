@@ -27,9 +27,9 @@ Another attended feature is _logical replication_. I will present it in a serie 
 
 <!--more-->
 
-  1. [PostgreSQL 10 : Logical replication - Overview][1]
-  2. [PostgreSQL 10 : Logical replication - Setup][2]
-  3. [PostgreSQL 10 : Logical replication - Limitations][3]
+1. [PostgreSQL 10 : Logical replication - Overview][1]
+2. [PostgreSQL 10 : Logical replication - Setup][2]
+3. [PostgreSQL 10 : Logical replication - Limitations][3]
 
 
 # Reminder
@@ -64,7 +64,7 @@ It will be possible to choose tables to replicate, add views and indexes on the 
 
 Implementation in next article...
 
-[1]: https://blog.anayrat.info/en/2017/07/29/postgresql-10-and-logical-replication---overview/
-[2]: https://blog.anayrat.info/en/2017/08/05/postgresql-10-and-logical-replication---setup/
+[1]: https://blog.anayrat.info/en/2017/07/29/postgresql-10-and-logical-replication-overview/
+[2]: https://blog.anayrat.info/en/2017/08/05/postgresql-10-and-logical-replication-setup/
 [3]: https://blog.anayrat.info/2017/08/27/postgresql-10-et-la-replication-logique-restrictions/
 [4]: http://blog.anayrat.info/wp-content/uploads/2017/07/schema-repli-logique.png

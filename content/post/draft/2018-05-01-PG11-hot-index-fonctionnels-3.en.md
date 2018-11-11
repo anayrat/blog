@@ -32,14 +32,21 @@ It can be found in releases notes : <https://www.postgresql.org/docs/11/static/r
 I admit that this is not very explicit and this feature requires some
 knowledge about how postgres works, that I will try to explain through several articles:
 
-1. [How MVCC works and *heap-only-tuples* updates](toto)
-2. [When postgres do not use *heap-only-tuple* updates and introduction to the new feature in v11](toto)
-3. [Impact on performances](toto)
+1. [How MVCC works and *heap-only-tuples* updates][1]
+2. When postgres do not use *heap-only-tuple* updates and introduction to the new feature in v11
+3. Impact on performances
+
+**This feature was disabled in 11.1 because it could lead to instance crashes[^1].
+I chose to publish these articles because they help to understand the mechanism
+of HOT updates and the benefits that this feature could bring.**
+
+I thank Guillaume Lelarge for his review of this article ;).
 
 # Impact on performance
 
 Here is a simple test to demonstrate the benefits of this feature.
-We could expect performance gains because postgres avoids updating the indexes. As well as in terms of index size, as seen above, fragmentation is avoided.
+We could expect performance gains because postgres avoids updating the indexes,
+as well as in terms of index size, as seen above, fragmentation is avoided.
 
 ```sql
 CREATE TABLE t5 (c1 jsonb, c2 int,c3 int);
@@ -73,9 +80,7 @@ UPDATE t5 SET c1 = '{"valeur": ":id", "prenom": "guillaume"}' WHERE c2=2;
 UPDATE t5 SET c1 = '{"valeur": ":id2", "prenom": "adrien"}' WHERE c2=1;
 ```
 
-That we execute for 60 seconds:
-
-With `recheck_on_update=on` (default):
+That we execute for 60 seconds with `recheck_on_update=on` (default):
 
 ```
 pgbench -f test.sql -n -c6 -T 120
@@ -104,7 +109,7 @@ tps = 22859.938191 (excluding connections establishing)
  public | t5_expr_idx | index | postgres | t5    | 32 kB |
 (2 rows)
 
-select * from pg_stat_user_tables where relname = 't5';
+SELECT * from pg_stat_user_tables where relname = 't5';
 -[ RECORD 1 ]-------+------------------------------
 relid               | 8890622
 schemaname          | public
@@ -130,9 +135,8 @@ analyze_count       | 0
 autoanalyze_count   | 5
 ```
 
-With `recheck_on_update=off`:
-
-Same data set as before but this time the index is created with this order:
+Now with `recheck_on_update=off`. So, why the same data set as before but this
+time the index is created with this order:
 `CREATE INDEX ON t5 ((c1->>'prenom')) WITH (recheck_on_update=off);`
 
 
@@ -351,15 +355,16 @@ indexes. We also note the importance of leaving the autovacuum activated.
 
 Why do we have such a large difference on the indexes and the table?
 
-For the indexes this is due to the mechanism explained above, postgres was
+For the indexes, this is due to the mechanism explained above. Postgres was
 able to chain the records by avoiding updating the index. The index has
 nevertheless slightly increased in size, it may happen that postgres cannot make a HOT.
-For example, when there is no more space in the block.
+For example when there is no more space in the block.
 
-As for the size of the table. During the test with autovacuum activated, the
+As for the size of the table, during the test with autovacuum activated, the
 autovacuum had more difficulty to pass on the table with the HOT disabled.
 The index growing, it resulted in more "work".
-During the test without autovacuum, the difference is explained.
+During the test without autovacuum, the difference is explained by the fact that
+even a simple SELECT can prune blocs.
 
 
 
@@ -420,3 +425,9 @@ SELECT pg_stat_get_xact_tuples_hot_updated('t4'::regclass);
 -- changement qui ne porte pas sur prenom
 UPDATE t4 SET c1 = '{"ville": "lillgegre", "prenom": "guillaume"}' WHERE c2=2;
 ```
+
+[1]: https://blog.anayrat.info/en/2018/11/12/postgresql-and-heap-only-tuples-updates-part-1/
+[2]:
+[3]:
+
+[^1]: [Disable recheck_on_update optimization to avoid crashes](https://git.postgresql.org/gitweb/?p=postgresql.git;a=commit;h=05f84605dbeb9cf8279a157234b24bbb706c5256)

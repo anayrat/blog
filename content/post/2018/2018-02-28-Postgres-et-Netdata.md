@@ -50,7 +50,7 @@ Ce graphe présente l'activité des processus lancés par "l'autovacuum launcher
 Leur rôle est d'effectuer des tâches de maintenance afin de :
 
   * Nettoyer les lignes mortes
-  * Mettre à jour les statistiques des données (voir [Rappels statistiques, cardinalité, sélectivité](https://blog.anayrat.info/2017/11/26/postgresql---jsonb-et-statistiques/#rappels-statistiques-cardinalit%C3%A9-s%C3%A9lectivit%C3%A9))
+  * Mettre à jour les statistiques des données (voir [Rappels statistiques, cardinalité, sélectivité](https://blog.anayrat.info/2017/11/26/postgresql-jsonb-et-statistiques/#rappels-statistiques-cardinalit%C3%A9-s%C3%A9lectivit%C3%A9))
   * "Geler" les lignes anciennes afin d'éviter un wraparound (Voir [Transaction Id Wraparound in Postgres](http://malisper.me/transaction-id-wraparound-in-postgres/))
 
 Normalement, il n'y a pas à s'inquiéter, la configuration par défaut suffit dans

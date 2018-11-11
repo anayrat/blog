@@ -1,7 +1,7 @@
 +++
 title = "PostgreSQL et updates heap-only-tuples - partie 1"
-date = 2018-04-25T14:09:22+02:00
-draft = true
+date = 2018-11-12T08:00:00+01:00
+draft = false
 summary = "Fonctionnement du MVCC et update *heap-only-tuples*"
 
 # Tags and categories
@@ -32,9 +32,17 @@ J'avoue que ce n'est pas très explicite et cette fonctionnalité nécessite que
 connaissances sur le fonctionnement du moteur que je vais essayer d'expliquer à travers
 plusieurs articles :
 
-1. [Fonctionnement du MVCC et update *heap-only-tuples*](toto)
-2. [Quand le moteur ne fait pas d'update *heap-only-tuple* et présentation de la nouveauté de la version 11](toto)
-3. [Impact sur les performances](toto)
+1. [Fonctionnement du MVCC et update *heap-only-tuples*][1]
+2. Quand le moteur ne fait pas d'update *heap-only-tuple* et présentation de la nouveauté de la version 11
+3. Impact sur les performances
+
+**Cette fonctionnalité a été désactivée en 11.1 car elle pouvait conduire à des
+crash d'instance[^1]. J'ai tout de même choisi de publier ces articles car ils permettent
+de comprendre le mécanisme des updates HOT et le gain que pourrait apporter cette
+fonctionnalité.**
+
+Je remercie au passage Guillaume Lelarge pour la relecture de cet article ;).
+
 
 # Fonctionnement MVCC
 
@@ -50,7 +58,7 @@ SGBG : la concurrence d'accès.
 La ligne que vous êtes en train de modifier est peut être utilisée par une transaction
 antérieure. Une sauvegarde en cours par exemple :)
 
-Pour cela les SGBD ont adopté différentes techniques :
+Pour cela, les SGBD ont adopté différentes techniques :
 
   * Modifier l'enregistrement et stocker les versions antérieures sur un autre
   emplacement. C'est ce que fait oracle par exemple avec les undo logs.
@@ -63,9 +71,7 @@ Prenons une table toute simple et regardons son contenu évoluer à l'aide de l'
 
 ```sql
 CREATE TABLE t2(c1 int);
-CREATE TABLE
 INSERT INTO t2 VALUES (1);
-INSERT 0 1
 SELECT lp,t_data FROM  heap_page_items(get_raw_page('t2',0));
  lp |   t_data   
 ----+------------
@@ -73,7 +79,6 @@ SELECT lp,t_data FROM  heap_page_items(get_raw_page('t2',0));
 (1 row)
 
 UPDATE t2 SET c1 = 2 WHERE c1 = 1;
-UPDATE 1
 SELECT lp,t_data FROM  heap_page_items(get_raw_page('t2',0));
  lp |   t_data   
 ----+------------
@@ -81,8 +86,7 @@ SELECT lp,t_data FROM  heap_page_items(get_raw_page('t2',0));
   2 | \x02000000
 (2 rows)
 
-vacuum t2;
-VACUUM
+VACUUM t2;
 SELECT lp,t_data FROM  heap_page_items(get_raw_page('t2',0));
  lp |   t_data   
 ----+------------
@@ -131,10 +135,10 @@ la table (colonne ctid).
 Si je mets à jour la colonne c1, avec la nouvelle valeur 3 par exemple, l'index
 devra être mis à jour.
 
-Maintenant si je mets à jour la colonne c2. Est-ce que l'index portant sur c1
-sera mis à jour?
+Maintenant, si je mets à jour la colonne c2, est-ce que l'index portant sur c1
+sera mis à jour ?
 
-Au premier abord on pourrait se dire non car c1 n'est pas modifiée.
+Au premier abord, on pourrait se dire non car c1 n'est pas modifiée.
 
 Mais à cause du modèle MVCC présenté plus haut, en théorie, la réponse sera oui :
 nous venons de voir que le moteur va dupliquer la ligne, son emplacement physique
@@ -144,7 +148,6 @@ Vérifions le :
 
 ```sql
 UPDATE t3 SET c2 = 3 WHERE c1=1;
-UPDATE 1
 SELECT lp,t_data,t_ctid FROM  heap_page_items(get_raw_page('t3',0));
  lp |       t_data       | t_ctid
 ----+--------------------+--------
@@ -166,16 +169,16 @@ La lecture du bloc de la table confirme bien que la ligne a été dupliquée.
 En observant attentivement le champ `t_data`, on arrive à distinguer le 1 de la
 colonne c1 et le 3 de la colonne c2.
 
-En lisant le bloc de l'index, on constate que son contenu n'a pas bougé! Si je
+En lisant le bloc de l'index, on constate que son contenu n'a pas bougé ! Si je
 cherche la ligne `WHERE c1 = 1`, l'index m'oriente vers l'enregistrement (0,1) qui
-correspond à l'ancienne ligne!
+correspond à l'ancienne ligne !
 
-Que s'est-il passé?
+Que s'est-il passé ?
 
-En réalité nous venons de mettre en évidence un mécanisme un peu particulier
+En réalité, nous venons de mettre en évidence un mécanisme un peu particulier
 appelé *heap-only-tuple* alias HOT. Lorsqu'une colonne est mise à jour, qu'aucun
 index ne pointe vers cette colonne et qu'on peut insérer l'enregistrement dans
-le même bloc. Le moteur va se contenter de faire un pointeur entre l'ancien
+le même bloc, le moteur va se contenter de faire un pointeur entre l'ancien
 enregistrement le nouveau.
 
 Cela permet au moteur d'éviter d'avoir à mettre à jour l'index. Avec tout ce que
@@ -217,8 +220,7 @@ SELECT lp,t_data,t_ctid FROM  heap_page_items(get_raw_page('t3',0));
 Vacuum nettoie les emplacements disponibles :
 
 ```sql
-vacuum t3;
-VACUUM
+VACUUM t3;
 SELECT lp,t_data,t_ctid FROM  heap_page_items(get_raw_page('t3',0));
  lp |       t_data       | t_ctid
 ----+--------------------+--------
@@ -234,7 +236,6 @@ Observez la valeur de la colonne `t_ctid` pour reconstituer la chaîne :
 
 ```sql
 UPDATE t3 SET c2 = 5 WHERE c1=1;
-UPDATE 1
 SELECT lp,t_data,t_ctid FROM  heap_page_items(get_raw_page('t3',0));
  lp |       t_data       | t_ctid
 ----+--------------------+--------
@@ -253,12 +254,12 @@ SELECT * FROM  bt_page_items(get_raw_page('t3_c1_idx',1));
 (2 rows)
 ```
 
-Euh, la première ligne est vide et le moteur a réutilisé le troisième emplacement?
+Euh, la première ligne est vide et le moteur a réutilisé le troisième emplacement ?
 
 En fait, une information n’apparaît pas dans pageinspect. Allons lire directement le bloc avec
 [pg_filedump](https://wiki.postgresql.org/wiki/Pg_filedump) :
 
-Note : Il faut demander un `CHECKPOINT` au préalable sinon le bloc pourrait ne
+Note : Il faut demander un `CHECKPOINT` au préalable. Dans le cas contraire, le bloc pourrait ne
 pas encore être écrit sur le disque.
 
 ```
@@ -303,7 +304,7 @@ correspond à une redirection HOT. C'est documenté dans `src/include/storage/it
 #define LP_DEAD         3       /* dead, may or may not have storage */   
 ```
 
-En réalité, il est possible de le voir avec pageinspect en affichant la colonne `lp_flags`:
+Il est AUSSI possible de le voir avec pageinspect en affichant la colonne `lp_flags`:
 
 ```sql
 SELECT lp,lp_flags,t_data,t_ctid FROM  heap_page_items(get_raw_page('t3',0));
@@ -316,7 +317,7 @@ SELECT lp,lp_flags,t_data,t_ctid FROM  heap_page_items(get_raw_page('t3',0));
 (4 rows)
 ```
 
-Si on refait un update, puis vacuum, suivi d'un CHECKPOINT pour écrire le bloc sur disque :
+Si on refait un UPDATE, puis VACUUM, suivi d'un CHECKPOINT pour écrire le bloc sur disque :
 
 ```sql
 SELECT lp,lp_flags,t_data,t_ctid FROM  heap_page_items(get_raw_page('t3',0));
@@ -372,10 +373,15 @@ Il y a cependant quelques cas où le moteur ne peut pas utiliser ce mécanisme :
   du HOT.
   * Un index porte sur la colonne mise à jour. Dans ce cas le moteur doit mettre
   à jour l'index. Le moteur peut détecter s'il y a eu un changement
-  en effectuant une comparaison binaire entre la nouvelle valeur et la précédente [^1].
+  en effectuant une comparaison binaire entre la nouvelle valeur et la précédente [^2].
 
 Dans le prochain article nous verrons justement un exemple où le moteur
 ne peut pas employer le mécanisme HOT. Puis, la nouveauté de la version 11
 où le moteur peut utiliser se mécanisme.
 
-[^1]: [README.HOT](https://git.postgresql.org/gitweb/?p=postgresql.git;a=blob;f=src/backend/access/heap/README.HOT;h=4cf3c3a0d4c2db96a57e73e46fdd7463db439f79;hb=HEAD#l128)
+[1]: https://blog.anayrat.info/2018/11/12/postgresql-et-updates-heap-only-tuples-partie-1/
+[2]:
+[3]:
+
+[^1]: [Disable recheck_on_update optimization to avoid crashes](https://git.postgresql.org/gitweb/?p=postgresql.git;a=commit;h=05f84605dbeb9cf8279a157234b24bbb706c5256)
+[^2]: [README.HOT](https://git.postgresql.org/gitweb/?p=postgresql.git;a=blob;f=src/backend/access/heap/README.HOT;h=4cf3c3a0d4c2db96a57e73e46fdd7463db439f79;hb=HEAD#l128)

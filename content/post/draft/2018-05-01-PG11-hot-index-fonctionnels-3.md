@@ -33,15 +33,23 @@ J'avoue que ce n'est pas très explicite et cette fonctionnalité nécessite que
 connaissances sur le fonctionnement du moteur que je vais essayer d'expliquer à travers
 plusieurs articles :
 
-1. [Fonctionnement du MVCC et update *heap-only-tuples*](toto)
-2. [Quand le moteur ne fait pas d'update *heap-only-tuple* et présentation de la nouveauté de la version 11](toto)
-3. [Impact sur les performances](toto)
+1. [Fonctionnement du MVCC et update *heap-only-tuples*][1]
+2. Quand le moteur ne fait pas d'update *heap-only-tuple* et présentation de la nouveauté de la version 11
+3. Impact sur les performances
+
+**Cette fonctionnalité a été désactivée en 11.1 car elle pouvait conduire à des
+crash d'instance[^1]. J'ai tout de même choisi de publier ces articles car ils permettent
+de comprendre le mécanisme des updates HOT et le gain que pourrait apporter cette
+fonctionnalité.**
+
+Je remercie au passage Guillaume Lelarge pour la relecture de cet article ;).
+
 
 # Impact sur les performances
 
 Voici un test assez simple pour mettre en évidence l'intérêt de cette fonctionnalité.
 On pourrait s'attendre à des gains en performances car le moteur évite de mettre
-à jour les index. Ainsi qu'en matière de taille d'index, comme vu précédemment,
+à jour les index, ainsi qu'en matière de taille d'index, comme vu précédemment,
 on évite la fragmentation.
 
 ```sql
@@ -76,9 +84,7 @@ UPDATE t5 SET c1 = '{"valeur": ":id", "prenom": "guillaume"}' WHERE c2=2;
 UPDATE t5 SET c1 = '{"valeur": ":id2", "prenom": "adrien"}' WHERE c2=1;
 ```
 
-Qu'on exécute pendant 60 secondes :
-
-Avec `recheck_on_update=on` (par défaut):
+Qu'on exécute pendant 60 secondes, avec `recheck_on_update=on` (par défaut) :
 
 ```
 pgbench -f test.sql -n -c6 -T 120
@@ -107,7 +113,7 @@ tps = 22859.938191 (excluding connections establishing)
  public | t5_expr_idx | index | postgres | t5    | 32 kB |
 (2 rows)
 
-select * from pg_stat_user_tables where relname = 't5';
+SELECT * FROM pg_stat_user_tables WHERE relname = 't5';
 -[ RECORD 1 ]-------+------------------------------
 relid               | 8890622
 schemaname          | public
@@ -133,9 +139,8 @@ analyze_count       | 0
 autoanalyze_count   | 5
 ```
 
-Avec `recheck_on_update=off` :
-
-Même jeu de donnée que précédemment mais cette fois l'index est créé avec cet ordre :
+Et maintenant avec `recheck_on_update=off`. Donc même jeu de donnée que
+précédemment mais cette fois l'index est créé avec cet ordre :
 `CREATE INDEX ON t5 ((c1->>'prenom')) WITH (recheck_on_update=off);`
 
 
@@ -354,25 +359,25 @@ Description |
 A nouveau, l'écart de performance est important, il en est de même pour la taille
 des tables et index. On note également l'importance de laisser l'autovacuum activé.
 
-Pourquoi avons-nous un tel écart de taille sur les index et la table?
+Pourquoi avons-nous un tel écart de taille sur les index et la table ?
 
-Pour les index c'est dû au mécanisme expliqué plus haut, le moteur a pu chaîner
+Pour les index, c'est dû au mécanisme expliqué plus haut. Le moteur a pu chaîner
 les enregistrements en évitant de mettre à jour l'index. L'index a quand même
-légèrement augmenté de taille, il arrive que le moteur ne peut pas faire de HOT.
-Par exemple, quand il n'y a plus de place dans le bloc.
+légèrement augmenté de taille, il arrive que le moteur ne peut pas faire de HOT,
+par exemple quand il n'y a plus de place dans le bloc.
 
-Pour ce qui est de la taille de la table. Lors du test avec autovacuum activé,
+Pour ce qui est de la taille de la table, lors du test avec autovacuum activé,
 l'autovacuum avait plus de difficultés à passer sur la table avec le HOT désactivé.
 L'index grossissant, cela engendrait plus de "travail".
 Lors du test sans autovacuum, l'écart s'explique par le fait que même un simple
-select peut nettoyer des blocs.
+SELECT peut nettoyer des blocs.
 
 
 # Cas où l'expression est coûteuse
 
 FIXME : est-ce que je vais aussi loin?
 
-Et dans le cas d'un index fonctionnel? Il est trop coûteux de verifier à chaque mise à jour si l'index doit être mis à jour.
+Et dans le cas d'un index fonctionnel ? Il est trop coûteux de vérifier à chaque mise à jour si l'index doit être mis à jour.
 Par exemple, un index fonctionnel qui n'indexe que certaines clés d'un objet JSON :
 
 ```SQL
@@ -425,3 +430,9 @@ SELECT pg_stat_get_xact_tuples_hot_updated('t4'::regclass);
 -- changement qui ne porte pas sur prenom
 UPDATE t4 SET c1 = '{"ville": "lillgegre", "prenom": "guillaume"}' WHERE c2=2;
 ```
+
+[1]: https://blog.anayrat.info/2018/11/12/postgresql-et-updates-heap-only-tuples-partie-1/
+[2]:
+[3]:
+
+[^1]: [Disable recheck_on_update optimization to avoid crashes](https://git.postgresql.org/gitweb/?p=postgresql.git;a=commit;h=05f84605dbeb9cf8279a157234b24bbb706c5256)

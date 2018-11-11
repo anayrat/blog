@@ -33,9 +33,17 @@ J'avoue que ce n'est pas très explicite et cette fonctionnalité nécessite que
 connaissances sur le fonctionnement du moteur que je vais essayer d'expliquer à travers
 plusieurs articles :
 
-1. [Fonctionnement du MVCC et update *heap-only-tuples*](toto)
-2. [Quand le moteur ne fait pas d'update *heap-only-tuple* et présentation de la nouveauté de la version 11](toto)
-3. [Impact sur les performances](toto)
+1. [Fonctionnement du MVCC et update *heap-only-tuples*][1]
+2. Quand le moteur ne fait pas d'update *heap-only-tuple* et présentation de la nouveauté de la version 11
+3. Impact sur les performances
+
+**Cette fonctionnalité a été désactivée en 11.1 car elle pouvait conduire à des
+crash d'instance[^1]. J'ai tout de même choisi de publier ces articles car ils permettent
+de comprendre le mécanisme des updates HOT et le gain que pourrait apporter cette
+fonctionnalité.**
+
+Je remercie au passage Guillaume Lelarge pour la relecture de cet article ;).
+
 
 # Cas avec un index sur une colonne mise à jour
 
@@ -43,16 +51,14 @@ Reprenons l'exemple précédent et rajoutons une colonne indexée :
 
 ```sql
 ALTER TABLE t3 ADD COLUMN c3 int;
-ALTER TABLE
 CREATE INDEX ON t3(c3);
-CREATE INDEX
 ```
 
-Les updates précédents portaient sur une colonne non-indexée. Que se passe-t-il
-si l'update porte sur c3?
+Les UPDATE précédents portaient sur une colonne non-indexée. Que se passe-t-il
+si l'UPDATE porte sur c3 ?
 
 
-État de la table et des index avant update :
+État de la table et des index avant UPDATE :
 
 ```sql
 SELECT lp,lp_flags,t_data,t_ctid FROM  heap_page_items(get_raw_page('t3',0));
@@ -86,7 +92,6 @@ chaque ligne.
 
 ```sql
 UPDATE t3 SET c3 = 7 WHERE c1=1;
-UPDATE 1
 SELECT * FROM  bt_page_items(get_raw_page('t3_c3_idx',1));
  itemoffset | ctid  | itemlen | nulls | vars |          data
 ------------+-------+---------+-------+------+-------------------------
@@ -119,11 +124,10 @@ bien un nouvel enregistrement. En revanche, l'index `t3_c1_idx` a également ét
 mis à jour. Entraînant l'ajout d'une troisième entrée, même si la valeur de la
 colonne c1 n'a pas changée.
 
-Après un vacuum:
+Après un VACUUM :
 
 ```sql
 VACUUM t3;
-VACUUM
 SELECT * FROM  bt_page_items(get_raw_page('t3_c1_idx',1));
  itemoffset | ctid  | itemlen | nulls | vars |          data
 ------------+-------+---------+-------+------+-------------------------
@@ -153,7 +157,6 @@ Le moteur a nettoyé les index et la table. La première ligne de la table n'a p
 le flag `REDIRECT`.
 
 
-
 # Nouveauté de la version : 11 heap-only-tuple (HOT) avec index fonctionnels
 
 
@@ -165,20 +168,13 @@ Prenons un exemple : un index fonctionnel sur une *clé spécifique* d'un objet 
 
 ```SQL
 CREATE TABLE t4 (c1 jsonb, c2 int,c3 int);
-CREATE TABLE
 CREATE INDEX ON t4 ((c1->>'prenom')) ;
-CREATE INDEX
 CREATE INDEX ON t4 (c2);
-CREATE INDEX
 INSERT INTO t4 VALUES ('{ "prenom":"adrien" , "ville" : "valence"}'::jsonb,1,1);
-INSERT 0 1
 INSERT INTO t4 VALUES ('{ "prenom":"guillaume" , "ville" : "lille"}'::jsonb,2,2);
-INSERT 0 1
-
 
 -- changement qui ne porte pas sur prenom, on change que la ville
 UPDATE t4 SET c1 = '{"ville": "valence (#soleil)", "prenom": "guillaume"}' WHERE c2=2;
-UPDATE 1
 SELECT pg_stat_get_xact_tuples_hot_updated('t4'::regclass);
  pg_stat_get_xact_tuples_hot_updated
 -------------------------------------
@@ -186,7 +182,6 @@ SELECT pg_stat_get_xact_tuples_hot_updated('t4'::regclass);
 (1 row)
 
 UPDATE t4 SET c1 = '{"ville": "nantes", "prenom": "guillaume"}' WHERE c2=2;
-UPDATE 1
 SELECT pg_stat_get_xact_tuples_hot_updated('t4'::regclass);
  pg_stat_get_xact_tuples_hot_updated
 -------------------------------------
@@ -197,10 +192,10 @@ SELECT pg_stat_get_xact_tuples_hot_updated('t4'::regclass);
 La fonction `pg_stat_get_xact_tuples_hot_updated` indique le nombre de lignes mises
 à jour par le mécanisme HOT.
 
-Les deux updates n'ont fait que modifier la clé "ville" et pas la clé "prenom".
+Les deux UPDATE n'ont fait que modifier la clé "ville" et pas la clé "prenom".
 Ce qui n’entraîne pas de modification de l'index car il n'indexe que la clé "prenom".
 
-Le moteur n'a pas pu faire d'HOT. En effet, pour lui l'update a porté sur la colonne et
+Le moteur n'a pas pu faire d'HOT. En effet, pour lui, l'UPDATE a porté sur la colonne et
 l'index doit être mis à jour.
 
 Avec la version 11, le moteur est capable de constater que le résultat de
@@ -208,21 +203,14 @@ l'expression ne change pas. Effectuons le même test sur la version 11 :
 
 ```SQL
 CREATE TABLE t4 (c1 jsonb, c2 int,c3 int);
-CREATE TABLE
 -- CREATE INDEX ON t4 ((c1->>'prenom'))  WITH (recheck_on_update='false');
 CREATE INDEX ON t4 ((c1->>'prenom')) ;
-CREATE INDEX
 CREATE INDEX ON t4 (c2);
-CREATE INDEX
 INSERT INTO t4 VALUES ('{ "prenom":"adrien" , "ville" : "valence"}'::jsonb,1,1);
-INSERT 0 1
 INSERT INTO t4 VALUES ('{ "prenom":"guillaume" , "ville" : "lille"}'::jsonb,2,2);
-INSERT 0 1
-
 
 -- changement qui ne porte pas sur prenom
 UPDATE t4 SET c1 = '{"ville": "valence (#soleil)", "prenom": "guillaume"}' WHERE c2=2;
-UPDATE 1
 SELECT pg_stat_get_xact_tuples_hot_updated('t4'::regclass);
  pg_stat_get_xact_tuples_hot_updated
 -------------------------------------
@@ -230,7 +218,6 @@ SELECT pg_stat_get_xact_tuples_hot_updated('t4'::regclass);
 (1 row)
 
 UPDATE t4 SET c1 = '{"ville": "nantes", "prenom": "guillaume"}' WHERE c2=2;
-UPDATE 1
 SELECT pg_stat_get_xact_tuples_hot_updated('t4'::regclass);
  pg_stat_get_xact_tuples_hot_updated
 -------------------------------------
@@ -238,7 +225,7 @@ SELECT pg_stat_get_xact_tuples_hot_updated('t4'::regclass);
 (1 row)
 ```
 
-Cette fois le moteur a bien utilisé le mécanisme HOT. On peut le vérifier en
+Cette fois, le moteur a bien utilisé le mécanisme HOT. On peut le vérifier en
 regardant le contenu physique de l'index avec pageinspect :
 
 Version 10 :
@@ -264,13 +251,19 @@ itemoffset | ctid  | itemlen | nulls | vars |                      data
 (2 rows)
 ```
 
-Ce comportement peut se contrôler grace à une nouvelle option lors de la création
+Ce comportement peut se contrôler grâce à une nouvelle option lors de la création
 de l'index : `recheck_on_update`.
 
 Par défaut à `on`, le moteur effectue la vérification du résultat de l'expression
-pour faire un update HOT. On peut le paramétrer à `off` s'il y a de fortes chances
-pour que le résultat de l'expression change lors d'un update. Cela permet d'éviter
+pour faire un UPDATE HOT. On peut le paramétrer à `off` s'il y a de fortes chances
+pour que le résultat de l'expression change lors d'un UPDATE. Cela permet d'éviter
 d'exécuter l'expression inutilement.
 
 A noter également que le moteur évite l'évaluation de l'expression si son coût est
 supérieur à 1000.
+
+[1]: https://blog.anayrat.info/2018/11/12/postgresql-et-updates-heap-only-tuples-partie-1/
+[2]:
+[3]:
+
+[^1]: [Disable recheck_on_update optimization to avoid crashes](https://git.postgresql.org/gitweb/?p=postgresql.git;a=commit;h=05f84605dbeb9cf8279a157234b24bbb706c5256)

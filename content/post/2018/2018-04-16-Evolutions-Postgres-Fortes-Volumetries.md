@@ -159,7 +159,7 @@ Ce type d'index contient le résumé d'un ensemble de blocs. Ils sont donc très
 Ils sont particulièrement adaptés aux fortes volumétries avec des requêtes manipulant
 un gros volume de données. Attention, il est très important qu'il y ait une forte corrélation entre les données et leur emplacement pour que leur efficacité soit optimale.
 
-J'ai présenté le fonctionnement de ce type d'index lors du PGDay France 2016 à Lille : [Index BRIN - Fonctionnement et usages possibles](http://blog.anayrat.info/talk/2016/05/31/index-brin---fonctionnement-et-usages-possibles/)
+J'ai présenté le fonctionnement de ce type d'index lors du PGDay France 2016 à Lille : [Index BRIN - Fonctionnement et usages possibles](http://blog.anayrat.info/talk/2016/05/31/index-brin-fonctionnement-et-usages-possibles/)
 
 ## BLOOM filters (9.6)
 

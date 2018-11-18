@@ -1,7 +1,7 @@
 +++
 title = "PostgreSQL and heap-only-tuples updates - part 2"
-date = 2018-04-25T14:09:22+02:00
-draft = true
+date = 2018-11-19T08:00:00+01:00
+draft = false
 summary = "When postgres do not use *heap-only-tuple* updates and introduction to the new feature in v11"
 
 # Tags and categories
@@ -33,14 +33,19 @@ I admit that this is not very explicit and this feature requires some
 knowledge about how postgres works, that I will try to explain through several articles:
 
 1. [How MVCC works and *heap-only-tuples* updates][1]
-2. When postgres do not use *heap-only-tuple* updates and introduction to the new feature in v11
+2. [When postgres do not use *heap-only-tuple* updates and introduction to the new feature in v11][2]
 3. Impact on performances
 
-**This feature was disabled in 11.1 because it could lead to instance crashes[^1].
+**This feature was disabled in 11.1 because it could lead to instance crashes[^4].
 I chose to publish these articles because they help to understand the mechanism
 of HOT updates and the benefits that this feature could bring.**
 
 I thank Guillaume Lelarge for his review of this article ;).
+
+The previous article showed how heap-only-tuple UPDATE works. In this one, we will
+see when Postgres does not perform heap-only-tuple UPDATE.
+This will allow us to approach the functionality that should have been available
+in version 11.
 
 
 # Cases with an index on an updated column
@@ -252,14 +257,17 @@ itemoffset | ctid  | itemlen | nulls | vars |                      data
 
 This behavior can be controlled by a new option when creating the index: `recheck_on_update`.
 
-On by default, the engine checks the result of the expression to perform a HOT UPDATE.
+On by default, postgres checks the result of the expression to perform a HOT UPDATE.
 It can be set to `off` if there is a good chance that the result of the expression
 will change during an UPDATE. This avoids executing the expression unnecessarily.
 
-Also notes that the engine avoids the evaluation of the expression if its cost is higher than 1000.
+Also notes that postgres avoids the evaluation of the expression if its cost is higher than 1000.
+
+In the third and last article, we will see a more concrete case to measure
+impact in terms of  performance and volumetry.
 
 [1]: https://blog.anayrat.info/en/2018/11/12/postgresql-and-heap-only-tuples-updates-part-1/
-[2]:
+[2]: https://blog.anayrat.info/en/2018/11/19/postgresql-and-heap-only-tuples-updates-part-2/
 [3]:
 
-[^1]: [Disable recheck_on_update optimization to avoid crashes](https://git.postgresql.org/gitweb/?p=postgresql.git;a=commit;h=05f84605dbeb9cf8279a157234b24bbb706c5256)
+[^4]: [Disable recheck_on_update optimization to avoid crashes](https://git.postgresql.org/gitweb/?p=postgresql.git;a=commit;h=05f84605dbeb9cf8279a157234b24bbb706c5256)

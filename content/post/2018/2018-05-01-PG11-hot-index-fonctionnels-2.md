@@ -1,7 +1,7 @@
 +++
 title = "PostgreSQL et updates heap-only-tuples - partie 2"
-date = 2018-04-25T14:09:22+02:00
-draft = true
+date = 2018-11-19T08:00:00+01:00
+draft = false
 summary = "Quand le moteur ne fait pas d'update *heap-only-tuple* et présentation de la nouveauté de la version 11"
 
 # Tags and categories
@@ -34,15 +34,20 @@ connaissances sur le fonctionnement du moteur que je vais essayer d'expliquer à
 plusieurs articles :
 
 1. [Fonctionnement du MVCC et update *heap-only-tuples*][1]
-2. Quand le moteur ne fait pas d'update *heap-only-tuple* et présentation de la nouveauté de la version 11
+2. [Quand le moteur ne fait pas d'update *heap-only-tuple* et présentation de la nouveauté de la version 11][2]
 3. Impact sur les performances
 
 **Cette fonctionnalité a été désactivée en 11.1 car elle pouvait conduire à des
-crash d'instance[^1]. J'ai tout de même choisi de publier ces articles car ils permettent
+crash d'instance[^4]. J'ai tout de même choisi de publier ces articles car ils permettent
 de comprendre le mécanisme des updates HOT et le gain que pourrait apporter cette
 fonctionnalité.**
 
 Je remercie au passage Guillaume Lelarge pour la relecture de cet article ;).
+
+
+L'article précédent présentait le fonctionnement des UDATES heap-only-tuple. Dans
+cet article nous allons voir le cas où Postgres ne fait pas d'UPDATE heap-ony-tuple.
+Ce qui nous permettra d'aborder la fonctionnalité qui aurait du arriver dans la version 11.
 
 
 # Cas avec un index sur une colonne mise à jour
@@ -262,8 +267,12 @@ d'exécuter l'expression inutilement.
 A noter également que le moteur évite l'évaluation de l'expression si son coût est
 supérieur à 1000.
 
+Dans le troisième et dernier article, nous verrons un cas un peu plus concret
+pour voir l'impact en terme de performance et de volumétrie.
+
+
 [1]: https://blog.anayrat.info/2018/11/12/postgresql-et-updates-heap-only-tuples-partie-1/
-[2]:
+[2]: https://blog.anayrat.info/2018/11/19/postgresql-et-updates-heap-only-tuples-partie-2/
 [3]:
 
-[^1]: [Disable recheck_on_update optimization to avoid crashes](https://git.postgresql.org/gitweb/?p=postgresql.git;a=commit;h=05f84605dbeb9cf8279a157234b24bbb706c5256)
+[^4]: [Disable recheck_on_update optimization to avoid crashes](https://git.postgresql.org/gitweb/?p=postgresql.git;a=commit;h=05f84605dbeb9cf8279a157234b24bbb706c5256)

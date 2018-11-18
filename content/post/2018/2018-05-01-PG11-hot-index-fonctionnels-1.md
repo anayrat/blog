@@ -33,11 +33,11 @@ connaissances sur le fonctionnement du moteur que je vais essayer d'expliquer à
 plusieurs articles :
 
 1. [Fonctionnement du MVCC et update *heap-only-tuples*][1]
-2. Quand le moteur ne fait pas d'update *heap-only-tuple* et présentation de la nouveauté de la version 11
+2. [Quand le moteur ne fait pas d'update *heap-only-tuple* et présentation de la nouveauté de la version 11][2]
 3. Impact sur les performances
 
 **Cette fonctionnalité a été désactivée en 11.1 car elle pouvait conduire à des
-crash d'instance[^1]. J'ai tout de même choisi de publier ces articles car ils permettent
+crash d'instance[^4]. J'ai tout de même choisi de publier ces articles car ils permettent
 de comprendre le mécanisme des updates HOT et le gain que pourrait apporter cette
 fonctionnalité.**
 
@@ -373,15 +373,15 @@ Il y a cependant quelques cas où le moteur ne peut pas utiliser ce mécanisme :
   du HOT.
   * Un index porte sur la colonne mise à jour. Dans ce cas le moteur doit mettre
   à jour l'index. Le moteur peut détecter s'il y a eu un changement
-  en effectuant une comparaison binaire entre la nouvelle valeur et la précédente [^2].
+  en effectuant une comparaison binaire entre la nouvelle valeur et la précédente [^5].
 
 Dans le prochain article nous verrons justement un exemple où le moteur
 ne peut pas employer le mécanisme HOT. Puis, la nouveauté de la version 11
 où le moteur peut utiliser se mécanisme.
 
 [1]: https://blog.anayrat.info/2018/11/12/postgresql-et-updates-heap-only-tuples-partie-1/
-[2]:
+[2]: https://blog.anayrat.info/2018/11/19/postgresql-et-updates-heap-only-tuples-partie-2/
 [3]:
 
-[^1]: [Disable recheck_on_update optimization to avoid crashes](https://git.postgresql.org/gitweb/?p=postgresql.git;a=commit;h=05f84605dbeb9cf8279a157234b24bbb706c5256)
-[^2]: [README.HOT](https://git.postgresql.org/gitweb/?p=postgresql.git;a=blob;f=src/backend/access/heap/README.HOT;h=4cf3c3a0d4c2db96a57e73e46fdd7463db439f79;hb=HEAD#l128)
+[^4]: [Disable recheck_on_update optimization to avoid crashes](https://git.postgresql.org/gitweb/?p=postgresql.git;a=commit;h=05f84605dbeb9cf8279a157234b24bbb706c5256)
+[^5]: [README.HOT](https://git.postgresql.org/gitweb/?p=postgresql.git;a=blob;f=src/backend/access/heap/README.HOT;h=4cf3c3a0d4c2db96a57e73e46fdd7463db439f79;hb=HEAD#l128)

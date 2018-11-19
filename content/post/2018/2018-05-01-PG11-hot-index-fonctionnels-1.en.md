@@ -368,7 +368,7 @@ However, there are a few cases where postgres cannot use this mechanism:
   We can deduce that the fragmentation of the table is useful here to benefit of HOT.
   * When an index exists on the updated column. In this case postgres must update
   the index. Postgres can detect if there has been a change by performing a binary
-  comparison between the new value and the previous one [^1].
+  comparison between the new value and the previous one [^5].
 
 In the next article we will see an example where postgres cannot use HOT mechanism.
 Then, the new feature of version 11 where postgres can use this mechanism.
@@ -377,5 +377,5 @@ Then, the new feature of version 11 where postgres can use this mechanism.
 [2]: https://blog.anayrat.info/en/2018/11/19/postgresql-and-heap-only-tuples-updates-part-2/
 [3]:
 
-[^1]: [Disable recheck_on_update optimization to avoid crashes](https://git.postgresql.org/gitweb/?p=postgresql.git;a=commit;h=05f84605dbeb9cf8279a157234b24bbb706c5256)
-[^2]: [README.HOT](https://git.postgresql.org/gitweb/?p=postgresql.git;a=blob;f=src/backend/access/heap/README.HOT;h=4cf3c3a0d4c2db96a57e73e46fdd7463db439f79;hb=HEAD#l128)
+[^4]: [Disable recheck_on_update optimization to avoid crashes](https://git.postgresql.org/gitweb/?p=postgresql.git;a=commit;h=05f84605dbeb9cf8279a157234b24bbb706c5256)
+[^5]: [README.HOT](https://git.postgresql.org/gitweb/?p=postgresql.git;a=blob;f=src/backend/access/heap/README.HOT;h=4cf3c3a0d4c2db96a57e73e46fdd7463db439f79;hb=HEAD#l128)

@@ -1,8 +1,8 @@
 +++
-title = "PostgreSQL and heap-only-tuples updates - part 3"
-date = 2018-04-25T14:09:22+02:00
-draft = true
-summary = "Impact on performances"
+title = "PostgreSQL et updates heap-only-tuples - partie 3"
+date = 2018-11-26T08:00:00+01:00
+draft = false
+summary = "Impact sur les performances"
 
 # Tags and categories
 # For example, use `tags = []` for no tags, or the form `tags = ["A Tag", "Another Tag"]` for one or more tags.
@@ -21,32 +21,36 @@ preview = true
 
 +++
 
-Here is a series of articles that will focus on a new feature in version 11.
+Voici une série d'articles qui va porter sur une nouveauté de la version 11.
 
-During the development of this version, a feature caught my attention.
-It can be found in releases notes : <https://www.postgresql.org/docs/11/static/release-11.html>
+Durant le développement de cette version, une fonctionnalité a attiré mon attention.
+On peut la retrouver dans les releases notes : <https://www.postgresql.org/docs/11/static/release-11.html>
 
 
 > Allow heap-only-tuple (HOT) updates for expression indexes when the values of the expressions are unchanged (Konstantin Knizhnik)
 
-I admit that this is not very explicit and this feature requires some
-knowledge about how postgres works, that I will try to explain through several articles:
+J'avoue que ce n'est pas très explicite et cette fonctionnalité nécessite quelques
+connaissances sur le fonctionnement du moteur que je vais essayer d'expliquer à travers
+plusieurs articles :
 
-1. [How MVCC works and *heap-only-tuples* updates][1]
-2. [When postgres do not use *heap-only-tuple* updates and introduction to the new feature in v11][2]
-3. [Impact on performances][3]
+1. [Fonctionnement du MVCC et update *heap-only-tuples*][1]
+2. [Quand le moteur ne fait pas d'update *heap-only-tuple* et présentation de la nouveauté de la version 11][2]
+3. [Impact sur les performances][3]
 
-**This feature was disabled in 11.1 because it could lead to instance crashes[^4].
-I chose to publish these articles because they help to understand the mechanism
-of HOT updates and the benefits that this feature could bring.**
+**Cette fonctionnalité a été désactivée en 11.1 car elle pouvait conduire à des
+crash d'instance[^4]. J'ai tout de même choisi de publier ces articles car ils permettent
+de comprendre le mécanisme des updates HOT et le gain que pourrait apporter cette
+fonctionnalité.**
 
-I thank Guillaume Lelarge for his review of this article ;).
+Je remercie au passage Guillaume Lelarge pour la relecture de cet article ;).
 
-# Impact on performance
 
-Here is a simple test to demonstrate the benefits of this feature.
-We could expect performance gains because postgres avoids updating the indexes,
-as well as in terms of index size, as seen above, fragmentation is avoided.
+# Impact sur les performances
+
+Voici un test assez simple pour mettre en évidence l'intérêt de cette fonctionnalité.
+On pourrait s'attendre à des gains en performances car le moteur évite de mettre
+à jour les index, ainsi qu'en matière de taille d'index, comme vu précédemment,
+on évite la fragmentation.
 
 ```sql
 CREATE TABLE t5 (c1 jsonb, c2 int,c3 int);
@@ -70,7 +74,7 @@ INSERT INTO t5 VALUES ('{ "prenom":"guillaume" , "valeur" : "2"}'::jsonb,2,2);
 (2 rows)
 ```
 
-Then this pgbench test:
+Puis ce test pgbench :
 
 ```sql
 \set id  random(1, 100000)
@@ -80,7 +84,7 @@ UPDATE t5 SET c1 = '{"valeur": ":id", "prenom": "guillaume"}' WHERE c2=2;
 UPDATE t5 SET c1 = '{"valeur": ":id2", "prenom": "adrien"}' WHERE c2=1;
 ```
 
-That we execute for 60 seconds with `recheck_on_update=on` (default):
+Qu'on exécute pendant 60 secondes, avec `recheck_on_update=on` (par défaut) :
 
 ```
 pgbench -f test.sql -n -c6 -T 120
@@ -109,7 +113,7 @@ tps = 22859.938191 (excluding connections establishing)
  public | t5_expr_idx | index | postgres | t5    | 32 kB |
 (2 rows)
 
-SELECT * from pg_stat_user_tables where relname = 't5';
+SELECT * FROM pg_stat_user_tables WHERE relname = 't5';
 -[ RECORD 1 ]-------+------------------------------
 relid               | 8890622
 schemaname          | public
@@ -135,8 +139,8 @@ analyze_count       | 0
 autoanalyze_count   | 5
 ```
 
-Now with `recheck_on_update=off`. So, why the same data set as before but this
-time the index is created with this order:
+Et maintenant avec `recheck_on_update=off`. Donc même jeu de donnée que
+précédemment mais cette fois l'index est créé avec cet ordre :
 `CREATE INDEX ON t5 ((c1->>'prenom')) WITH (recheck_on_update=off);`
 
 
@@ -193,6 +197,7 @@ autovacuum_count    | 3
 analyze_count       | 0
 autoanalyze_count   | 3
 ```
+
 | recheck_on_update | on     | off     | Gain   |
 |------------------:|--------|---------|--------|
 |               TPS | 22859  | 8880    | 157%   |
@@ -200,9 +205,10 @@ autoanalyze_count   | 3
 |    t5_c2_idx size | 16 kB  | 768 kB  | -98%   |
 |  t5_expr_idx size | 32 kB  | 58 MB   | -99.9% |
 
-The performance difference is quite impressive, as well as the size of the tables and indexes.
+L'écart de performance est assez impressionnant de même que la taille des tables
+et index.
 
-I did the first test again by disabling the autovacuum and here is the result:
+J'ai refait le premier test en désactivant l'autovacuum et voici le résultat :
 
 ```
 pgbench -f test.sql -n -c6 -T 120
@@ -273,7 +279,7 @@ Size        | 1080 kB
 Description |
 ```
 
-Then the second test:
+Puis le second test :
 
 ```
 pgbench -f test.sql -n -c6 -T 120
@@ -350,84 +356,30 @@ Description |
 |    t5_c2_idx size | 16 kB   | 600 kB | -97%   |
 |  t5_expr_idx size | 40 kB   | 56 MB  | -99.9% |
 
-Once again, the performance gap is significant, as is the size of tables and
-indexes. We also note the importance of leaving the autovacuum activated.
+A nouveau, l'écart de performance est important, il en est de même pour la taille
+des tables et index. On note également l'importance de laisser l'autovacuum activé.
 
-Why do we have such a large difference on the indexes and the table?
+Pourquoi avons-nous un tel écart de taille sur les index et la table ?
 
-For the indexes, this is due to the mechanism explained above. Postgres was
-able to chain the records by avoiding updating the index. The index has
-nevertheless slightly increased in size, it may happen that postgres cannot make a HOT.
-For example when there is no more space in the block.
+Pour les index, c'est dû au mécanisme expliqué plus haut. Le moteur a pu chaîner
+les enregistrements en évitant de mettre à jour l'index. L'index a quand même
+légèrement augmenté de taille, il arrive que le moteur ne peut pas faire de HOT,
+par exemple quand il n'y a plus de place dans le bloc.
 
-As for the size of the table, during the test with autovacuum activated, the
-autovacuum had more difficulty to pass on the table with the HOT disabled.
-The index growing, it resulted in more "work".
-During the test without autovacuum, the difference is explained by the fact that
-even a simple SELECT can prune blocs.
+Pour ce qui est de la taille de la table, lors du test avec autovacuum activé,
+l'autovacuum avait plus de difficultés à passer sur la table avec le HOT désactivé.
+L'index grossissant, cela engendrait plus de "travail".
+Lors du test sans autovacuum, l'écart s'explique par le fait que même un simple
+SELECT peut nettoyer des blocs[^5].
 
+Rappelons que cette fonctionnalité a été retirée avec la version 11.1. J'avais écrit
+ces articles peu après la sortie de la version 11.0 et j'ai tout de même choisit
+de les publier afin de présenter le fonctionnement des UPDATES HOT. Espérons que
+cette fonctionnalité sera corrigée dans les versions à venir.
 
-
-# Cas où l'expression est coûteuse
-
-FIXME : est-ce que je vais aussi loin?
-
-Et dans le cas d'un index fonctionnel? Il est trop coûteux de verifier à chaque mise à jour si l'index doit être mis à jour.
-Par exemple, un index fonctionnel qui n'indexe que certaines clés d'un objet JSON :
-
-```SQL
-BEGIN;
-DROP TABLE IF EXISTS t4;
-
-CREATE TABLE t4 (c1 jsonb, c2 int,c3 int);
--- CREATE INDEX ON t4 ((c1->>'prenom'))  WITH (recheck_on_update='false');
-CREATE INDEX ON t4 ((c1->>'prenom')) ;
-CREATE INDEX ON t4 (c2);
-INSERT INTO t4 VALUES ('{ "prenom":"adrien" , "ville" : "valence"}'::jsonb,1,1);
-INSERT INTO t4 VALUES ('{ "prenom":"guillaume" , "ville" : "lille"}'::jsonb,2,2);
-
-
--- changement qui ne porte pas sur prenom
-UPDATE t4 SET c1 = '{"ville": "valence (#soleil)", "prenom": "guillaume"}' WHERE c2=2;
-SELECT pg_stat_get_xact_tuples_hot_updated('t4'::regclass);
-UPDATE t4 SET c1 = '{"ville": "nantes", "prenom": "guillaume"}' WHERE c2=2;
-SELECT pg_stat_get_xact_tuples_hot_updated('t4'::regclass);
-
-ROLLBACK;
-
-\timing
-CREATE OR REPLACE FUNCTION upper_ville_field(obj jsonb)
-RETURNS jsonb
-AS $$
-SELECT pg_sleep(5);
-SELECT jsonb_set($1, '{"prenom"}',a::jsonb, true) FROM (SELECT to_jsonb(upper($1->>'prenom'))) a(a);
-$$
-LANGUAGE SQL IMMUTABLE COST 1100;
-
-BEGIN;
-CREATE TABLE t4 (c1 jsonb, c2 int,c3 int);
-CREATE INDEX ON t4 ((upper_ville_field(c1)->>'prenom')) ;
--- CREATE INDEX ON t4 ((upper_ville_field(c1)->>'prenom')) WITH (recheck_on_update=œ'true');;
-
-CREATE INDEX ON t4 (c2);
-INSERT INTO t4 VALUES ('{ "prenom":"adrien" , "ville" : "valence"}'::jsonb,1,1);
-INSERT INTO t4 VALUES ('{ "prenom":"guillaume" , "ville" : "lille"}'::jsonb,2,2);
-SELECT * FROM t4;
-
--- changement qui ne porte pas sur prenom
-UPDATE t4 SET c1 = '{"ville": "valence (#soleil)", "prenom": "guillaume"}' WHERE c2=2;
-SELECT * FROM t4;
-SELECT pg_stat_get_xact_tuples_hot_updated('t4'::regclass);
-UPDATE t4 SET c1 = '{"ville": "nantes", "prenom": "guillaume"}' WHERE c2=2;
-SELECT pg_stat_get_xact_tuples_hot_updated('t4'::regclass);
-
-
--- changement qui ne porte pas sur prenom
-UPDATE t4 SET c1 = '{"ville": "lillgegre", "prenom": "guillaume"}' WHERE c2=2;
-```
-
-[1]: https://blog.anayrat.info/en/2018/11/12/postgresql-and-heap-only-tuples-updates-part-1/
-[2]: https://blog.anayrat.info/en/2018/11/19/postgresql-and-heap-only-tuples-updates-part-2/
-[3]:
+[1]: https://blog.anayrat.info/2018/11/12/postgresql-et-updates-heap-only-tuples-partie-1/
+[2]: https://blog.anayrat.info/2018/11/19/postgresql-et-updates-heap-only-tuples-partie-2/
+[3]: https://blog.anayrat.info/2018/11/26/postgresql-et-updates-heap-only-tuples-partie-3/
 
 [^4]: [Disable recheck_on_update optimization to avoid crashes](https://git.postgresql.org/gitweb/?p=postgresql.git;a=commit;h=05f84605dbeb9cf8279a157234b24bbb706c5256)
+[^5]: [README.HOT](https://github.com/postgres/postgres/blob/master/src/backend/access/heap/README.HOT#L251)

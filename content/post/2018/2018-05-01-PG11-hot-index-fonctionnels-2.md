@@ -35,7 +35,7 @@ plusieurs articles :
 
 1. [Fonctionnement du MVCC et update *heap-only-tuples*][1]
 2. [Quand le moteur ne fait pas d'update *heap-only-tuple* et présentation de la nouveauté de la version 11][2]
-3. Impact sur les performances
+3. [Impact sur les performances][3]
 
 **Cette fonctionnalité a été désactivée en 11.1 car elle pouvait conduire à des
 crash d'instance[^4]. J'ai tout de même choisi de publier ces articles car ils permettent
@@ -273,6 +273,6 @@ pour voir l'impact en terme de performance et de volumétrie.
 
 [1]: https://blog.anayrat.info/2018/11/12/postgresql-et-updates-heap-only-tuples-partie-1/
 [2]: https://blog.anayrat.info/2018/11/19/postgresql-et-updates-heap-only-tuples-partie-2/
-[3]:
+[3]: https://blog.anayrat.info/2018/11/26/postgresql-et-updates-heap-only-tuples-partie-3/
 
 [^4]: [Disable recheck_on_update optimization to avoid crashes](https://git.postgresql.org/gitweb/?p=postgresql.git;a=commit;h=05f84605dbeb9cf8279a157234b24bbb706c5256)

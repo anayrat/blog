@@ -34,7 +34,7 @@ knowledge about how postgres works, that I will try to explain through several a
 
 1. [How MVCC works and *heap-only-tuples* updates][1]
 2. [When postgres do not use *heap-only-tuple* updates and introduction to the new feature in v11][2]
-3. Impact on performances
+3. [Impact on performances][3]
 
 **This feature was disabled in 11.1 because it could lead to instance crashes[^4].
 I chose to publish these articles because they help to understand the mechanism
@@ -375,7 +375,7 @@ Then, the new feature of version 11 where postgres can use this mechanism.
 
 [1]: https://blog.anayrat.info/en/2018/11/12/postgresql-and-heap-only-tuples-updates-part-1/
 [2]: https://blog.anayrat.info/en/2018/11/19/postgresql-and-heap-only-tuples-updates-part-2/
-[3]:
+[3]: https://blog.anayrat.info/en/2018/11/26/postgresql-and-heap-only-tuples-updates-part-3/
 
 [^4]: [Disable recheck_on_update optimization to avoid crashes](https://git.postgresql.org/gitweb/?p=postgresql.git;a=commit;h=05f84605dbeb9cf8279a157234b24bbb706c5256)
 [^5]: [README.HOT](https://git.postgresql.org/gitweb/?p=postgresql.git;a=blob;f=src/backend/access/heap/README.HOT;h=4cf3c3a0d4c2db96a57e73e46fdd7463db439f79;hb=HEAD#l128)

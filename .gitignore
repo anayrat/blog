@@ -1,3 +1,4 @@
 public/
 deploy.sh
 *.swp
+resources/

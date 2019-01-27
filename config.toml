@@ -47,6 +47,7 @@ pygmentsCodefencesGuessSyntax = true
     hrefTargetBlank = true  # `true` opens external links in a new tab.
     fractions = true  # `false` disables smart fractions (e.g. 5/12 formatted as a fraction).
     smartypants = true  # `false` disables all smart punctuation substitutions (e.g. smart quotes, dashes, fractions).
+    extensions = ["backslashLineBreak"] 
     footnotes = true
 
 RSSLink = "index.xml"
@@ -78,6 +79,9 @@ copyright = "This work is licensed under a Creative Commons Attribution-NonComme
   # Enable Keybase in Contact section by entering your keybase.io username.
   keybase = ""
 
+  # Enter an optional link for booking appointments (e.g. calendly.com).
+  appointment_url = ""
+
 
   # Enable Google Maps by entering your API key, latitude, and longitude.
   #   Get your API key: https://developers.google.com/maps/documentation/javascript/get-api-key
@@ -91,6 +95,8 @@ copyright = "This work is licensed under a Creative Commons Attribution-NonComme
    # Color theme.
   #   Choose from `default`, `ocean`, `forest`, `dark`, `apogee`, `1950s`, `coffee`, `cupcake`.
   color_theme = "default"
+  # Enable users to switch between day and night mode?
+  day_night = true
    # Font style.
   #   Choose from `default`, `classic`, or `playfair`.
   font = "default"
@@ -281,11 +287,6 @@ copyright = "This work is licensed under a Creative Commons Attribution-NonComme
   url = "#contact"
   weight = 6
 
-[[menu.main]]
-  name = "Rechercher"
-  url = "#search"
-  weight = 7
-
 # Search.
 [params.search]
   # Search provider:
@@ -339,7 +340,3 @@ copyright = "This work is licensed under a Creative Commons Attribution-NonComme
   url = "#contact"
   weight = 6
 
-[[Languages.en.menu.main]]
-  name = "Search"
-  url = "#search"
-  weight = 7

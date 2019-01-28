@@ -1,7 +1,7 @@
 +++
 title = "pg_sampletolog: An extension to log a sample of statements"
-date = 2019-01-28T08:30:00+02:00
-draft = true
+date = 2019-01-28T08:00:00+02:00
+draft = false
 
 summary = "This extension can be useful for diagnosing requests with very short execution times."
 

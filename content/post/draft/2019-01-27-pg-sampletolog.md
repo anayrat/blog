@@ -1,7 +1,7 @@
 +++
 title = "pg_sampletolog : Une extension permettant de loguer un échantillon de requêtes"
-date = 2019-01-28T08:30:00+02:00
-draft = true
+date = 2019-01-28T08:00:00+02:00
+draft = false
 
 summary = "Cette extension peut s'avérer utile pour diagnostiquer des requêtes dont le temps d’exécution est très court."
 

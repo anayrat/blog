@@ -13,7 +13,7 @@ baseurl = "https://blog.anayrat.info/"
 
 # Enter a copyright notice to display in the site footer.
 # To display a copyright symbol, type `&copy;`.
-copyright = "[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) - 2016 - 2019 Adrien Nayrat"
+copyright = "[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) - 2016 - {year} Adrien Nayrat"
 
 # Enable analytics by entering your Google Analytics tracking ID
 googleAnalytics = ""

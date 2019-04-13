@@ -199,20 +199,20 @@ copyright = "This work is licensed under a Creative Commons Attribution-NonComme
     #   0 = Simple
     #   1 = Detailed
     #   2 = Stream
-    post_format = 2
+    post_view = 2
 
     # Publication list format.
     #   0 = Simple
     #   1 = Detailed
     #   2 = APA
     #   3 = MLA
-    publication_format = 3
+    publication_view = 3
 
     # Talk list format.
     #   0 = Simple
     #   1 = Detailed
     #   2 = Stream
-    talk_format = 2
+    talk_view = 2
 
   # Social/Academic Networking
   #

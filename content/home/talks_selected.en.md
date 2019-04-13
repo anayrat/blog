@@ -1,14 +1,14 @@
 +++
 # Selected Publications widget.
 # This widget displays publications from `content/publication/` which have
-# `selected = true` in their `+++` front matter.
+# `featured = true` in their `+++` front matter.
 
 date = 2016-04-20
 draft = false
 
 title = "Talks"
 subtitle = ""
-widget = "talks_selected"
+widget = "talks_featured"
 
 # Order that this section will appear in.
 weight = 40
@@ -18,7 +18,7 @@ weight = 40
 #   1 = Detailed
 #   2 = APA
 #   3 = MLA
-list_format = 1
+view = 3
 
 # Filter by publication type.
 # -1: Any

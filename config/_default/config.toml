@@ -37,10 +37,16 @@ hasCJKLanguage = false  # Set `true` for Chinese/Japanese/Korean languages.
 defaultContentLanguageInSubdir = false
 
 paginate = 10  # Number of items per page in paginated lists.
+enablerobotstxt = true
 enableEmoji = true
 footnotereturnlinkcontents = "<sup>^</sup>"
 ignoreFiles = ["\\.ipynb$", ".ipynb_checkpoints$", "\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
 preserveTaxonomyNames = true
+
+[permalinks]
+  post = "/:year/:month/:day/:title/"
+  talk = "/talk/:year/:month/:day/:title/"
+
 
 [outputs]
   home = [ "HTML", "CSS", "RSS", "JSON" ]

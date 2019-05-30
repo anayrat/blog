@@ -350,7 +350,7 @@ The study of this index opens other ways for reflection. Like taking into accoun
 In the example with the large table (150GB). If you want to create a partial index on the previous month, the engine will browse the entire table to create index. One could consider creating the index b-tree using the index BRIN to browse only lines corresponding to the previous least.
 
 
-[1]: http://blog.anayrat.info/2016/04/19/index-brin-principe/
-[2]: http://blog.anayrat.info/2016/04/20/index-brin-fonctionnement/
-[3]: http://blog.anayrat.info/2016/04/20/index-brin-correlation/
-[4]: http://blog.anayrat.info/2016/04/21/index-brin-performances/
+[1]: https://blog.anayrat.info/en/2016/04/19/brin-indexes-overview/
+[2]: https://blog.anayrat.info/en/2016/04/20/brin-indexes-operation/
+[3]: https://blog.anayrat.info/en/2016/04/20/brin-indexes-correlation/
+[4]: https://blog.anayrat.info/en/2016/04/21/brin-indexes-performances/

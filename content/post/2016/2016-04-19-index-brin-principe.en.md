@@ -73,10 +73,10 @@ uuid
 ```
 
 
- [1]: http://blog.anayrat.info/2016/04/19/index-brin-principe/
- [2]: http://blog.anayrat.info/2016/04/20/index-brin-fonctionnement/
- [3]: http://blog.anayrat.info/2016/04/20/index-brin-correlation/
- [4]: http://blog.anayrat.info/2016/04/21/index-brin-performances/
+ [1]: https://blog.anayrat.info/en/2016/04/19/brin-indexes-overview/
+ [2]: https://blog.anayrat.info/en/2016/04/20/brin-indexes-operation/
+ [3]: https://blog.anayrat.info/en/2016/04/20/brin-indexes-correlation/
+ [4]: https://blog.anayrat.info/en/2016/04/21/brin-indexes-performances/
  [7]: https://en.wikipedia.org/wiki/Block_Range_Index#Exadata_Storage_Indexe
 
 [^8]: `SELECT amname FROM pg_am;` or <http://www.postgresql.org/docs/current/static/indexes-types.html>

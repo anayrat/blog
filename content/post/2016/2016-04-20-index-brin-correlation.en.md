@@ -230,7 +230,8 @@ SELECT * FROM brin_page_items(get_raw_page('brin_random_brin_idx_16', 2), 'brin_
 Postgres knows it just have to read blocks from 48 to 96.
 
 
-[1]: http://blog.anayrat.info/2016/04/19/index-brin-principe/
-[2]: http://blog.anayrat.info/2016/04/20/index-brin-fonctionnement/
-[3]: http://blog.anayrat.info/2016/04/20/index-brin-correlation/
-[4]: http://blog.anayrat.info/2016/04/21/index-brin-performances/
+[1]: https://blog.anayrat.info/en/2016/04/19/brin-indexes-overview/
+[2]: https://blog.anayrat.info/en/2016/04/20/brin-indexes-operation/
+[3]: https://blog.anayrat.info/en/2016/04/20/brin-indexes-correlation/
+[4]: https://blog.anayrat.info/en/2016/04/21/brin-indexes-performances/
+

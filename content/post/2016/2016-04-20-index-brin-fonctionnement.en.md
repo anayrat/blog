@@ -280,10 +280,10 @@ SELECT * FROM brin_page_items(get_raw_page('brin_demo_brin_idx', 2),'brin_demo_b
 
 With the index brin\_demo\_brin\_idx\_16 we note that the values we are interested in are present in the first set of blocks (0 to 15). On the other hand, with the index brin\_demo\_brin_idx, this one is less selective. The values that interest us are included in blocks 0 to 127 which explains why there are more blocks read in the first example.
 
-[1]: http://blog.anayrat.info/2016/04/19/index-brin-principe/
-[2]: http://blog.anayrat.info/2016/04/20/index-brin-fonctionnement/
-[3]: http://blog.anayrat.info/2016/04/20/index-brin-correlation/
-[4]: http://blog.anayrat.info/2016/04/21/index-brin-performances/
+[1]: https://blog.anayrat.info/en/2016/04/19/brin-indexes-overview/
+[2]: https://blog.anayrat.info/en/2016/04/20/brin-indexes-operation/
+[3]: https://blog.anayrat.info/en/2016/04/20/brin-indexes-correlation/
+[4]: https://blog.anayrat.info/en/2016/04/21/brin-indexes-performances/
 [5]: http://www.pgday.fr/index.html
 [6]: http://www.pgday.fr/programme.html
 [^7]: Index also contains two Booleans that indicate whether the set contains nulls (hasnulls) or contains *only* nulls (allnulls)

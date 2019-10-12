@@ -1,15 +1,24 @@
 # SITE SETUP
 # Documentation: https://sourcethemes.com/academic/
 
-# Color theme.
-#   Choose from `default`, `ocean`, `forest`, `dark`, `apogee`, `1950s`, `coffee`, `cupcake`.
-color_theme = "default"
+# Choose a theme.
+#   Latest themes (may require updating): https://sourcethemes.com/academic/themes/
+#   Browse built-in themes in `themes/academic/data/themes/`
+#   Browse user installed themes in `data/themes/`
+theme = "minimal"
+
 # Enable users to switch between day and night mode?
 day_night = true
 
-# Font style.
-#   Choose from `default`, `classic`, or `playfair`.
-font = "default"
+# Override the theme's font set (optional).
+#   Latest font sets (may require updating): https://sourcethemes.com/academic/themes/
+#   Browse built-in font sets in `themes/academic/data/fonts/`
+#   Browse user installed font sets in `data/fonts/`
+font = ""
+
+# Choose a font size.
+# Sizes: XS (extra small), S (small), M (medium), L (large - DEFAULT), XL (extra large)
+font_size = "M"
 
 # Description for social sharing and search engines. If undefined, superuser role is used in place.
 description = ""
@@ -45,6 +54,11 @@ math = false
 #   Anonymize IP in Google Analytics (if enabled)
 privacy_pack = false
 
+# Enable visitors to edit pages?
+#   `repo` defines the repository URL. `editable` defines which page types can be edited.
+edit_page = {repo_url = "https://github.com/anayrat/blog", repo_branch = "master", editable = {docs = false, page = false, post = false}}
+
+
 # Date and time format (refer to https://sourcethemes.com/academic/docs/customization/#date-format )
 #   Examples: "Mon, Jan 2, 2006" or "2006-01-02"
 date_format = "Jan 2, 2006"
@@ -58,7 +72,14 @@ time_format = "15:04"
 # Enter contact details (optional). To hide a field, clear it to "".
 email = "adrien.nayrat@gmail.com"
 phone = ""
-address = ""
+
+# Address
+# For country_code, use the 2-letter ISO code (see https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2 )
+address = {street = "", city = "Valence", region = "", postcode = "26000", country = "France", country_code = "FR"}
+
+# Geographic coordinates
+# To get your coordinates, right-click on Google Maps and choose "What's here?". The coords will show up at the bottom.
+coordinates = {latitude = "", longitude = ""}
 
 # Office hours: use `<br>` to insert a line break, or set to "" to remove office hours
 office_hours = ""
@@ -75,27 +96,6 @@ appointment_url = ""
 #  {icon = "comments", icon_pack = "fas", name = "Discuss on Forum", link = "https://discourse.gohugo.io"},
   # {icon = "telegram", icon_pack = "fab", name = "Telegram Me", link = "https://telegram.me/@Telegram"},
 #  ]
-
-# Display a map.
-# To show your address on a map in the contact widget, you need to enter your latitude, longitude and choose
-# a map provider below.
-# To use Google Maps, set `map = 1` and enter your API key that can be obtained here:
-#   https://developers.google.com/maps/documentation/javascript/get-api-key
-# To use OpenStreetMap tiles, set `map = 2`.
-# To use OpenStreetMap on a high traffic site, set `map = 3` and enter your API key that can be obtained here:
-#   https://www.mapbox.com/studio/account/tokens
-# To get your coordinates, right-click on Google Maps and choose "What's here?". The coords will show up at the bottom.
-#
-# Map provider:
-#   0: No map
-#   1: Google Maps
-#   2: OpenStreetMap (Mapnik)
-#   3: OpenStreetMap (Mapbox)
-map = 0
-map_api_key = ""
-latitude = "37.4275"
-longitude = "-122.1697"
-zoom = 15
 
 ############################
 ## Plugins                ##
@@ -149,6 +149,28 @@ sharing = true
   publication_view = 2
   talk_view = 2
 
+############################
+## Comments
+############################
+[comments]
+  # Comment provider:
+  #   0: Disabled
+  #   1: Disqus (https://disqus.com)
+  #   2: Commento (https://commento.io)
+  engine = 0
+
+  # Which page types are commentable?
+  commentable = {page = false, post = false, docs = false, project = false, publication = false, talk = false}
+
+  # Configuration of Disqus.
+  [comments.disqus]
+    shortname = ""  # Paste the shortname from your Disqus dashboard.
+    show_count = true  # Show comment count in page header? (true/false)
+
+############################
+## Search
+############################
+
 # Search.
 [search]
   # Search provider:
@@ -164,3 +186,25 @@ sharing = true
     api_key = ""
     index_name = ""
     show_logo = false
+
+############################
+## Maps
+############################
+[map]
+  # To show your address on a map in the Contact widget, enter your latitude and longitude (above)
+  # and choose a map provider below.
+  #
+  # To use Google Maps, set `engine` to 1 and enter your API key that can be obtained here:
+  #   https://developers.google.com/maps/documentation/javascript/get-api-key
+  # To use OpenStreetMap tiles, set `engine` to 2.
+  # To use OpenStreetMap on a high traffic site, set `engine` to 3 and enter your API key that can be obtained here:
+  #   https://www.mapbox.com/studio/account/tokens
+  #
+  # Map provider:
+  #   0: No map
+  #   1: Google Maps
+  #   2: OpenStreetMap (Mapnik)
+  #   3: OpenStreetMap (Mapbox)
+  engine = 0
+  api_key = ""
+  zoom = 15

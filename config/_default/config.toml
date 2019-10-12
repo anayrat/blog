@@ -9,7 +9,7 @@ title = "Select * from Adrien"
 
 # The URL of your site.
 # End your URL with a `/` trailing slash, e.g. `https://example.com/`.
-baseurl = "https://blog.anayrat.info/" 
+baseurl = "https://blog.anayrat.info/"
 
 # Enter a copyright notice to display in the site footer.
 # To display a copyright symbol, type `&copy;`.
@@ -48,11 +48,23 @@ preserveTaxonomyNames = true
   talk = "/talk/:year/:month/:day/:title/"
 
 
+#[outputs]
+#  home = [ "HTML", "RSS", "JSON" ]
+#  section = [ "HTML", "RSS" ]
+
 [outputs]
-  home = [ "HTML", "RSS", "JSON" ]
+  home = [ "HTML", "RSS", "JSON", "WebAppManifest" ]
   section = [ "HTML", "RSS" ]
   taxonomy = [ "HTML", "RSS" ]
   taxonomyTerm = [ "HTML", "RSS" ]
+
+
+[mediaTypes."application/manifest+json"]
+  suffixes = ["webmanifest"]
+
+[outputFormats.WebAppManifest]
+  mediaType = "application/manifest+json"
+  rel = "manifest"
 
 # Configure BlackFriday Markdown rendering.
 #   See: https://gohugo.io/getting-started/configuration/#configure-blackfriday

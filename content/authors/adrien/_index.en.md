@@ -13,7 +13,7 @@ role = "PostgreSQL DBA"
 
 # Organizations/Affiliations
 #   Separate multiple entries with a comma, using the form: `[ {name="Org1", url=""}, {name="Org2", url=""} ]`.
-#organizations = [ { name = "PostgreSQL Europe", url = "https://www.postgresql.eu" } ]
+organizations = [ { name = "DBA @Peopledoc", url = "https://www.people-doc.fr" }, { name = "Member of PostgreSQL Europe", url = "https://www.postgresql.eu" } ]
 
 # Short bio (displayed in user profile at end of posts)
 bio = "Postgres and opensource passionate"

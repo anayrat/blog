@@ -9,7 +9,7 @@ date = 2019-11-08T12:00:00+01:00
 #date_end = 2018-01-25T21:00:00+01:00
 
 # Abstract and optional shortened version.
-abstract = "Discussions autour de Postgres, son histoire et ses fonctionnalités"
+abstract = "Discussion autour de Postgres, son histoire et ses fonctionnalités"
 summary = ""
 
 # Name of event and optional event URL.

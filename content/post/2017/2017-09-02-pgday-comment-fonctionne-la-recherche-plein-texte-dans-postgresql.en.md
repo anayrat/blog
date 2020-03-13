@@ -35,6 +35,6 @@ Here is the video of the talk:
 
 {{< youtube 9S5dBqMbw8A >}}
 
-Here the [slides](http://pgday.fr/slides/nayrat_Le_Full_Text_Search_dans_PostgreSQL.pdf).
+Here the [slides](https://blog.anayrat.info/presentations/2017/nayrat_Le_Full_Text_Search_dans_PostgreSQL.pdf).
 
 [1]: http://pgday.fr/programme.html

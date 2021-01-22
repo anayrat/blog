@@ -9,7 +9,7 @@ authors = ["adrien"]
 superuser = true
 
 # Role/position
-role = "PostgreSQL DBA"
+role = "PostgreSQL DBA & Freelance"
 
 # Organizations/Affiliations
 #   Separate multiple entries with a comma, using the form: `[ {name="Org1", url=""}, {name="Org2", url=""} ]`.
@@ -96,8 +96,23 @@ interests = [
 
 +++
 
+I fell into PostgreSQL in 2014 and since then, this open source DBMS has never left me :smile:
 
-I started working with Postgres in 2013 at a web hosting provider of educational solutions. Seduced by the features of the engine and the community I joined Dalibo in 2015 to devote full time to PostgreSQL.
+At Dalibo, I acquired a good knowledge of Postgres and SQL that I used in my work as a consultant. These included training, postgres tuning, participation in the PostgreSQL community (conferences, open source projects, writing articles, [patches](https://git.postgresql.org/gitweb/?p=postgresql.git&a=search&h=HEAD&st=commit&s=nayrat&.cgifields=sr)...).
+
+At Doctolib, I acquired a strong experience in maintaining in operational conditions a high volume production with high throughput, with significant challenges in terms of service performance, security and availability: ~45,000 transactions per second on a database of more than 3.5TB with very strong growth.
+
+Currently at PeopleDoc, I'm in a DBA team where my role is to make sure that production runs smoothly, communicate best practices to developers, and optimize platforms for performance. I am also involved in writing blue-green migration in as transparent a way as possible for the application and without downtime.
+
+Since 2021 I am also available for freelance missions:
+- architecture consulting
+- tuning
+- query optimization
+- database design
+- replication
+- training
+
+I am also determined to maintain my involvement in the PostgreSQL community. Thus, you can meet me at community events (conferences, meetup...) and also on Postgres' mailing list ;)
 
 Here you will find articles (mostly in French but I try to translate them) about PostgreSQL (but not only :smile:). As well as the presentations that I could make during conferences. Feel free to open an issue on [github](https://github.com/anayrat/blog) ;)
 

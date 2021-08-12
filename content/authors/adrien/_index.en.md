@@ -9,11 +9,11 @@ authors = ["adrien"]
 superuser = true
 
 # Role/position
-role = "PostgreSQL DBA & Freelance"
+role = "PostgreSQL DBA Freelance"
 
 # Organizations/Affiliations
 #   Separate multiple entries with a comma, using the form: `[ {name="Org1", url=""}, {name="Org2", url=""} ]`.
-organizations = [ { name = "DBA @Peopledoc", url = "https://www.people-doc.fr" }, { name = "Member of PostgreSQL Europe", url = "https://www.postgresql.eu" } ]
+organizations = [ { name = "Member of PostgreSQL Europe", url = "https://www.postgresql.eu" } ]
 
 # Short bio (displayed in user profile at end of posts)
 bio = "Postgres and opensource passionate"
@@ -102,9 +102,9 @@ At Dalibo, I acquired a good knowledge of Postgres and SQL that I used in my wor
 
 At Doctolib, I acquired a strong experience in maintaining in operational conditions a high volume production with high throughput, with significant challenges in terms of service performance, security and availability: ~45,000 transactions per second on a database of more than 3.5TB with very strong growth.
 
-Currently at PeopleDoc, I'm in a DBA team where my role is to make sure that production runs smoothly, communicate best practices to developers, and optimize platforms for performance. I am also involved in writing blue-green migration in as transparent a way as possible for the application and without downtime.
+Then at PeopleDoc, I joined a DBA team where my role was to make sure that production runs smoothly, communicate best practices to developers, and optimize platforms for performance. I was also involved in writing blue-green migration in as transparent a way as possible for the application and without downtime.
 
-Since 2021 I am also available for freelance missions:
+Since 2021 I am available for freelance missions:
 - architecture consulting
 - tuning
 - query optimization

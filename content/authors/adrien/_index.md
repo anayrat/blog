@@ -9,11 +9,11 @@ authors = ["adrien"]
 superuser = true
 
 # Role/position
-role = "DBA PostgreSQL & Freelance"
+role = "Expert DBA PostgreSQL Freelance"
 
 # Organizations/Affiliations
 #   Separate multiple entries with a comma, using the form: `[ {name="Org1", url=""}, {name="Org2", url=""} ]`.
-organizations = [ { name = "DBA @Peopledoc", url = "https://www.people-doc.fr" }, { name = "Membre de PostgreSQL Europe", url = "https://www.postgresql.eu" } ]
+organizations = [ { name = "Membre de PostgreSQL Europe", url = "https://www.postgresql.eu" } ]
 
 # Short bio (displayed in user profile at end of posts)
 bio = "Passionné d'open source et de PostgreSQL."
@@ -102,9 +102,9 @@ J'ai acquis chez Dalibo une bonne connaissance du moteur et du SQL que j'ai mis 
 
 J'ai complété ces compétences chez Doctolib avec une solide expérience pour le maintient en condition opérationnelle d'une grosse production à fort trafic avec des enjeux importants en terme de performance, sécurité et disponibilité du service : ~45 000 transactions par seconde sur une base de plus de 3.5To avec une croissance très forte.
 
-Actuellement chez PeopleDoc, je suis dans une équipe de DBA où mon rôle est de m'assurer du bon fonctionnement de la production, transmettre les bonnes pratiques auprès des développeurs, optimiser les plateformes pour les performances. Je participe également à l'écriture de migration en blue-green de la manière la plus transparent possible pour l'applicatif et sans downtime.
+Ensuite chez PeopleDoc, j'ai rejoint une équipe de DBA où mon rôle était de m'assurer du bon fonctionnement de la production, transmettre les bonnes pratiques auprès des développeurs, optimiser les plateformes pour les performances. Je participais également à l'écriture de migration en blue-green de la manière la plus transparent possible pour l'applicatif et sans downtime.
 
-Depuis 2021 je suis également disponible pour des missions freelance ponctuelles :
+Depuis 2021 je suis disponible pour des missions freelance ponctuelles :
 - conseils en architecture
 - tuning du moteur
 - optimisation de requête

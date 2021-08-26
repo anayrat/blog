@@ -63,7 +63,7 @@ Les index BRIN présentent des bénéfices proches du partitionnement ou shardin
 L'idée serait de créer des partitions et des tablespaces sur différentes disques afin de répartir les opérations d'entrées/sorties.
 
 Pour PostgreSQL, un tablespace n'est ni plus, ni moins qu'un chemin vers un répertoire. Il est tout à fait possible
-de gérer le stockage au niveau du système d'exploitation et d'aggréger plusieurs disques (en RAID10) par exemple.
+de gérer le stockage au niveau du système d'exploitation et d'agréger plusieurs disques (en RAID10) par exemple.
 Ensuite il suffit de stocker la table sur le volume créé. Ainsi, on peut répartir les I/O sur un ensemble de disques.
 
 Dans ce cas, il n'est donc pas nécessaire de mettre en oeuvre le partitionnement. Toutefois, nous verrons un cas où il pourrait avoir du sens.

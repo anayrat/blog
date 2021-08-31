@@ -1,9 +1,9 @@
 +++
-title = "Cas d'usage du partionnement natif dans PostgreSQL"
+title = "Cas d'usages du partitionnement natif dans PostgreSQL"
 date = 2021-09-01T09:00:00+02:00
 draft = true
 
-summary = "Différents cas d'usages du partionnement natif sous PostgreSQL"
+summary = "Différents cas d'usages du partitionnement natif sous PostgreSQL"
 
 # Tags and categories
 # For example, use `tags = []` for no tags, or the form `tags = ["A Tag", "Another Tag"]` for one or more tags.
@@ -18,7 +18,7 @@ Après une période d'inactivité, je reprends l'écriture d'articles techniques
 
 # Histoire du partitionnement dans PostgreSQL
 
-PostgreSQL permet depuis très longtemps de partitionner des tables en exploitant l'héritage de table. Toutefois, cette méthode était assez lourde à mettre en oeuvre : elle impliquait de mettre en place soi-même des triggers pour rediriger les écritures (moins performant que le partitionnement natif), le temps de planification pouvait augmenter fortement au délà d'une centaine de partitions...
+PostgreSQL permet depuis très longtemps de partitionner des tables en exploitant l'héritage de table. Toutefois, cette méthode était assez lourde à mettre en oeuvre : elle impliquait de mettre en place soi-même des triggers pour rediriger les écritures (moins performant que le partitionnement natif), le temps de planification pouvait augmenter fortement au-delà d'une centaine de partitions...
 
 
 Le partitionnement natif est arrivé avec la version 10. C'est depuis cette version que le moteur est capable (entre autres) de diriger lui-même les écritures vers les bonnes tables, lire seulement les tables concernées, d'utiliser des algorithmes exploitant le partitionnement etc.
@@ -43,11 +43,11 @@ Je vais vous présenter plusieurs cas d'usages que j'ai pu rencontrer. Mais avan
 
 Déjà, qu'est-ce qu'une volumétrie "importante"?
 
-Certains diront que c'est au-delà de plusieurs centaines de Go, d'autres au-delà du teraoctet, d'autres encore au-delà du petaoctet...
+Certains diront que c'est au-delà de plusieurs centaines de Go, d'autres au-delà du téraoctet, d'autres encore au-delà du pétaoctet...
 
 Il n'existe pas vraiment de réponse à cette question et globalement ça va dépendre du type d'activité : ratio INSERT/UPDATE/DELETE, type de SELECT (OLTP, OLAP...).
 Ca dépendra également du matériel. Il y a 10 ans, quand les serveurs n'avaient que quelques Go de RAM avec des disques mécaniques, il était probable qu'une base de quelques centaines de Go soit perçue comme une grosse base.
-Maintenant il n'est pas rare de voir des serveurs avec plus d'un teraoctet de RAM, des disques NVMe.
+Maintenant il n'est pas rare de voir des serveurs avec plus d'un téraoctet de RAM, des disques NVMe.
 
 Ainsi, une base de quelques centaines de Go n'est plus considérée comme une grosse base. Mais plutôt comme une base de taille modeste.
 
@@ -60,11 +60,11 @@ Les index BRIN présentent des bénéfices proches du partitionnement ou shardin
 
 ## "Il faut partitionner pour répartir les données sur plusieurs disques"
 
-L'idée serait de créer des partitions et des tablespaces sur différentes disques afin de répartir les opérations d'entrées/sorties.
+L'idée serait de créer des partitions et des tablespaces sur différents disques afin de répartir les opérations d'entrées/sorties.
 
 Pour PostgreSQL, un tablespace n'est ni plus, ni moins qu'un chemin vers un répertoire. Il est tout à fait possible
 de gérer le stockage au niveau du système d'exploitation et d'agréger plusieurs disques (en RAID10) par exemple.
-Ensuite il suffit de stocker la table sur le volume créé. Ainsi, on peut répartir les I/O sur un ensemble de disques.
+Ensuite, il suffit de stocker la table sur le volume créé. Ainsi, on peut répartir les I/O sur un ensemble de disques.
 
 Dans ce cas, il n'est donc pas nécessaire de mettre en oeuvre le partitionnement. Toutefois, nous verrons un cas où il pourrait avoir du sens.
 
@@ -105,7 +105,7 @@ On appelle cela le "bloat". Il y a eu de nombreuses améliorations sur les derni
 
 Pour contrôler le bloat, on pourrait reconstruire l'index à intervalles réguliers (merci `REINDEX CONCURRENTLY` arrivé en version 12). Cette solution serait contraignante, car il faudrait régulièrement reconstruire l'intégralité de l'index.
 
-Si la majorité des modifications sont faites sur les données récentes, par exemple: table de logs, commandes clients, rendez-vous... On pourrait imaginer un partitionnement par mois. Ainsi, à chaque début de mois on part sur une table "neuve" et on peut réindexer la précédente table pour supprimer le bloat.
+Si la majorité des modifications sont faites sur les données récentes, par exemple: table de logs, commandes clients, rendez-vous... On pourrait imaginer un partitionnement par mois. Ainsi, à chaque début de mois on part sur une table "neuve" et on peut ré-indexer la précédente table pour supprimer le bloat.
 
 On peut aussi en profiter pour faire un `CLUSTER` sur la table pour avoir une bonne corrélation des données avec le stockage.
 
@@ -118,7 +118,7 @@ Prenons un exemple : une table de commande comprenant un statut de livraison, au
 Imaginons qu'on souhaite récupérer 100 commandes en cours de livraison. On va créer un index sur le statut et l'utiliser pour récupérer les enregistrements.
 En étant un peu astucieux, on peut créer un index partiel sur ce statut particulier. Problème, cet index va se fragmenter assez vite au fur et à mesure que les commandes seront livrées.
 
-Dans ce cas on pourrait faire un partitionnement sur le statut. Ainsi, récupérer 100 commandes en cours de livraisons revient à lire 100 enregistrements de la partition.
+Dans ce cas on pourrait faire un partitionnement sur le statut. Ainsi, récupérer 100 commandes en cours de livraison revient à lire 100 enregistrements de la partition.
 
 ## Partitionner pour obtenir de meilleures statistiques
 
@@ -132,17 +132,17 @@ On peut augmenter de manière drastique la taille de l'échantillon, mais cette 
 * Ca alourdis le `ANALYZE`
 * Parfois ce n'est pas suffisant si les données sont mal réparties. Par exemple si on prend quelques centaines de milliers de lignes sur une table qui comprend plusieurs centaines de millions, on peut rater les lignes dont le statut est en livraison.
 
-Avec le partitionnement on pourrait avoir un même échantillon mais par partition, ce qui permet de gagner en précision.
+Avec le partitionnement on pourrait avoir un même échantillon, mais par partition, ce qui permet de gagner en précision.
 
 Ce serait également utile quand on a des données corrélées entre colonnes. Je vais reprendre l'exemple des commandes. On a une année entière de commandes: toutes les commandes qui ont plus d'un mois sont livrées, celles du dernier mois sont livrées à 90% (10% sont en cours de livraison).
 
-Intuitivement, si je cherche une commande en cours de livraison il y a plus de 6 mois je ne devrais pas avoir de résultat. Inversement, si je cherche des commandes en cours de livraison sur le dernier mois, je devrais obtenir 10% de la table. Or, ça le moteur ne le sait pas, pour lui les commandes en cours de livraison sont réparties sur toute la table.
+Intuitivement, si je cherche une commande en cours de livraison il y a plus de 6 mois je ne devrais pas avoir de résultat. Inversement, si je cherche des commandes en cours de livraison sur le dernier mois, je devrais obtenir 10% de la table. Or, le moteur ne le sait pas, pour lui les commandes en cours de livraison sont réparties sur toute la table.
 
 Avec un partitionnement par date, il peut estimer qu'il n'y a pas de commande en cours de livraisons de plus d'un mois. Ce type d'approche permet surtout de réduire une erreur d'estimation dans un plan d'exécution.
 
 Voici un exemple avec cette table de commandes, `orders_p` est la version partitionnée par mois de la table `orders`. Les données étant identiques dans les deux tables.
 
-On peut remarquer que l'estimation est bien meilleure dans le cas où la table est partitionnée, le moteur ayant des statistiques par partitions.
+On peut remarquer que l'estimation est bien meilleure dans le cas où la table est partitionnée, le moteur ayant des statistiques par partition.
 
 
 {{< highlight sql "linenos=table,hl_lines=3 6 10 19 22 25" >}}

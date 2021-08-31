@@ -46,7 +46,7 @@ First, what is a "large" size?
 
 Some will say that it is more than several hundred GB, others more than a terabyte, others still more than a petabyte...
 
-There is no real answer to this question and generally it will depend on the type of workload: ratio INSERT/UPDATE/DELETE, type of SELECT (OLTP, OLAP...).
+There is no real answer to this question, and generally it will depend on the type of workload: ratio INSERT/UPDATE/DELETE, type of SELECT (OLTP, OLAP...).
 It will also depend on the hardware. 10 years ago, when servers only had a few GB of RAM with mechanical disks, it was likely that a database of a few hundred GB would be perceived as a large database.
 Now it is not uncommon to see servers with over a terabyte of RAM, NVMe drives.
 
@@ -63,7 +63,7 @@ It may be superfluous to partition a database of a few TB as it may be necessary
 The idea would be to create partitions and tablespaces on different disks in order to spread the input/output operations.
 
 For PostgreSQL, a tablespace is nothing more or less than a path to a directory. It is quite possible to manage the storage at the operating system level and to aggregate several disks (in RAID10) for example.
-Then, it is just a matter of storing the table on the volume created. Thus, I/O can be spreaded over a set of disks.
+Then, it is just a matter of storing the table on the volume created. Thus, I/O can be spread over a set of disks.
 
 In this case, it is not necessary to implement partitioning. However, we will see a case where it might make sense.
 
@@ -136,7 +136,7 @@ With partitioning, we could have the same sample but per partition, which allows
 
 This would also be useful when we have correlated data between columns. I will take the example of orders. We have a whole year's worth of orders: all the orders that are more than one month old are delivered, those of the last month are 90% delivered (10% are in progress).
 
-Intuitively, if I look for an order in progress more than 6 months ago, I should not get any result. On the other hand, if I search for orders in progress for the last month, I should get 10% of the table. But postgres doesn't know that, for him, the orders in progress are spread over the whole table.
+Intuitively, if I look for an order in progress more than 6 months ago, I should not get any result. On the other hand, if I search for orders in progress for the last month, I should get 10% of the table. But postgres doesn't know that, for it, the orders in progress are spread over the whole table.
 
 With a partitioning by date, it can estimate that there are no orders in progress for deliveries of more than one month. This approach is mainly used to reduce an estimation error in an execution plan.
 
@@ -274,7 +274,7 @@ The `partitionwise join` performs on the same principle, we do a partition per p
 Finally, another use case would be to store a part of the table on a different storage:
 
 We can store a partitioned table in different tablespaces. For example recent data on a fast tablespace on NVMe SSD.
-Then the more rarely accessed data on another tablespace, with less expensive mechanical disks.
+Then, the more rarely accessed data on another tablespace, with less expensive mechanical disks.
 
 This approach can also make sense in the cloud era where storage is very expensive.
 
@@ -283,7 +283,7 @@ This approach can also make sense in the cloud era where storage is very expensi
 I think I've covered the main use cases that came to my mind.
 
 Obviously, the implementation of partitioning implies a bigger complexity (management of partitions...)
-and limitations that will have to be studied before.
+and limitations that will have to be studied upstream.
 
 [^1]: "BRIN indexes provide similar benefits to horizontal partitioning or sharding but without needing to explicitly declare partitions." - <https://en.wikipedia.org/wiki/Block_Range_Index>
 

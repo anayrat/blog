@@ -1,7 +1,7 @@
 +++
 title = "Partitioning use cases with PostgreSQL"
 date = 2021-09-01T09:00:00+02:00
-draft = true
+draft = false
 
 summary = "Different use cases of native partioning under PostgreSQL"
 

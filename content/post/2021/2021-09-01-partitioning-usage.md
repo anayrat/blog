@@ -1,7 +1,7 @@
 +++
 title = "Cas d'usages du partitionnement natif dans PostgreSQL"
 date = 2021-09-01T09:00:00+02:00
-draft = true
+draft = false
 
 summary = "Différents cas d'usages du partitionnement natif sous PostgreSQL"
 

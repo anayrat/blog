@@ -3,11 +3,13 @@ title = "PostgreSQL et updates heap-only-tuples - partie 1"
 date = 2018-11-12T08:00:00+01:00
 draft = false
 summary = "Fonctionnement du MVCC et update *heap-only-tuples*"
+authors = ['adrien']
 
 # Tags and categories
 # For example, use `tags = []` for no tags, or the form `tags = ["A Tag", "Another Tag"]` for one or more tags.
 tags = ["postgres","index","heap-only-tuple"]
 categories = ["Postgres"]
+show_related = true
 
 # Featured image
 # Place your image in the `static/img/` folder and reference its filename below, e.g. `image = "example.jpg"`.
@@ -73,14 +75,14 @@ Prenons une table toute simple et regardons son contenu évoluer à l'aide de l'
 CREATE TABLE t2(c1 int);
 INSERT INTO t2 VALUES (1);
 SELECT lp,t_data FROM  heap_page_items(get_raw_page('t2',0));
- lp |   t_data   
+ lp |   t_data
 ----+------------
   1 | \x01000000
 (1 row)
 
 UPDATE t2 SET c1 = 2 WHERE c1 = 1;
 SELECT lp,t_data FROM  heap_page_items(get_raw_page('t2',0));
- lp |   t_data   
+ lp |   t_data
 ----+------------
   1 | \x01000000
   2 | \x02000000
@@ -88,7 +90,7 @@ SELECT lp,t_data FROM  heap_page_items(get_raw_page('t2',0));
 
 VACUUM t2;
 SELECT lp,t_data FROM  heap_page_items(get_raw_page('t2',0));
- lp |   t_data   
+ lp |   t_data
 ----+------------
   1 |
   2 | \x02000000
@@ -121,7 +123,7 @@ de lire les blocs d'un index avec pageinspect :
 
 ```sql
 SELECT * FROM  bt_page_items(get_raw_page('t3_c1_idx',1));
- itemoffset | ctid  | itemlen | nulls | vars |          data           
+ itemoffset | ctid  | itemlen | nulls | vars |          data
 ------------+-------+---------+-------+------+-------------------------
           1 | (0,1) |      16 | f     | f    | 01 00 00 00 00 00 00 00
           2 | (0,2) |      16 | f     | f    | 02 00 00 00 00 00 00 00
@@ -158,7 +160,7 @@ SELECT lp,t_data,t_ctid FROM  heap_page_items(get_raw_page('t3',0));
 
 
 SELECT * FROM  bt_page_items(get_raw_page('t3_c1_idx',1));
- itemoffset | ctid  | itemlen | nulls | vars |          data           
+ itemoffset | ctid  | itemlen | nulls | vars |          data
 ------------+-------+---------+-------+------+-------------------------
           1 | (0,1) |      16 | f     | f    | 01 00 00 00 00 00 00 00
           2 | (0,2) |      16 | f     | f    | 02 00 00 00 00 00 00 00
@@ -201,7 +203,7 @@ On modifie une ligne et l'index ne change toujours pas :
 ```sql
 UPDATE t3 SET c2 = 4 WHERE c1=1;
 SELECT * FROM  bt_page_items(get_raw_page('t3_c1_idx',1));
- itemoffset | ctid  | itemlen | nulls | vars |          data           
+ itemoffset | ctid  | itemlen | nulls | vars |          data
 ------------+-------+---------+-------+------+-------------------------
           1 | (0,1) |      16 | f     | f    | 01 00 00 00 00 00 00 00
           2 | (0,2) |      16 | f     | f    | 02 00 00 00 00 00 00 00
@@ -247,7 +249,7 @@ SELECT lp,t_data,t_ctid FROM  heap_page_items(get_raw_page('t3',0));
 
 
 SELECT * FROM  bt_page_items(get_raw_page('t3_c1_idx',1));
- itemoffset | ctid  | itemlen | nulls | vars |          data           
+ itemoffset | ctid  | itemlen | nulls | vars |          data
 ------------+-------+---------+-------+------+-------------------------
           1 | (0,1) |      16 | f     | f    | 01 00 00 00 00 00 00 00
           2 | (0,2) |      16 | f     | f    | 02 00 00 00 00 00 00 00
@@ -295,13 +297,13 @@ correspond à une redirection HOT. C'est documenté dans `src/include/storage/it
 
 ```c
 /*
- * lp_flags has these possible states.  An UNUSED line pointer is available     
- * for immediate re-use, the other states are not.                              
- */                                                                             
-#define LP_UNUSED       0       /* unused (should always have lp_len=0) */      
-#define LP_NORMAL       1       /* used (should always have lp_len>0) */        
-#define LP_REDIRECT     2       /* HOT redirect (should have lp_len=0) */       
-#define LP_DEAD         3       /* dead, may or may not have storage */   
+ * lp_flags has these possible states.  An UNUSED line pointer is available
+ * for immediate re-use, the other states are not.
+ */
+#define LP_UNUSED       0       /* unused (should always have lp_len=0) */
+#define LP_NORMAL       1       /* used (should always have lp_len>0) */
+#define LP_REDIRECT     2       /* HOT redirect (should have lp_len=0) */
+#define LP_DEAD         3       /* dead, may or may not have storage */
 ```
 
 Il est AUSSI possible de le voir avec pageinspect en affichant la colonne `lp_flags`:

@@ -1,101 +1,132 @@
-+++
+---
 # Display name
-name = "Adrien Nayrat"
+title: Adrien Nayrat
 
-# Username (this should match the folder name)
-authors = ["adrien"]
+# Name pronunciation (optional)
+# name_pronunciation: Chien Shiung Wu
+
+# Full name (for SEO)
+first_name: Adrien
+last_name: Nayrat
+
+# Status emoji
+status:
+  icon: 🧗
 
 # Is this the primary user of the site?
-superuser = true
+superuser: true
 
-# Role/position
-role = "Expert DBA PostgreSQL Freelance"
+# Role/position/tagline
+role: Expert DBA PostgreSQL Freelance
 
-# Organizations/Affiliations
-#   Separate multiple entries with a comma, using the form: `[ {name="Org1", url=""}, {name="Org2", url=""} ]`.
-organizations = [ { name = "Membre de PostgreSQL Europe", url = "https://www.postgresql.eu" } ]
+# Organizations/Affiliations to show in About widget
+organizations:
+  - name: Membre de PostgreSQL Europe
+    url: https://www.postgresql.eu
 
 # Short bio (displayed in user profile at end of posts)
-bio = "Passionné d'open source et de PostgreSQL."
+bio: Passionné d'open source et de PostgreSQL..
 
-# Enter email to display Gravatar (if Gravatar enabled in Config)
-email = ""
+# Interests to show in About widget
+interests:
+  - PostgreSQL
+  - Open Source
+  - Linux
+  - Base de données
 
-# List (academic) interests or hobbies
-interests = [
-  "PostgreSQL",
-  "Open Source",
-  "Linux",
-  "Sciences Humaines",
-  "Economie Sociale et Solidaire"
-]
+# Education to show in About widget
+# education:
+#   courses:
+#     - course: PhD in Artificial Intelligence
+#       institution: Stanford University
+#       year: 2012
+#     - course: MEng in Artificial Intelligence
+#       institution: Massachusetts Institute of Technology
+#       year: 2009
+#     - course: BSc in Artificial Intelligence
+#       institution: Massachusetts Institute of Technology
+#       year: 2008
+#
+# # Skills
+# # For available icons, see: https://wowchemy.com/docs/getting-started/page-builder/#icons
+# skills:
+#   - name: Technique
+#     items:
+#     - name: Python
+#       description: ''
+#       percent: 80
+#       icon: python
+#       icon_pack: fab
+#     - name: Data Science
+#       description: ''
+#       percent: 100
+#       icon: chart-line
+#       icon_pack: fas
+#     - name: SQL
+#       description: ''
+#       percent: 100
+#       icon: database
+#       icon_pack: fas
+#   - name: Loisirs
+#     color: '#eeac02'
+#     color_border: '#f0bf23'
+#     items:
+#       - name: Entrainement
+#         description: ''
+#         percent: 80
+#         icon_pack: person-biking
+#         icon_pack: fas
+#       - name: Escalade
+#         description: ''
+#         percent: 100
+#         icon: chart-line
+#         icon_pack: fas
+#         # icon_pack: ':climbing:'
+#         #  icon_pack: emoji
 
-# Organizational groups that you belong to (for People widget)
-#   Set this to `[]` or comment out if you are not using People widget.
-#user_groups = ["Researchers", "Visitors"]
 
-# List qualifications (such as academic degrees)
-#[[education.courses]]
-#  course = "PhD in Artificial Intelligence"
-#  institution = "Stanford University"
-#  year = 2012
-
-#[[education.courses]]
-#  course = "MEng in Artificial Intelligence"
-#  institution = "Massachusetts Institute of Technology"
-#  year = 2009
-
-#[[education.courses]]
-#  course = "BSc in Artificial Intelligence"
-#  institution = "Massachusetts Institute of Technology"
-#  year = 2008
 
 # Social/Academic Networking
-# For available icons, see: https://sourcethemes.com/academic/docs/widgets/#icons
+# For available icons, see: https://wowchemy.com/docs/getting-started/page-builder/#icons
 #   For an email link, use "fas" icon pack, "envelope" icon, and a link in the
-#   form "mailto:your-email@example.com" or "#contact" for contact widget.
+#   form "mailto:your-email@example.com" or "/#contact" for contact widget.
+social:
+  - icon: rss
+    icon_pack: fas
+    link: 'https://blog.anayrat.info/index.xml'
+    display:
+      header: true
+  - icon: envelope
+    icon_pack: fas
+    link: '/#contact'
+  - icon: mastodon
+    icon_pack: fab
+    link: 'https://framapiaf.org/@anayrat'
+    label: Retrouvez-moi sur Mastodon
+    display:
+      header: true
+  - icon: twitter
+    icon_pack: fab
+    link: https://twitter.com/Adrien_nayrat
+    label: Retrouvez-moi sur Twitter
+    display:
+      header: true
+  - icon: github
+    icon_pack: fab
+    link: https://github.com/anayrat
+  - icon: linkedin
+    icon_pack: fab
+    link: https://www.linkedin.com/in/adriennayrat/
+  # Link to a PDF of your resume/CV.
+  # To use: copy your resume to `static/uploads/resume.pdf`, enable `ai` icons in `params.yaml`,
+  # and uncomment the lines below.
+  #- icon: cv
+  #  icon_pack: ai
+  #  link: uploads/resume.pdf
 
-#[[social]]
-#  icon = "google-scholar"
-#  icon_pack = "ai"
-#  link = "https://scholar.google.co.uk/citations?user=sIwtMXoAAAAJ"
-
-
-[[social]]
-  icon = "rss "
-  icon_pack = "fas"
-  link = "https://blog.anayrat.info/index.xml"
-
-[[social]]
-  icon = "envelope"
-  icon_pack = "fas"
-  link = "#contact"
-
-[[social]]
-  icon = "twitter"
-  icon_pack = "fab"
-  link = "https://twitter.com/Adrien_nayrat"
-
-[[social]]
-  icon = "linkedin"
-  icon_pack = "fab"
-  link = "https://linkedin.com/in/adriennayrat/"
-
-[[social]]
-  icon = "github"
-  icon_pack = "fab"
-  link = "https://github.com/anayrat/"
-
-
-# Link to a PDF of your resume/CV from the About widget.
-# To enable, copy your resume/CV to `static/files/cv.pdf` and uncomment the lines below.
-# [[social]]
-#   icon = "cv"
-#   icon_pack = "ai"
-#   link = "files/cv.pdf"
-
-+++
-
+# Highlight the author in author lists? (true/false)
+highlight_name: true
+---
 Je suis tombé dans PostgreSQL en 2013 et depuis, ce SGBD open source ne m'a plus quitté :smile:
 
 J'ai acquis chez Dalibo une bonne connaissance du moteur et du SQL que j'ai mis à profit dans mes tâches de consultant . Celles-ci allaient de la formation au tuning du moteur en passant par la participation à la communauté PostgreSQL (conférences, projets open source, écriture d'articles, [écriture et relecture de patch pour le moteur lui-même](https://git.postgresql.org/gitweb/?p=postgresql.git&a=search&h=HEAD&st=commit&s=nayrat&.cgifields=sr)...).
@@ -115,3 +146,5 @@ Depuis 2021 je suis disponible pour des missions freelance ponctuelles :
 J'ai également à cœur de maintenir mon implication dans la communauté PostgreSQL. Ainsi, vous pourrez me croiser lors d'évènements communautaires (conférences, meetup ...) ainsi que sur les mailing list Postgres ;)
 
 Vous trouverez ici des articles à propos de PostgreSQL (mais pas que :smile: ). Ainsi que les présentations que j'ai pu effectuer lors de conférences. Si vous trouvez une erreur, n'hésitez pas à me contacter via le projet sur [github](https://github.com/anayrat/blog) ;)
+
+{style="text-align: justify;"}

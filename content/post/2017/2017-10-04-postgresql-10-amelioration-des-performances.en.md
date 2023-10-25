@@ -1,6 +1,6 @@
 ---
 title: 'PostgreSQL 10 : Performances improvements'
-author: Adrien Nayrat
+authors: ['adrien']
 type: post
 date: 2017-10-04T09:51:44+00:00
 categories:
@@ -8,6 +8,7 @@ categories:
   - Postgres
 tags:
   - postgres
+show_related: true
 
 ---
 

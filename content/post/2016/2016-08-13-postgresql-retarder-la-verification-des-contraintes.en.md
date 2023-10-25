@@ -1,6 +1,6 @@
 ---
 title: 'PostgreSQL : Deferrable constraints'
-author: Adrien Nayrat
+authors: ['adrien']
 type: post
 date: 2016-08-13T20:42:53+00:00
 draft: false
@@ -8,6 +8,7 @@ categories:
   - Postgres
 tags:
   - postgres
+show_related: true
 
 ---
 # Differ constraints verification

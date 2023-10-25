@@ -1,0 +1,45 @@
+# Languages
+#   Create a section for each of your site's languages.
+#   Documentation: https://wowchemy.com/docs/guide/language/
+
+# Default language
+en:
+  languageCode: en-us
+  # Uncomment for multi-lingual sites, and move English content into `en` sub-folder.
+  #contentDir: content/en
+  menu:
+    main:
+      - name: Home
+        url: '#about'
+        weight: 10
+      - name: Posts
+        url: '#posts'
+        weight: 20
+      - name: Talks
+        url: '#talks'
+        weight: 40
+      - name: Contact
+        url: '#contact'
+        weight: 60
+
+
+
+fr:
+  languageCode: fr-fr
+#  menu:
+#    main:
+#      - name: 传
+#        url: '#about'
+#        weight: 1
+# Uncomment the lines below to configure your website in a second language.
+#zh:
+#  languageCode: zh-Hans
+#  contentDir: content/zh
+#  title: Chinese website title...
+#  params:
+#    description: Site description in Chinese...
+#  menu:
+#    main:
+#      - name: 传
+#        url: '#about'
+#        weight: 1

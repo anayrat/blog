@@ -1,6 +1,6 @@
 ---
 title: PostgreSQL 10 and Logical replication - Setup
-author: Adrien Nayrat
+authors: ['adrien']
 type: post
 date: 2017-08-05T11:13:43+00:00
 draft: false
@@ -10,6 +10,7 @@ categories:
 tags:
   - postgres
   - logical replication
+show_related: true
 ---
 This article is the result of a series of articles on logical replication in PostgreSQL 10
 

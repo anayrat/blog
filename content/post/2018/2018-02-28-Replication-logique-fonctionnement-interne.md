@@ -3,11 +3,13 @@ title = "Replication Logique Fonctionnement Interne"
 date = 2018-03-10T12:19:41+01:00
 draft = false
 summary = "Cet article détaille le fonctionne de la réplication logique, notamment les différences de comportement en fonction du type de trafic"
+authors = ['adrien']
 
 # Tags and categories
 # For example, use `tags = []` for no tags, or the form `tags = ["A Tag", "Another Tag"]` for one or more tags.
 tags = ["postgres","replication logique", "netdata"]
 categories = ["Postgres"]
+show_related = true
 
 # Featured image
 # Place your image in the `static/img/` folder and reference its filename below, e.g. `image = "example.jpg"`.
@@ -229,7 +231,7 @@ On remarque également que la notion de changement correspond à une ligne et no
 un ordre. Par exemple, un seul insert de 4096 lignes entrainera l'écriture d'un
 fichier \*.snap.
 
-Edit : Les développeurs de Postgres ont changé l'extension `snap` pour `spill` pour Postgres 12 : 
+Edit : Les développeurs de Postgres ont changé l'extension `snap` pour `spill` pour Postgres 12 :
 
 ```
 commit ba9d35b8eb8466cf445c732a2e15ca5790cbc6c6

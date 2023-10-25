@@ -1,6 +1,6 @@
 ---
 title: Introduction à Postgres – Part1
-author: Adrien Nayrat
+authors: ['adrien']
 type: post
 date: 2014-12-22T23:00:05+00:00
 aliases: /2014/12/23/introduction-a-postgres-part1/
@@ -10,6 +10,7 @@ categories:
 tags:
   - linux
   - postgres
+show_related: true
 
 ---
 Cet article a pour but de présenter quelques principes de Postgres. Il n'est pas exhaustif, néanmoins si vous souhaitez approfondir j'ai agrémenté l'article de quelques liens que j'ai trouvé pertinents. Pour ceux qui veulent vraiment creuser je vous recommande la lecture des ouvrages de Greg Smith et les articles de Dalibo parus dans Linux Mag.

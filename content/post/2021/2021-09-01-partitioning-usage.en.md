@@ -4,11 +4,13 @@ date = 2021-09-01T09:00:00+02:00
 draft = false
 
 summary = "Different use cases of native partioning under PostgreSQL"
+authors = ['adrien']
 
 # Tags and categories
 # For example, use `tags = []` for no tags, or the form `tags = ["A Tag", "Another Tag"]` for one or more tags.
 tags = ["postgres","partitioning"]
 categories = ["Postgres"]
+show_related = true
 
 +++
 
@@ -152,7 +154,7 @@ WHERE
     state = 'pending'
     AND c1 BETWEEN '2021-01-01' AND '2021-01-31';
 
-                                                  QUERY PLAN                                                  
+                                                  QUERY PLAN
 --------------------------------------------------------------------------------------------------------------
  Index Scan using orders_13_state_idx on orders_13  (cost=0.42..4.45 rows=1 width=12) (actual rows=0 loops=1)
    Index Cond: (state = 'pending'::text)
@@ -167,7 +169,7 @@ FROM orders
 WHERE
     state = 'pending'
     AND c1 BETWEEN '2021-01-01' AND '2021-01-31';
-                                                  QUERY PLAN                                                   
+                                                  QUERY PLAN
 ---------------------------------------------------------------------------------------------------------------
  Index Scan using orders_state_idx on orders  (cost=0.44..13168.25 rows=3978 width=12) (actual rows=0 loops=1)
    Index Cond: (state = 'pending'::text)
@@ -188,7 +190,7 @@ WHERE
     state = 'pending'
     AND c1 BETWEEN '2021-07-01' AND '2021-07-31';
 
-                                                       QUERY PLAN                                                        
+                                                       QUERY PLAN
 -------------------------------------------------------------------------------------------------------------------------
  Index Scan using orders_19_state_idx on orders_19  (cost=0.43..2417.50 rows=19215 width=12) (actual rows=20931 loops=1)
    Index Cond: (state = 'pending'::text)
@@ -204,7 +206,7 @@ WHERE
     state = 'pending'
     AND c1 BETWEEN '2021-07-01' AND '2021-07-31';
 
-                                                     QUERY PLAN                                                     
+                                                     QUERY PLAN
 --------------------------------------------------------------------------------------------------------------------
  Index Scan using orders_state_idx on orders  (cost=0.44..13168.25 rows=15008 width=12) (actual rows=20931 loops=1)
    Index Cond: (state = 'pending'::text)
@@ -225,7 +227,7 @@ The `partitionwise aggregate` allows to do an aggregation or a grouping partitio
 
 {{< highlight sql "linenos=table,hl_lines=4 16 21" >}}
 explain (analyze,timing off) select count(*), c1 from orders_p group by c1;
-                                                  QUERY PLAN                                                  
+                                                  QUERY PLAN
 --------------------------------------------------------------------------------------------------------------
  HashAggregate  (cost=508361.80..508365.45 rows=365 width=12) (actual rows=365 loops=1)
    Group Key: orders_01.c1
@@ -242,7 +244,7 @@ explain (analyze,timing off) select count(*), c1 from orders_p group by c1;
 set enable_partitionwise_aggregate to on;
 
 explain (analyze,timing off) select count(*), c1 from orders_p group by c1;
-                                                  QUERY PLAN                                                  
+                                                  QUERY PLAN
 --------------------------------------------------------------------------------------------------------------
  Append  (cost=29.05..408343.83 rows=1765 width=12) (actual rows=365 loops=1)
    ->  HashAggregate  (cost=29.05..31.05 rows=200 width=12) (actual rows=0 loops=1)

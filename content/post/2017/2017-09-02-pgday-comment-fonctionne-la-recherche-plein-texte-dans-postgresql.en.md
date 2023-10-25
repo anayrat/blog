@@ -1,6 +1,6 @@
 ---
 title: 'PGDay : How does Full Text Search works?'
-author: Adrien Nayrat
+authors: ['adrien']
 type: post
 date: 2017-09-02T11:04:58+00:00
 categories:
@@ -8,6 +8,7 @@ categories:
 tags:
   - full text search
   - postgres
+show_related: true
 
 ---
 

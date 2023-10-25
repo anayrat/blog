@@ -4,11 +4,13 @@ date = 2022-02-14T09:00:00+02:00
 draft = false
 
 summary = "Effects of TOAST and application of toast_tuple_target with JSONB"
+authors = ['adrien']
 
 # Tags and categories
 # For example, use `tags = []` for no tags, or the form `tags = ["A Tag", "Another Tag"]` for one or more tags.
 tags = ["postgres","toast", "jsonb"]
 categories = ["Postgres"]
+show_related = true
 
 +++
 

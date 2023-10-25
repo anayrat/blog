@@ -1,6 +1,6 @@
 ---
 title: Restauration PITR – Part 7
-author: Adrien Nayrat
+authors: ['adrien']
 type: post
 date: 2015-03-22T12:25:41+00:00
 aliases: /2015/03/22/restauration-pitr-part-7/
@@ -8,6 +8,7 @@ categories:
   - Postgres
 tags:
   - postgres
+show_related: true
 
 ---
 Je profite d'un week end de mauvais temps (m’empêchant de retourner en falaise 🙁 ) pour poursuivre mes articles sur Postgres.

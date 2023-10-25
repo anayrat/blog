@@ -1,6 +1,6 @@
 ---
 title: PostgreSQL 10 et la réplication logique – Mise en oeuvre
-author: Adrien Nayrat
+authors: ['adrien']
 type: post
 date: 2017-08-05T11:13:43+00:00
 aliases: /2017/08/05/postgresql-10-et-la-replication-logique-mise-en-oeuvre/
@@ -10,6 +10,7 @@ categories:
 tags:
   - postgres
   - replication logique
+show_related: true
 
 ---
 Cet article est la suite d'une série d'articles sur la réplication logique dans la version 10 de PostgreSQL

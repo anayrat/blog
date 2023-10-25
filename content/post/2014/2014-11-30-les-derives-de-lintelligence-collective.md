@@ -1,6 +1,6 @@
 ---
 title: Les dérives de l’intelligence collective
-author: Adrien Nayrat
+authors: ['adrien']
 type: post
 date: 2014-11-30T09:20:24+00:00
 aliases: /2014/11/30/les-derives-de-lintelligence-collective/
@@ -8,6 +8,7 @@ categories:
   - Travail
 tags:
   - travail
+show_related: true
 
 ---
 J'ai lu un article très intéressant dans la revue Sciences Humaines  sur « Les dérives de l'intelligence collective ».

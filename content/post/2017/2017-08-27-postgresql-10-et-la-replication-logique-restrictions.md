@@ -1,6 +1,6 @@
 ---
 title: PostgreSQL 10 et la réplication logique – Restrictions
-author: Adrien Nayrat
+authors: ['adrien']
 type: post
 date: 2017-08-27T16:48:22+00:00
 aliases: /2017/08/27/postgresql-10-et-la-replication-logique-restrictions/
@@ -10,6 +10,7 @@ categories:
 tags:
   - postgres
   - replication logique
+show_related: true
 
 ---
 Cet article est la suite d'une série d'articles sur la réplication logique dans la version 10 de PostgreSQL

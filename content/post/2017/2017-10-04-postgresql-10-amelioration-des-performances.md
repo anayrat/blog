@@ -1,6 +1,6 @@
 ---
 title: 'PostgreSQL 10 : Amélioration des performances'
-author: Adrien Nayrat
+authors: ['adrien']
 type: post
 date: 2017-10-04T09:51:44+00:00
 aliases: /2017/10/04/postgresql-10-amelioration-des-performances/
@@ -9,6 +9,7 @@ categories:
   - Postgres
 tags:
   - postgres
+show_related: true
 
 ---
 
@@ -118,7 +119,7 @@ Ainsi les tris qui ne peuvent pas tenir en mémoire et qui doivent donc être  
 
 Andreus Freund (encore!) a revu les fonctions de hashage et à nouveau les gains sont impressionnants.
 
-Peter Geoghegan en fait mention dans cette conférence : 
+Peter Geoghegan en fait mention dans cette conférence :
 
 {{< youtube aic_9KNwKn0 >}}
 

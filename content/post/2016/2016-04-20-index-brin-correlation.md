@@ -1,6 +1,6 @@
 ---
 title: Index BRIN – Corrélation
-author: Adrien Nayrat
+authors: ['adrien']
 type: post
 date: 2016-04-20T20:57:31+00:00
 aliases: /2016/04/20/index-brin-correlation/
@@ -11,6 +11,7 @@ tags:
   - brin
   - index
   - postgres
+show_related: true
 
 ---
 La version 9.5 de PostgreSQL sortie en Janvier 2016 propose un nouveau type d'index : les Index BRIN pour Bloc Range INdex. Ces derniers sont recommandés pour les tables volumineuses et corrélées avec leur emplacement. J'ai décidé de consacrer une série d'article sur ces index :

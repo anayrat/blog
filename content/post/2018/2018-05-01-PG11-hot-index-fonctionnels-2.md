@@ -3,11 +3,13 @@ title = "PostgreSQL et updates heap-only-tuples - partie 2"
 date = 2018-11-19T08:00:00+01:00
 draft = false
 summary = "Quand le moteur ne fait pas d'update *heap-only-tuple* et présentation de la nouveauté de la version 11"
+authors = ['adrien']
 
 # Tags and categories
 # For example, use `tags = []` for no tags, or the form `tags = ["A Tag", "Another Tag"]` for one or more tags.
 tags = ["postgres","index","heap-only-tuple"]
 categories = ["Postgres"]
+show_related = true
 
 # Featured image
 # Place your image in the `static/img/` folder and reference its filename below, e.g. `image = "example.jpg"`.
@@ -76,7 +78,7 @@ SELECT lp,lp_flags,t_data,t_ctid FROM  heap_page_items(get_raw_page('t3',0));
   5 |        1 | \x0100000006000000 | (0,5)
 (5 rows)
 
-SELECT * FROM  bt_page_items(get_raw_page('t3_c1_idx',1));              
+SELECT * FROM  bt_page_items(get_raw_page('t3_c1_idx',1));
  itemoffset | ctid  | itemlen | nulls | vars |          data
 ------------+-------+---------+-------+------+-------------------------
           1 | (0,1) |      16 | f     | f    | 01 00 00 00 00 00 00 00
@@ -115,7 +117,7 @@ SELECT lp,lp_flags,t_data,t_ctid FROM  heap_page_items(get_raw_page('t3',0));
   5 |        1 | \x0100000006000000         | (0,3)
 (5 rows)
 
-SELECT * FROM  bt_page_items(get_raw_page('t3_c1_idx',1));              
+SELECT * FROM  bt_page_items(get_raw_page('t3_c1_idx',1));
  itemoffset | ctid  | itemlen | nulls | vars |          data
 ------------+-------+---------+-------+------+-------------------------
           1 | (0,3) |      16 | f     | f    | 01 00 00 00 00 00 00 00
@@ -236,7 +238,7 @@ regardant le contenu physique de l'index avec pageinspect :
 Version 10 :
 ```sql
 SELECT * FROM  bt_page_items(get_raw_page('t4_expr_idx',1));
-itemoffset | ctid  | itemlen | nulls | vars |                      data                       
+itemoffset | ctid  | itemlen | nulls | vars |                      data
 ------------+-------+---------+-------+------+-------------------------------------------------
          1 | (0,1) |      16 | f     | t    | 0f 61 64 72 69 65 6e 00
          2 | (0,4) |      24 | f     | t    | 15 67 75 69 6c 6c 61 75 6d 65 00 00 00 00 00 00

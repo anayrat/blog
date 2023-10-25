@@ -1,6 +1,6 @@
 ---
 title: Le travail, qualité et collectif
-author: Adrien Nayrat
+authors: ['adrien']
 type: post
 date: 2015-01-29T19:08:55+00:00
 aliases: /2015/01/29/le-travail-qualite-et-collectif/
@@ -8,6 +8,7 @@ categories:
   - Travail
 tags:
   - travail
+show_related: true
 
 ---
 J'ai publié beaucoup d'articles techniques ces derniers temps, hors je ne souhaite pas que ce blog soit exclusivement technique. Le travail dans l'informatique ce n'est pas que de la technique, c'est aussi de la collaboration avec différents acteurs : Collaborateurs, supérieurs, clients, prestataires ...

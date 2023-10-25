@@ -3,12 +3,14 @@ title = "Postgres et Netdata : application à autovacuum et pg_stat_bgwriter"
 date = 2018-02-20T18:35:22+01:00
 draft = false
 summary = "Présentation des graphiques autovacuum et bgwriter dédiés à PostgreSQL dans Netdata"
+authors = ['adrien']
 
 # Tags and categories
 # For example, use `tags = []` for no tags, or the form `tags = ["A Tag", "Another Tag"]` for one or more tags.
 tags = ["postgres","netdata","supervision","métrologie"]
 categories = ["Postgres"]
 
+show_related = true
 # Featured image
 # Place your image in the `static/img/` folder and reference its filename below, e.g. `image = "example.jpg"`.
 # Use `caption` to display an image caption.

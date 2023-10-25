@@ -1,6 +1,6 @@
 ---
 title: PostgreSQL 10 and Logical replication - Overview
-author: Adrien Nayrat
+authors: ['adrien']
 type: post
 draft: false
 date: 2017-07-29T20:53:37+00:00
@@ -9,7 +9,7 @@ categories:
 tags:
   - postgres
   - logical replication
-
+show_related: true
 
 ---
 

@@ -2,6 +2,7 @@
 title = "PostgreSQL 10 : ICU & Abbreviated Keys"
 date = 2017-11-19T15:30:00+01:00
 draft = false
+authors = ['adrien']
 
 # Tags and categories
 # For example, use `tags = []` for no tags, or the form `tags = ["A Tag", "Another Tag"]` for one or more tags.
@@ -17,6 +18,7 @@ categories = ["Postgres"]
 image = ""
 caption = ""
 preview = true
+show_related = true
 
 +++
 

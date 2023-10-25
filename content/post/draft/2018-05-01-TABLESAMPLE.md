@@ -2,6 +2,7 @@
 title = "Postgres: GROUPING SETS et TABLESAMPLE"
 date = 2018-04-25T14:09:38+02:00
 draft = true
+authors = ['adrien']
 
 summary = "Depuis la version 9.5, Postgres dispose des ordres `TABLESAMPLE` et `GROUPING SETS`."
 

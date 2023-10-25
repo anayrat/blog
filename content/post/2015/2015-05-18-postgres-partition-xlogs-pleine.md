@@ -1,6 +1,6 @@
 ---
 title: Partition xlogs pleine
-author: Adrien Nayrat
+authors: ['adrien']
 type: post
 date: 2015-05-18T20:00:46+00:00
 aliases: /2015/05/18/postgres-partition-xlogs-pleine/
@@ -9,6 +9,7 @@ categories:
   - Postgres
 tags:
   - postgres
+show_related: true
 
 ---
 Cette semaine j'ai été confronté à un incident sur une instance postgres. La partition xlogs était pleine :

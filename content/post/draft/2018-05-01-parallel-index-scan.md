@@ -2,6 +2,7 @@
 title = "Postgres: parcours d'index parallélisés"
 date = 2018-04-25T14:09:38+02:00
 draft = true
+authors = ['adrien']
 
 summary = "Comment fonctionnent les parcours de type bitmap index scan parallélisés?"
 

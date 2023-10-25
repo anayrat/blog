@@ -2,6 +2,7 @@
 title = "Postgres: partitionwise join et partitionwise aggregate"
 date = 2018-04-25T14:09:38+02:00
 draft = true
+authors = ['adrien']
 
 summary = "Présentation des jointures et aggrégats par partition"
 

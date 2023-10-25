@@ -4,12 +4,14 @@ date = 2019-01-28T08:00:00+02:00
 draft = false
 
 summary = "This extension can be useful for diagnosing requests with very short execution times."
+authors = ['adrien']
 
 
 # Tags and categories
 # For example, use `tags = []` for no tags, or the form `tags = ["A Tag", "Another Tag"]` for one or more tags.
 tags = ["postgres","extension","pg_sampletolog","sampling","logs"]
 categories = ["Postgres"]
+show_related = true
 
 # Featured image
 # Place your image in the `static/img/` folder and reference its filename below, e.g. `image = "example.jpg"`.
@@ -110,7 +112,7 @@ New settings should be visible in `pg_settings` view:
 
 ```
 select name from pg_settings where name like 'pg_sampletolog%';
-                 name                 
+                 name
 ----------------------------------------
  pg_sampletolog.disable_log_duration
  pg_sampletolog.log_before_execution

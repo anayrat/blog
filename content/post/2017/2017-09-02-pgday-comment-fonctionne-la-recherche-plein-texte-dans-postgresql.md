@@ -1,6 +1,6 @@
 ---
 title: 'PGDay : Comment fonctionne la recherche plein texte dans PostgreSQL?'
-author: Adrien Nayrat
+authors: ['adrien']
 type: post
 date: 2017-09-02T11:04:58+00:00
 aliases: /2017/09/02/pgday-comment-fonctionne-la-recherche-plein-texte-dans-postgresql/
@@ -9,6 +9,7 @@ categories:
 tags:
   - full text search
   - postgres
+show_related: true
 
 ---
 

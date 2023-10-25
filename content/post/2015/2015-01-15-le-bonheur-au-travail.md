@@ -1,6 +1,6 @@
 ---
 title: « Le bonheur au travail »
-author: Adrien Nayrat
+authors: ['adrien']
 type: post
 date: 2015-01-15T19:06:43+00:00
 aliases: /2015/01/15/le-bonheur-au-travail/
@@ -8,6 +8,7 @@ categories:
   - Travail
 tags:
   - travail
+show_related: true
 
 ---
 Je vous avais annoncé que ce blog ne traiterait pas que de technique mais également du travail, du rapport entre l'homme et le travail, du rapport entre les hommes au travail.

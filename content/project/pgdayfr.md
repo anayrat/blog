@@ -1,31 +1,34 @@
-+++
-title = "PG Day France"
-date = 2017-10-22T15:53:52+02:00
-draft = false
+---
+title: PG Day France
+summary: Le rendez-vous annuel de la communauté PostgreSQL !
 
-# Tags: can be used for filtering projects.
-# Example: `tags = ["machine-pgdayfr", "deep-learning"]`
-tags = ["pgdayfr"]
-
-# Project summary to display on homepage.
-summary = ""
-
-# Optional image to display on homepage.
-image_preview = ""
+tags:
+  - postgres
+date: '2016-04-27T00:00:00Z'
 
 # Optional external URL for project (replaces project detail page).
-external_link = ""
+external_link: 'https://pgday.fr/'
 
-# Does the project detail page use math formatting?
-math = false
+image:
+  caption:
+  focal_point: Smart
 
-# Does the project detail page use source code highlighting?
-highlight = true
+links:
+  - icon: twitter
+    icon_pack: fab
+    name: Follow
+    url: https://twitter.com/PGDAY_Fr
+url_code: ''
+url_pdf: ''
+url_slides: ''
+url_video: ''
 
-# Featured image
-# Place your image in the `static/img/` folder and reference its filename below, e.g. `image = "example.jpg"`.
-[header]
-image = ""
-caption = ""
+# Slides (optional).
+#   Associate this project with Markdown slides.
+#   Simply enter your slide deck's filename without extension.
+#   E.g. `slides = "example-slides"` references `content/slides/example-slides.md`.
+#   Otherwise, set `slides = ""`.
+slides:
+---
+Le rendez-vous annuel de la communauté PostgreSQL !
 
-+++

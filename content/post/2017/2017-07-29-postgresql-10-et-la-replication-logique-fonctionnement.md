@@ -1,6 +1,6 @@
 ---
 title: PostgreSQL 10 et la réplication logique – Fonctionnement
-author: Adrien Nayrat
+authors: ['adrien']
 type: post
 date: 2017-07-29T20:53:37+00:00
 aliases: /2017/07/29/postgresql-10-et-la-replication-logique-fonctionnement/
@@ -9,6 +9,7 @@ categories:
 tags:
   - postgres
   - replication logique
+show_related: true
 
 ---
 Certains d'entre vous sont déjà au courant, la nouvelle version majeure de PostgreSQL approche à grands pas. Elle devrait sortir dans le courant du mois de septembre.

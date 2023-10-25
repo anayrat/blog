@@ -1,6 +1,6 @@
 ---
 title: Backup, restauration – Part 6
-author: Adrien Nayrat
+authors: ['adrien']
 type: post
 date: 2015-02-26T17:30:51+00:00
 aliases: /2015/02/26/backup-restauration-pitr-part-6/
@@ -10,6 +10,7 @@ categories:
 tags:
   - linux
   - postgres
+show_related: true
 
 ---
 J'ai consacré les précédents articles aux différents mécanismes de réplications. Le principe est à chaque fois le même, on utilise une copie d'une instance Postgres puis la réplication se fait par rejeu des journaux de transaction (soit par transfert de fichier ou par flux).

@@ -1,6 +1,6 @@
 ---
 title: BRIN Indexes – Overview
-author: Adrien Nayrat
+authors: ['adrien']
 type: post
 date: 2016-04-19T06:00:21+00:00
 draft: false
@@ -11,6 +11,7 @@ tags:
   - brin
   - index
   - postgres
+show_related: true
 
 ---
 PostgreSQL 9.5 released in january 2016 brings a new kind of index: BRIN indexes for Bloc Range INdex. They are recommanded when tables are very big and correlated with their physical location. I decided to devote a series of articles on these indexes:

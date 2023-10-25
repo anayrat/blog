@@ -4,12 +4,14 @@ date = 2019-01-28T08:00:00+02:00
 draft = false
 
 summary = "Cette extension peut s'avérer utile pour diagnostiquer des requêtes dont le temps d’exécution est très court."
+authors = ['adrien']
 
 
 # Tags and categories
 # For example, use `tags = []` for no tags, or the form `tags = ["A Tag", "Another Tag"]` for one or more tags.
 tags = ["postgres","extension","pg_sampletolog","échantillonnage","logs"]
 categories = ["Postgres"]
+show_related = true
 
 # Featured image
 # Place your image in the `static/img/` folder and reference its filename below, e.g. `image = "example.jpg"`.
@@ -106,7 +108,7 @@ connexion avec  `session_preload_libraries = 'pg_sampletolog'`
 Si l'extension est bien chargée, ces nouveaux paramètres apparaissent :
 ```
 select name from pg_settings where name like 'pg_sampletolog%';
-                 name                 
+                 name
 ----------------------------------------
  pg_sampletolog.disable_log_duration
  pg_sampletolog.log_before_execution

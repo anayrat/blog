@@ -1,18 +1,15 @@
-+++
-title = "Posts"
-date = 2017-01-01
-math = false
-highlight = false
+---
+title: Articles
+cms_exclude: true
 
-# List format.
-#   0 = Simple
-#   1 = Detailed
-#   2 = Stream
-view = 3
+# View.
+#   1 = List
+#   2 = Compact
+#   3 = Card
+view: 2
 
-# Optional featured image (relative to `static/img/` folder).
-[header]
-image = ""
-caption = ""
-
-+++
+# Optional header image (relative to `static/media/` folder).
+header:
+  caption: ''
+  image: ''
+---

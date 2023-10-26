@@ -91,6 +91,11 @@ interests:
 #   For an email link, use "fas" icon pack, "envelope" icon, and a link in the
 #   form "mailto:your-email@example.com" or "/#contact" for contact widget.
 social:
+  - icon: user-tie
+    icon_pack: fas
+    link: 'https://pro.anayrat.info/en/'
+    display:
+      header: true
   - icon: rss
     icon_pack: fas
     link: 'https://blog.anayrat.info/index.xml'
@@ -131,12 +136,15 @@ I fell into PostgreSQL in 2014 and since then, this open source DBMS has never l
 {style="text-align: justify;"}
 
 At Dalibo, I acquired a good knowledge of Postgres and SQL that I used in my work as a consultant. These included training, postgres tuning, participation in the PostgreSQL community (conferences, open source projects, writing articles, [patches](https://git.postgresql.org/gitweb/?p=postgresql.git&a=search&h=HEAD&st=commit&s=nayrat&.cgifields=sr)...).
+{style="text-align: justify;"}
 
 At Doctolib, I acquired a strong experience in maintaining in operational conditions a high volume production with high throughput, with significant challenges in terms of service performance, security and availability: ~45,000 transactions per second on a database of more than 3.5TB with very strong growth.
+{style="text-align: justify;"}
 
 Then at PeopleDoc, I joined a DBA team where my role was to make sure that production runs smoothly, communicate best practices to developers, and optimize platforms for performance. I was also involved in writing blue-green migration in as transparent a way as possible for the application and without downtime.
+{style="text-align: justify;"}
 
-Since 2021 I am available for freelance missions:
+Since 2021 [I am available for freelance missions](https://pro.anayrat.info/en/):
 - architecture consulting
 - tuning
 - query optimization
@@ -145,5 +153,7 @@ Since 2021 I am available for freelance missions:
 - training
 
 I am also determined to maintain my involvement in the PostgreSQL community. Thus, you can meet me at community events (conferences, meetup...) and also on Postgres' mailing list ;)
+{style="text-align: justify;"}
 
 Here you will find articles (mostly in French but I try to translate them) about PostgreSQL (but not only :smile:). As well as the presentations that I could make during conferences. Feel free to open an issue on [github](https://github.com/anayrat/blog) ;)
+{style="text-align: justify;"}

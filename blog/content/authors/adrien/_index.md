@@ -91,6 +91,11 @@ interests:
 #   For an email link, use "fas" icon pack, "envelope" icon, and a link in the
 #   form "mailto:your-email@example.com" or "/#contact" for contact widget.
 social:
+  - icon: user-tie
+    icon_pack: fas
+    link: 'https://pro.anayrat.info/'
+    display:
+      header: true
   - icon: rss
     icon_pack: fas
     link: 'https://blog.anayrat.info/index.xml'
@@ -128,14 +133,18 @@ social:
 highlight_name: true
 ---
 Je suis tombé dans PostgreSQL en 2013 et depuis, ce SGBD open source ne m'a plus quitté :smile:
+{style="text-align: justify;"}
 
 J'ai acquis chez Dalibo une bonne connaissance du moteur et du SQL que j'ai mis à profit dans mes tâches de consultant . Celles-ci allaient de la formation au tuning du moteur en passant par la participation à la communauté PostgreSQL (conférences, projets open source, écriture d'articles, [écriture et relecture de patch pour le moteur lui-même](https://git.postgresql.org/gitweb/?p=postgresql.git&a=search&h=HEAD&st=commit&s=nayrat&.cgifields=sr)...).
+{style="text-align: justify;"}
 
 J'ai complété ces compétences chez Doctolib avec une solide expérience pour le maintient en condition opérationnelle d'une grosse production à fort trafic avec des enjeux importants en terme de performance, sécurité et disponibilité du service : ~45 000 transactions par seconde sur une base de plus de 3.5To avec une croissance très forte.
+{style="text-align: justify;"}
 
 Ensuite chez PeopleDoc, j'ai rejoint une équipe de DBA où mon rôle était de m'assurer du bon fonctionnement de la production, transmettre les bonnes pratiques auprès des développeurs, optimiser les plateformes pour les performances. Je participais également à l'écriture de migration en blue-green de la manière la plus transparent possible pour l'applicatif et sans downtime.
+{style="text-align: justify;"}
 
-Depuis 2021 je suis disponible pour des missions freelance ponctuelles :
+Depuis 2021 [je suis disponible pour des missions freelance ponctuelles](https://pro.anayrat.info) :
 - conseils en architecture
 - tuning du moteur
 - optimisation de requête
@@ -144,7 +153,7 @@ Depuis 2021 je suis disponible pour des missions freelance ponctuelles :
 - formation
 
 J'ai également à cœur de maintenir mon implication dans la communauté PostgreSQL. Ainsi, vous pourrez me croiser lors d'évènements communautaires (conférences, meetup ...) ainsi que sur les mailing list Postgres ;)
+{style="text-align: justify;"}
 
 Vous trouverez ici des articles à propos de PostgreSQL (mais pas que :smile: ). Ainsi que les présentations que j'ai pu effectuer lors de conférences. Si vous trouvez une erreur, n'hésitez pas à me contacter via le projet sur [github](https://github.com/anayrat/blog) ;)
-
 {style="text-align: justify;"}

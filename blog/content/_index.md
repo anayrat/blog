@@ -253,6 +253,10 @@ sections:
       #  - 'Monday 10:00 to 13:00'
       #  - 'Wednesday 09:00 to 10:00'
       contact_links:
+        - icon: user-tie
+          icon_pack: fas
+          name: Site professionnel
+          link: 'https://pro.anayrat.info/'
         # - icon: twitter
         #   icon_pack: fab
         #   name: Retrouvez-moi sur Twitter

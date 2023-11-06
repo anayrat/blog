@@ -250,7 +250,7 @@ Attached to open source, I have both participated in community events:
 * French-speaking conferences at [PG Day France](https://pgday.fr/): I was a participant as well as a [speaker](https://blog.anayrat.info/project/pgdayfr/).
 * International conferences:
   * The [PGCon](https://www.pgcon.org) in Ottawa, Canada. This is **the** world conference for Postgres developers.
-  * PostgreSQL Europe](https://www.pgconf.eu). Europe's biggest conference, 600 participants, 3 tracks over 3 days.
+  * [PostgreSQL Europe](https://www.pgconf.eu). Europe's biggest conference, 600 participants, 3 tracks over 3 days.
   * The [pgDay Paris](https://www.pgday.paris). The annual English-speaking conference in Paris. I was lucky enough to be part of the 2020 selection committee, unfortunately cancelled due to COVID. But that's only a matter of time, as I'm back on the selection committee for 2024.
 {style="text-align: justify;"}
 

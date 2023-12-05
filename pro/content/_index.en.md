@@ -180,13 +180,15 @@ sections:
           date_start: '2019-09-01'
           date_end: '2021-06-01'
           description: |2-
-              Maintient en condition opérationnelle de la base de donnée sous PostgreSQL à fort trafic (3.5To - 40K-50K TPS) :
-              * Tuning système d'exploitation et PostgreSQL
-              * Tests de charge
-              * Supervision et métrologie
-              * Optimisation de requêtes
-              * Partage de connaissances auprès des développeurs et équipe DEVOPS afin d'exploiter au mieux le moteur
-              * Veille technique sur PostgreSQL, Linux et hardware (CPU, stockage, mémoire)
+              DBA de production qui comprend administration des bases :
+              * full text search
+              * écriture de fonctions en pl/pgsql
+              * partitionnement
+              * écriture de migrations blue-green
+              * optimisation/tuning
+              * automatisation avec ansible
+              * astreintes
+              * veille technique.
 
               Compétences:
 

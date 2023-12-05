@@ -37,7 +37,7 @@ interests:
 # Education to show in About widget
 education:
   courses:
-    - course: ingénieur spécialisé en réseaux et télécommunications
+    - course: Ingénieur spécialisé en réseaux et télécommunications
       institution: Ecole nationale supérieure des Télécommunications de Bretagne
       year: 2009
     - course: Dut Génie des Télécommunications et Réseaux
@@ -235,9 +235,9 @@ social:
   # Link to a PDF of your resume/CV.
   # To use: copy your resume to `static/uploads/resume.pdf`, enable `ai` icons in `params.yaml`,
   # and uncomment the lines below.
-  #- icon: cv
-  #  icon_pack: ai
-  #  link: uploads/resume.pdf
+  - icon: cv
+    icon_pack: ai
+    link: uploads/resume.pdf
 
 # Highlight the author in author lists? (true/false)
 highlight_name: true

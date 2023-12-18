@@ -138,7 +138,7 @@ Je suis tombé dans PostgreSQL en 2013 et depuis, ce SGBD open source ne m'a plu
 J'ai acquis chez Dalibo une bonne connaissance du moteur et du SQL que j'ai mis à profit dans mes tâches de consultant . Celles-ci allaient de la formation au tuning du moteur en passant par la participation à la communauté PostgreSQL (conférences, projets open source, écriture d'articles, [écriture et relecture de patch pour le moteur lui-même](https://git.postgresql.org/gitweb/?p=postgresql.git&a=search&h=HEAD&st=commit&s=nayrat&.cgifields=sr)...).
 {style="text-align: justify;"}
 
-J'ai complété ces compétences chez Doctolib avec une solide expérience pour le maintient en condition opérationnelle d'une grosse production à fort trafic avec des enjeux importants en terme de performance, sécurité et disponibilité du service : ~45 000 transactions par seconde sur une base de plus de 3.5To avec une croissance très forte.
+J'ai complété ces compétences chez Doctolib avec une solide expérience pour le maintien en condition opérationnelle d'une grosse production à fort trafic avec des enjeux importants en terme de performance, sécurité et disponibilité du service : ~45 000 transactions par seconde sur une base de plus de 3.5To avec une croissance très forte.
 {style="text-align: justify;"}
 
 Ensuite chez PeopleDoc, j'ai rejoint une équipe de DBA où mon rôle était de m'assurer du bon fonctionnement de la production, transmettre les bonnes pratiques auprès des développeurs, optimiser les plateformes pour les performances. Je participais également à l'écriture de migration en blue-green de la manière la plus transparent possible pour l'applicatif et sans downtime.

@@ -80,7 +80,7 @@ Pour illustrer l'auteur de ce blog m'a aimablement autorisé à utiliser son sch
 # Que nous indique ce schéma?
 
   * Il y a un process principal : Postmaster. C'est sur lui que se fait fait la connexion.
-  * Lors de la connexion il crée un autre processus backend qui va traiter la requête. Si votre client a tendance à initier beaucoup d'ouverture et fermeture de connexion il peut être intéressant de mettre en place un mécanisme de maintient de la connexion type pooler.
+  * Lors de la connexion il crée un autre processus backend qui va traiter la requête. Si votre client a tendance à initier beaucoup d'ouverture et fermeture de connexion il peut être intéressant de mettre en place un mécanisme de maintien de la connexion type pooler.
   * Dans la mémoire on peut distinguer deux zones : La shared memory et per-backend memory. Comme leur nom l'indique la shared-memory sera utilisée par tous les process alors que la « per backend memory » sera dédiée à chaque processus postgres traitant une requête (backend).
   * Un ensemble de processus d'arrière plan nécessaire au bon fonctionnement de postgres : bgwriter (renomé en writer depuis postgres 9.2), wal writer, autovacuum, stats collector, logger, archiver...
   * Le dossier de l'instance postgres contient les fichiers de configuration (ça dépend de la distribution), les fichiers pid et lock et un ensemble de répertoires. Les plus essentiels sont :

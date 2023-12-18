@@ -95,6 +95,11 @@ skills:
       percent: 80
       icon: google
       icon_pack: fab
+    - name: Microsoft Azure
+      description: ''
+      percent: 80
+      icon: microsoft
+      icon_pack: fab
     - name: Heroku
       description: ''
       percent: 20

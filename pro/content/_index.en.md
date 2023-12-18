@@ -150,7 +150,7 @@ sections:
               Contributions à des projets opensource, notamment :
 
                * PostgreSQL : patch, relecture, remontée de bug
-               * Powa : tests, hébergement et maintient de la plateforme de démo et de dev : https://demo-powa.anayrat.info & https://dev-powa.anayrat.info
+               * Powa : tests, hébergement et maintien de la plateforme de démo et de dev : https://demo-powa.anayrat.info & https://dev-powa.anayrat.info
                * check_pgactivity : tests, patchs
                * netdata : tests, patchs
                * pg_sampletolog : auteur

@@ -243,6 +243,8 @@ social:
   - icon: cv
     icon_pack: ai
     link: uploads/resume.pdf
+    display:
+      header: true
 
 # Highlight the author in author lists? (true/false)
 highlight_name: true

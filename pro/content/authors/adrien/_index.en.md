@@ -242,6 +242,8 @@ social:
   - icon: cv
     icon_pack: ai
     link: https://pro.anayrat.info/uploads/resume.pdf
+    display:
+      header: true
 
 
 # Highlight the author in author lists? (true/false)

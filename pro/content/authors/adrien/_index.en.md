@@ -213,6 +213,7 @@ social:
   - icon: blog
     icon_pack: fas
     link: 'https://blog.anayrat.info'
+    label: My technical blog
     display:
       header: true
   - icon: envelope
@@ -242,6 +243,7 @@ social:
   - icon: cv
     icon_pack: ai
     link: https://pro.anayrat.info/uploads/resume.pdf
+    label: Download my resume
     display:
       header: true
 

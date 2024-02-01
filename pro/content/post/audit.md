@@ -54,6 +54,12 @@ Chez les cloud provider, on n'a évidemment pas accès à ces informations, cepe
 
 Je regarde comment se comporte le serveur ou l'instance. Est-ce qu'il y a une saturation du stockage, CPU, RAM ?
 
+## Revue de l'activité Postgres
+
+J'identifie le comportement de Postgres : taches de maintenance (*vacuum*,*checkpoint*...), les problèmes de contention (locks), erreurs applicatives...
+
+Cela va m'aider à comprendre la charge de travail de votre instance et savoir quoi et où regarder. Je pourrais aussi proposer une configuration adaptée.
+
 ## Tuning Postgres
 
 *Savez-vous qu'il existe plus de 350 paramètres de configuration ? Leur nombre augmente (raisonnablement) au fil des versions. Certains disparaissent, d'autres apparaissent.*

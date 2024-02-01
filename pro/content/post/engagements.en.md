@@ -36,6 +36,12 @@ authors:
 # categories:
 #   - Audit
 ---
+
+## Independence
+
+As an independent freelancer not attached to any company, I don't have any "in-house solutions" to sell you.
+I have only two affections: Postgres and Opensource.
+
 ## No bullshit
 
 No buzzword. I'll recommend proven solutions. If not, I'll warn you about the possible risks (reliability, lack of maturity...).

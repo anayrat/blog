@@ -52,6 +52,12 @@ studying the documentation and technical specifications of the instances (CPU, B
 
 I look at how the server or instance is behaving. Are storage, CPU and RAM saturated?
 
+## Postgres activity
+
+Same as system activity, I understand what Postgres is doing : maintenance tasks (*vacuum*, *checkpoint*...), locking, errors....
+
+This will help me to understand what is your database workload, know what and where to look for. So, I will be able to suggest a better configuration.
+
 ## Tuning Postgres
 
 *Did you know that there are over 350 configuration parameters? The number increases (reasonably) with each new version. Some disappear, others appear.

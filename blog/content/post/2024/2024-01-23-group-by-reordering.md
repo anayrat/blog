@@ -7,8 +7,8 @@ summary: "Nouveauté dans PostgreSQL 17. Réorganisation du GROUP BY"
 authors: []
 tags: ['PostgreSQL 17','Nouveautés']
 categories: ['Postgres']
-date: 2024-01-26T12:00:00+01:00
-lastmod: 2024-01-26T12:00:00+01:00
+date: 2024-01-26T10:00:00+01:00
+lastmod: 2024-01-29T10:00:00+01:00
 featured: false
 
 # Featured image

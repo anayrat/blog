@@ -7,8 +7,8 @@ summary: "New feature in PostgreSQL 17: GROUP BY reordering"
 authors: []
 tags: ['PostgreSQL 17','News']
 categories: ['Postgres']
-date: 2024-01-26T12:00:00+01:00
-lastmod: 2024-01-26T12:00:00+01:00
+date: 2024-01-26T10:00:00+01:00
+lastmod: 2024-01-29T10:00:00+01:00
 featured: false
 
 # Featured image

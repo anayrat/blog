@@ -19,7 +19,7 @@ sections:
         url: https://discord.gg/z8wNYzb
       cta_note:
         label:
-      text: Vous chercher un DBA PosgreSQL Freelance ?
+      text: Vous cherchez un DBA PosgreSQL Freelance ?
     design:
       background:
         gradient_end: '#1976d2'
@@ -578,8 +578,10 @@ sections:
     content:
       title: Contact
       subtitle:
-      # text: |-
-      #   Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam mi diam, venenatis ut magna et, vehicula efficitur enim.
+      text: |-
+        {{< rawhtml >}}
+        <form method="post" action="https://newsletter.infomaniak.com/external/submit" class="inf-form" target="_blank"><input type="email" name="email" style="display:none" /><input type="hidden" name="key" value="eyJpdiI6IkoyZzdOdlQ2MndEaUhtZkMzMmlPaG1mY3RqWGRNeGwyVW5iMUF4dkJtaUE9IiwidmFsdWUiOiJJQXlyelVlRzBGY2lnZmgzRnNIZnhQZWxNSnM5KzQ2clI5RHVwWEVzdFdzPSIsIm1hYyI6ImU5MGRjNTE1MTc0ODViMDIyMzBhYmFhNWJjNGZjZjhlMDJiNDQ2MmY0ZmIwZTM0MzNlZGIyZTQwNGM3ZTFlZmUifQ=="><input type="hidden" name="webform_id" value="16367"><style> .inf-main_ff4d70de478038c72282b7e4af1d4260{ background-color:#f5f5f5; padding:25px 20px; margin:25px auto; } .inf-main_ff4d70de478038c72282b7e4af1d4260 .inf-content { margin-top:13px;} .inf-main_ff4d70de478038c72282b7e4af1d4260 h4, .inf-main_ff4d70de478038c72282b7e4af1d4260 span, .inf-main_ff4d70de478038c72282b7e4af1d4260 label, .inf-main_ff4d70de478038c72282b7e4af1d4260 input, .inf-main_ff4d70de478038c72282b7e4af1d4260 .inf-submit, .inf-main_ff4d70de478038c72282b7e4af1d4260 .inf-success p a { color:#555555; font-size:14px; } .inf-main_ff4d70de478038c72282b7e4af1d4260 h4{ font-size:18px; margin:0px 0px 13px 0px; } .inf-main_ff4d70de478038c72282b7e4af1d4260 h4, .inf-main_ff4d70de478038c72282b7e4af1d4260 label{ font-weight:bold; } .inf-main_ff4d70de478038c72282b7e4af1d4260 .inf-input { margin-bottom:7px; } .inf-main_ff4d70de478038c72282b7e4af1d4260 label { display:block;} .inf-main_ff4d70de478038c72282b7e4af1d4260 input{ height:35px; color:#999999; border: 1px solid #E9E9E9; border:none; padding-left:7px; } .inf-main_ff4d70de478038c72282b7e4af1d4260 .inf-input.inf-error label, .inf-main_ff4d70de478038c72282b7e4af1d4260 .inf-input.inf-error span.inf-message{ color: #cc0033; } .inf-main_ff4d70de478038c72282b7e4af1d4260 .inf-input.inf-error input{ border: 1px solid #cc0033; } .inf-main_ff4d70de478038c72282b7e4af1d4260 .inf-input input { width:100%;} .inf-main_ff4d70de478038c72282b7e4af1d4260 .inf-input.inf-error span.inf-message { display: block; } .inf-main_ff4d70de478038c72282b7e4af1d4260 .inf-submit { text-align:right;} .inf-main_ff4d70de478038c72282b7e4af1d4260 .inf-submit input{ background-color:#777777; color:#ffffff; border:none; font-weight: normal; height:auto; padding:7px; } .inf-main_ff4d70de478038c72282b7e4af1d4260 .inf-submit input.disabled{ opacity: 0.4; } .inf-btn { color: rgb(85, 85, 85); border: medium none; font-weight: normal; height: auto; padding: 7px; display: inline-block; background-color: white; box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.24); border-radius: 2px; line-height: 1em; } .inf-rgpd { margin:25px 0px 15px 0px; color:#555555; } </style> <div class="inf-main_ff4d70de478038c72282b7e4af1d4260"> <h4>Newsletter</h4> <span>Je souhaite recevoir les informations d'Adrien Nayrat sur PostgreSQL</span> <div class="inf-success" style="display:none"> <h4>Votre inscription a été enregistrée avec succès !</h4> <p> <a href="#" class="inf-btn">&laquo;</a> </p> </div> <div class="inf-content"> <div class="inf-input inf-input-text"> <input type="text" name="inf[1]" data-inf-meta = "1" data-inf-error = "Merci de renseigner une adresse email" required="required" placeholder="Email" > </div> <div class="inf-rgpd">Votre adresse de messagerie est uniquement utilisée pour vous envoyer notre lettre d'information ainsi que des informations concernant nos activités. Elle n'est communiquée à aucun tier Vous pouvez à tout moment utiliser le lien de désabonnement intégré dans chacun de nos mails.</div> <div class="inf-submit"> <input type="submit" name="" value="Valider"> </div> </div> </div> </form>
+        {{< /rawhtml >}}
       # Contact (add or remove contact options as necessary)
       email: adrien.nayrat@gmail.com
       # phone: 888 888 88 88

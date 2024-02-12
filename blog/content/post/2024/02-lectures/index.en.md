@@ -10,7 +10,7 @@ categories: ['Postgres']
 date: 2024-02-12T09:00:00+01:00
 lastmod: 2024-02-12T09:00:00+01:00
 featured: false
-draft: true
+draft: false
 
 # Featured image
 # To use, add an image named `featured.jpg/png` to your page's folder.

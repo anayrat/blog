@@ -60,12 +60,12 @@ This will help me to understand what is your database workload, know what and wh
 
 ## Tuning Postgres
 
-*Did you know that there are over 350 configuration parameters? The number increases (reasonably) with each new version. Some disappear, others appear.
+*Did you know that there are over 350 configuration parameters? The number increases (reasonably) with each new version. Some disappear, others appear.*
 
 Review of all Postgres configuration. The default configuration is very conservative, and needs to be reviewed.
 Automatic configuration tools such as [PGTune](https://pgtune.leopard.in.ua/) are often inadequate and unsuitable.
 
-*Tell yourself that if it were enough to apply simple rules, they would already be implemented in Postgres!
+*Tell yourself that if it were enough to apply simple rules, they would already be implemented in Postgres!*
 
 ## Review of slow / power-hungry requests
 
@@ -81,9 +81,8 @@ Of course, I won't just point out the problematic queries. I'm going to suggest 
 
 ## Schema review
 
-Are any indexes missing? Are you using the right index type?
-
-Are the types used correctly?
+* Are any indexes missing? Are you using the right index type?
+* Are the types used correctly?
 
 ## Report
 

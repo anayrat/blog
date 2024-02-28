@@ -83,9 +83,8 @@ C'est en général à cette étape que l'on peut espérer les plus gros gains en
 
 ## Revue du schéma
 
-Est-ce qu'il manque des index ? Utilisez-vous le bon type d'index ?
-
-Est-ce que les types sont correctement utilisés ?
+* Est-ce qu'il manque des index ? Utilisez-vous le bon type d'index ?
+* Est-ce que les types sont correctement utilisés ?
 
 ## Bilan
 

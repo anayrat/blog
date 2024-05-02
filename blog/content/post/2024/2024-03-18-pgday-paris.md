@@ -128,6 +128,8 @@ Actuellement, on peut difficilement “raccrocher” une réplication logique en
 Postgres 17 devrait permettre de synchroniser un slot de réplication. En cas de bascule, on peut reprendre la réplication.
 On est chanceux, il vient tout juste d’écrire un article sur le sujet : [Postgres 17 highlight: Logical replication slots synchronization](https://bdrouvot.github.io/2024/03/16/postgres-17-highlight-logical-replication-slots-synchronization/).
 
+[Les slides sont disponibles](https://www.postgresql.eu/events/pgdayparis2024/sessions/session/5122/slides/483/pgdayParis2024.pdf).
+
 # Closing
 
 C’était la dernière conférence de la journée. On a pu se retrouver pour le social event.

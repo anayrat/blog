@@ -131,6 +131,8 @@ Currently, it's difficult to "hang up" a logical replication in the case of a sw
 Postgres 17 should make it possible to synchronize a replication slot. In case of a failover, replication can be resumed.
 We're lucky, he's just written an article on this: [Postgres 17 highlight: Logical replication slots synchronization](https://bdrouvot.github.io/2024/03/16/postgres-17-highlight-logical-replication-slots-synchronization/).
 
+[Slides are availables](https://www.postgresql.eu/events/pgdayparis2024/sessions/session/5122/slides/483/pgdayParis2024.pdf).
+
 # Closing
 
 It was the last conference of the day. We all met up again for the social event.

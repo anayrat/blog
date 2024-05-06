@@ -12,7 +12,7 @@ date: '2023-10-26T00:00:00Z'
 lastmod: ''
 
 # Is this an unpublished draft?
-draft: true
+draft: false
 
 # Show this page in the Featured widget?
 featured: false

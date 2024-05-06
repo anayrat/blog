@@ -35,8 +35,11 @@ authors:
 #
 # categories:
 #   - Audit
+#
+# categories:
+#   - Prestations
 ---
-A la suite d'un audit, il n'est pas rare que des clients souhaite que j'intervienne de temps en temps pour contrôler que tout va bien.
+A la suite d'un audit, il n'est pas rare que des clients souhaitent que j'intervienne de temps en temps pour contrôler que tout va bien.
 
 C'est aussi l'occasion pour vous de demander du conseil.
 
@@ -52,5 +55,5 @@ Pour vous :
 Pour moi :
 
 * On se connait, je sais comment vos équipes fonctionnent, je connais votre activité.
-* Je connais votre base et sa charge de travail. Je suis plus pertinent pour identifier des comportement anormaux (dégradation de performance).
+* Je connais votre base et sa charge de travail. Je suis plus pertinent pour identifier des comportements anormaux (dégradation de performance).
 * J'assure la veille technique sur Postgres et son écosystème.

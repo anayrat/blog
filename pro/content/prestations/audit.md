@@ -29,12 +29,17 @@ image:
 
 authors:
   - adrien
+profile: false
+highlight_name: false
 
 # tags:
 #   - Audit
 #
-# categories:
-#   - Audit
+# categories:
+#   - Audit
+#
+#categories:
+#  - Prestations
 ---
 
 C'est souvent le point d'entrée de la plupart de mes prestations. Avant de travailler sur des problèmes spécifiques, il faut s'assurer que les fondations sont bien construites.

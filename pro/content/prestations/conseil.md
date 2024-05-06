@@ -35,6 +35,9 @@ authors:
 # 
 # categories:
 #   - Audit
+#
+# categories:
+#   - Prestations
 ---
 
 Certains clients ont parfois juste besoin de conseils pour savoir vers quelle direction aller.

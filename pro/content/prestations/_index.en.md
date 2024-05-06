@@ -1,5 +1,5 @@
 ---
-title: Prestations
+title: Services
 cms_exclude: true
 
 # View.

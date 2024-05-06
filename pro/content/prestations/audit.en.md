@@ -33,8 +33,9 @@ authors:
 # tags:
 #   - Audit
 #
+#
 # categories:
-#   - Audit
+#   - Services
 ---
 
 This is often the starting point for most of my interventions. Before working on specific problems, we need to make sure that the foundations are well established.

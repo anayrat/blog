@@ -35,6 +35,9 @@ authors:
 #
 # categories:
 #   - Audit
+#
+# categories:
+#   - Services
 ---
 Following an audit, it's not rare for customers to want me to come in from time to time to check that everything's running smoothly.
 

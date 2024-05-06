@@ -35,6 +35,9 @@ authors:
 # 
 # categories:
 #   - Audit
+#
+# categories:
+#   - Services
 ---
 
 Some customers just need a little advice on which direction to go in.

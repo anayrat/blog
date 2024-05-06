@@ -27,7 +27,9 @@ enableRobotsTXT: true
 footnotereturnlinkcontents: <sup>^</sup>
 ignoreFiles: [\.ipynb$, .ipynb_checkpoints$, \.Rmd$, \.Rmarkdown$, _cache$]
 permalinks:
-  post: '/:year/:month/:day/:title/'
+  #post: '/:year/:month/:day/:title/'
+  prestations: '/prestations/:title/'
+  references: '/references/:title/'
   talk: '/talk/:year/:month/:day/:title/'
   event: '/talk/:year/:month/:day/:title/'
   tags: '/tag/:slug/'

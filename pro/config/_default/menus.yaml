@@ -8,8 +8,11 @@ main:
     url: '#about'
     weight: 10
   - name: Prestations
-    url: 'post'
+    pageRef: /prestations/
     weight: 20
+  - name: Références
+    pageRef: /references/
+    weight: 30
   - name: Contact
     url: '#contact'
     weight: 60

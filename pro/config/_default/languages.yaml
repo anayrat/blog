@@ -13,11 +13,23 @@ en:
         url: '#about'
         weight: 10
       - name: Services
-        url: 'post'
+        pageRef: /prestations/
         weight: 20
+      - name: References
+        pageRef: /references/
+        weight: 30
       - name: Contact
         url: '#contact'
         weight: 60
+  permalinks:
+    page:
+      prestations: '/services/:title/'
+      references: '/references/:title/'
+    section:
+      prestations: '/services/'
+      references: '/references/'
+
+
 
 
 

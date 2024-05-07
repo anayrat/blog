@@ -94,6 +94,7 @@ social:
   - icon: user-tie
     icon_pack: fas
     link: 'https://pro.anayrat.info/'
+    label: 'Mon site professionnel'
     display:
       header: true
   - icon: rss
